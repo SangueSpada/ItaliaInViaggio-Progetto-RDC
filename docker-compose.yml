@@ -1,0 +1,106 @@
+version: '3'
+
+services:
+
+  couchdb:
+    build:
+      context: .
+      dockerfile: ./docker/couchdb/couchdb.dockerfile
+    environment:
+      - NODE_ENV=production
+      - COUCHDB_SERVER=http://admin:root@couchdb:5984
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=root
+    working_dir: /opt/couchdb/data
+    volumes:
+      - ./docker/couchdb:/opt/couchdb/data
+    ports:
+      - "5984:5984"
+    networks:
+      - db-network
+
+  initializer:
+    image: curlimages/curl
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - couchdb
+    environment:
+      - NODE_ENV=production
+    command: ["sh","-c","sleep 15 && curl -X PUT http://admin:root@couchdb:5984/_users && curl -X PUT http://admin:root@couchdb:5984/iiv_db"]
+    networks:
+      - db-network
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/nginx.dockerfile
+    links:
+      - node1:node1
+      - node2:node2
+      - node3:node3
+    depends_on:
+      - node1
+      - node2
+      - node3
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+
+  node1:
+    build:
+      context: .
+      dockerfile: ./docker/node/node.dockerfile
+    working_dir: /usr/src/app
+    depends_on:
+      - couchdb
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=node1
+    networks:
+      - app-network
+      - db-network
+
+  node2:
+    build:
+      context: .
+      dockerfile: ./docker/node/node.dockerfile
+    working_dir: /usr/src/app
+    depends_on:
+      - couchdb
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=node2
+    networks:
+      - app-network
+      - db-network
+
+  node3:
+    build:
+      context: .
+      dockerfile: ./docker/node/node.dockerfile
+    working_dir: /usr/src/app
+    depends_on:
+      - couchdb
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=node3
+    networks:
+      - app-network
+      - db-network
+
+networks:
+  app-network:
+    driver: bridge
+  db-network:
+    driver: bridge
