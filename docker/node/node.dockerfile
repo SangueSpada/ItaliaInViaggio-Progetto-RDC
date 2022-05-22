@@ -1,6 +1,6 @@
 FROM node:latest
 
-LABEL maintainer="noi@gmail.com"
+LABEL maintainer="maremma@gmail.com"
 
 WORKDIR /usr/src/app
 

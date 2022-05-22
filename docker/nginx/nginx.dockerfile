@@ -1,6 +1,6 @@
 FROM nginx:latest
 
-LABEL maintainer="noi@gmail.com"
+LABEL maintainer="maremma@gmail.com"
 
 COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 

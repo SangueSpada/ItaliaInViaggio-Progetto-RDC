@@ -1,7 +1,7 @@
 {
   "name": "italiainviaggiordc",
   "version": "1.0.0",
-  "description": "",
+  "description": "Made by Aras L. Kankilic, Francesco S. Sconocchia P.",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,5 +14,13 @@
     "pug": "^3.0.2",
     "request": "^2.88.2",
     "winston": "^3.7.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SangueSpada/ItaliaInViaggioRDC.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SangueSpada/ItaliaInViaggioRDC/issues"
+  },
+  "homepage": "https://github.com/SangueSpada/ItaliaInViaggioRDC#readme"
 }
