@@ -1,0 +1,32 @@
+[
+    {   "nome":"Castel Gandolfo",
+        "lat":"41.7487496",
+        "long":"12.6353254",
+        "zoom":"14"
+    },
+    {   "nome":"Bard",
+        "lat":"45.6099622",
+        "long":"7.7412505",
+        "zoom":"16"
+    },
+    {   "nome":"Orta San Giulio",
+        "lat":"45.7964467",
+        "long":"8.405217",
+        "zoom":"15"
+    },
+    {   "nome":"Vogogna",
+        "lat":"46.0178943",
+        "long":"8.2686205",
+        "zoom":"14"
+    },
+    {   "nome":"",
+        "lat":"",
+        "long":"",
+        "zoom":""
+    },
+    {   "nome":"",
+        "lat":"",
+        "long":"",
+        "zoom":""
+    }
+]

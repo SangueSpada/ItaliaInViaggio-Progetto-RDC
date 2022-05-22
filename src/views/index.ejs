@@ -10,12 +10,11 @@
 </head>
 <body>
     <div id="controls">
-        <select id="country">
+        <select id="borgo" onchange="initMap();">
             <optgroup label="Valle D'Aosta">
             <option value="Bard">Bard</option>
             </optgroup>
             <optgroup label="Piemonte">
-            <option value="Mombaldone">Mombaldone</option>
             <option value="Orta San Giulio">Orta San Giulio</option>
             <option value="Vogogna">Vogogna</option>
             </optgroup>
@@ -24,8 +23,9 @@
             </optgroup>
         </select>
     </div>
-
+    <div id="panel"></div>
     <div id="map"></div>
+    
 
     <div id="listing">
       <table id="resultsTable">
