@@ -1,16 +1,19 @@
-/* 
- * Always set the map height explicitly to define the size of the div element
- * that contains the map. 
- */
+ body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+
  #map {
     height: 100%;
     margin-top: 40px;
     width: 70%;
   }
   
-  /* 
-   * Optional: Makes the sample page fill the window. 
-   */
+
   html,
   body {
     height: 100%;

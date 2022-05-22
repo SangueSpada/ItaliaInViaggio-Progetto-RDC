@@ -7,10 +7,10 @@ const reqcouch=require('request');
 var urlencodedParser=bodyParser.urlencoded({extended:false});
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
 
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 
 app.get('/',urlencodedParser, (req, res) => {
 
@@ -40,8 +40,8 @@ p.then(value=>{
     port: process.env.PORT,
     couchdb: resp
   };
-
-  res.render('index', { environment });
+  // { environment }
+  res.render('index');
 });
 
 
