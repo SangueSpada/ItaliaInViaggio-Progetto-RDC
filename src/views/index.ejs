@@ -9,6 +9,8 @@
     <title>Index</title>
 </head>
 <body>
+ 
+ 
     <div id="controls">
         <select id="borgo" onchange="initMap();">
             <optgroup label="Valle D'Aosta">
@@ -36,6 +38,7 @@
     <div style="display: none">
       <div id="info-content">
         <table>
+         
           <tr id="iw-url-row" class="iw_table_row">
             <td id="iw-icon" class="iw_table_icon"></td>
             <td id="iw-url"></td>
@@ -64,7 +67,8 @@
 
 
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXLshAX3pJvvmBXzllyIwKOz1V27MerOo&callback=initMap&libraries=places"
+
+      src="https://maps.googleapis.com/maps/api/js?key=<%=api_key%>&callback=initMap&libraries=places"
       defer
     ></script>
 </body>
