@@ -1,8 +1,7 @@
-//var fs = require('fs');
 let map;
+var selectBorgo;
 let service;
 let currentInfoWindow;
-var selection;
 var position={lat:"",lng:"",zoom:""};
 var borghi=[
   {  nome:"Castel Gandolfo",
@@ -25,41 +24,56 @@ var borghi=[
       long:"8.2686205",
       zoom:"14"
   }];
-/*fetch("../borghi.json")
-.then(response => {
-   return response.json();
-})
-.then(jsondata => {borghi=jsondata;});
-*/
-function update_position(){
+
+
+
+
+function initMap() {
+  
+  selectBorgo = document.getElementById("borgo");
+  google.maps.event.addDomListener(selectBorgo,"change",() => {
+    console.log("è cambiato");
+ 
+    let selection =selectBorgo.value;
+    borghi.forEach(borgo =>{
+      if(borgo.nome==selection){
+        console.log(borgo.nome);
+        position.lat=borgo.lat;
+        position.lng=borgo.long;
+        position.zoom=borgo.zoom;
+        try{
+          map.setCenter({ lat: parseFloat(position.lat), lng: parseFloat(position.lng) });
+          map.setZoom(parseInt(position.zoom));
+          getNearbyPlaces();
+          console.log("posti aggiornati");
+        }
+        catch (error) {
+          console.log(error);
+        }
+      }
+    });
+  });
+
   selection=document.getElementById('borgo').value;
   borghi.forEach(borgo =>{
-    if(borgo.nome==selection){
-      position.lat=borgo.lat;
-      position.lng=borgo.long;
-      position.zoom=borgo.zoom;
-      try{
-        map.center= new google.maps.LatLng(parseInt(position.lat),parseInt(position.lng));
-        map.zoom=position.zoom;
+      if(borgo.nome==selection){
+        console.log(borgo.nome);
+        position.lat=borgo.lat;
+        position.lng=borgo.long;
+        position.zoom=borgo.zoom;
       }
-      catch (error) {
-        console.log(error);
-      }
-    }
   });
-}
 
-async function initMap() {
-  
+
+  console.log(position);
   var infoWindow = new google.maps.InfoWindow;
   currentInfoWindow = infoWindow;
-  update_position();
-  console.log(position);
+  
   map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: parseInt(position.lat), lng: parseInt(position.lng) },
+      center: { lat: parseFloat(position.lat), lng: parseFloat(position.lng) },
       zoom: parseInt(position.zoom)
     });
-  
+  console.log(map);
     
 
 
@@ -84,7 +98,7 @@ async function initMap() {
     }
   }
 
-  getNearbyPlaces()
+  getNearbyPlaces();
 
   function createMarkers(places) {
     places.forEach(place => {
