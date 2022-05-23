@@ -1,0 +1,20 @@
+POST http://admin:root@localhost:5984/iiv_db/_all_docs/queries
+Content-Type: application/json
+
+{
+
+"queries":[
+{ "keys":[
+    "nome"
+]
+
+},{
+    "limit": 3,
+    "skip": 2
+}
+
+
+
+]
+
+}
