@@ -1,4 +1,3 @@
-//var fs = require('fs');
 let map;
 let service;
 let currentInfoWindow;
@@ -25,41 +24,44 @@ var borghi=[
       long:"8.2686205",
       zoom:"14"
   }];
-/*fetch("../borghi.json")
-.then(response => {
-   return response.json();
-})
-.then(jsondata => {borghi=jsondata;});
-*/
-function update_position(){
-  selection=document.getElementById('borgo').value;
-  borghi.forEach(borgo =>{
-    if(borgo.nome==selection){
-      position.lat=borgo.lat;
-      position.lng=borgo.long;
-      position.zoom=borgo.zoom;
-      try{
-        map.center= new google.maps.LatLng(parseInt(position.lat),parseInt(position.lng));
-        map.zoom=position.zoom;
-      }
-      catch (error) {
-        console.log(error);
-      }
-    }
-  });
-}
 
-async function initMap() {
+
+
+
+function initMap() {
+  
+  function update_position(){
+ 
+    selection=document.getElementById('borgo').value;
+    borghi.forEach(borgo =>{
+      if(borgo.nome==selection){
+        console.log(borgo.nome);
+        position.lat=borgo.lat;
+        position.lng=borgo.long;
+        position.zoom=borgo.zoom;
+        try{
+          map.setCenter({ lat: parseFloat(position.lat), lng: parseFloat(position.lng) });
+          map.setZoom(parseInt(position.zoom));
+          getNearbyPlaces();
+        }
+        catch (error) {
+          console.log(error);
+        }
+      }
+    });
+  }
+
+
   
   var infoWindow = new google.maps.InfoWindow;
   currentInfoWindow = infoWindow;
   update_position();
   console.log(position);
   map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: parseInt(position.lat), lng: parseInt(position.lng) },
+      center: { lat: parseFloat(position.lat), lng: parseFloat(position.lng) },
       zoom: parseInt(position.zoom)
     });
-  
+  console.log(map);
     
 
 
