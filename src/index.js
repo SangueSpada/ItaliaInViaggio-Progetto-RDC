@@ -3,7 +3,7 @@ const bodyParser=require('body-parser');
 const path = require('path');
 const winston = require('winston');
 const reqcouch=require('request');
-
+require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
 const app = express();
 
@@ -33,15 +33,17 @@ app.get('/',urlencodedParser, (req, res) => {
 
 
 p.then(value=>{
+
+  /*
   const environment = {
     title: 'Docker with Nginx and Express',
     node: process.env.NODE_ENV,
     instance: process.env.INSTANCE,
     port: process.env.PORT,
     couchdb: resp
-  };
+  };*/
   // { environment }
-  res.render('index');
+  res.render('index',{api_key:process.env.API_MAPS});
 });
 
 

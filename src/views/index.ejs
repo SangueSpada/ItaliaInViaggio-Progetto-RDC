@@ -9,8 +9,10 @@
     <title>Index</title>
 </head>
 <body>
+ 
+  
     <div id="controls">
-        <select id="borgo" onchange="update_position()">
+        <select id="borgo">
             <optgroup label="Valle D'Aosta">
             <option value="Bard">Bard</option>
             </optgroup>
@@ -23,6 +25,7 @@
             </optgroup>
         </select>
     </div>
+    <div id="prova"><p>aoaoaoaoa</p></div>
     <div id="panel"></div>
     <div id="map"></div>
     
@@ -36,6 +39,7 @@
     <div style="display: none">
       <div id="info-content">
         <table>
+         
           <tr id="iw-url-row" class="iw_table_row">
             <td id="iw-icon" class="iw_table_icon"></td>
             <td id="iw-url"></td>
@@ -64,7 +68,8 @@
 
 
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap&libraries=places"
+
+      src="https://maps.googleapis.com/maps/api/js?key=<%=api_key%>&callback=initMap&libraries=places"
       defer
     ></script>
 </body>

@@ -1,7 +1,7 @@
 let map;
+var selectBorgo;
 let service;
 let currentInfoWindow;
-var selection;
 var position={lat:"",lng:"",zoom:""};
 var borghi=[
   {  nome:"Castel Gandolfo",
@@ -30,9 +30,11 @@ var borghi=[
 
 function initMap() {
   
-  function update_position(){
+  selectBorgo = document.getElementById("borgo");
+  google.maps.event.addDomListener(selectBorgo,"change",() => {
+    console.log("è cambiato");
  
-    selection=document.getElementById('borgo').value;
+    let selection =selectBorgo.value;
     borghi.forEach(borgo =>{
       if(borgo.nome==selection){
         console.log(borgo.nome);
@@ -43,20 +45,30 @@ function initMap() {
           map.setCenter({ lat: parseFloat(position.lat), lng: parseFloat(position.lng) });
           map.setZoom(parseInt(position.zoom));
           getNearbyPlaces();
+          console.log("posti aggiornati");
         }
         catch (error) {
           console.log(error);
         }
       }
     });
-  }
+  });
+
+  selection=document.getElementById('borgo').value;
+  borghi.forEach(borgo =>{
+      if(borgo.nome==selection){
+        console.log(borgo.nome);
+        position.lat=borgo.lat;
+        position.lng=borgo.long;
+        position.zoom=borgo.zoom;
+      }
+  });
 
 
-  
+  console.log(position);
   var infoWindow = new google.maps.InfoWindow;
   currentInfoWindow = infoWindow;
-  update_position();
-  console.log(position);
+  
   map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: parseFloat(position.lat), lng: parseFloat(position.lng) },
       zoom: parseInt(position.zoom)
@@ -86,7 +98,7 @@ function initMap() {
     }
   }
 
-  getNearbyPlaces()
+  getNearbyPlaces();
 
   function createMarkers(places) {
     places.forEach(place => {
