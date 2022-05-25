@@ -110,7 +110,7 @@ function initMap() {
       google.maps.event.addListener(marker, 'click', () => {
         let request = {
         placeId: place.place_id,
-        fields: ['name', 'formatted_address', 'geometry', 'rating','website', 'photos']
+        fields: ['name', 'formatted_address', 'geometry', 'rating','website','telephone', 'photos']
         };
         /* Only fetch the details of a place when the user clicks on a marker.
         * If we fetch the details for all place results as soon as we get

@@ -46,9 +46,12 @@ p.then(value=>{
   res.render('index',{api_key:process.env.API_MAPS});
 });
 
-
-
   
+});
+
+app.get('/ao',urlencodedParser, (req, res) => {
+  res.sendFile('src/views/ao.html');
+  res.end();
 });
 
 app.listen(process.env.PORT, () => {

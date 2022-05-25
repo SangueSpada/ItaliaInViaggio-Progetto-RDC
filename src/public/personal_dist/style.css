@@ -1,28 +1,26 @@
- body {
-  padding-top: 50px;
-}
 .starter-template {
   padding: 40px 15px;
   text-align: center;
 }
 
-
  #map {
     height: 100%;
-    margin-top: 40px;
-    width: 70%;
+    margin-top: 20px;
+    width: 100%;
+    position: fixed;
   }
-  
-
-  html,
-  body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+  .map-container{
+    overflow:hidden;
+    padding-bottom:56.25%;
+    position:relative;
+    height:0;
   }
-  
-  body {
-    padding: 0 !important;
+  .map-container iframe{
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
   }
   
   table {
@@ -119,11 +117,10 @@
 
   #panel {
     height: 100%;
-    width: null;
+    width: 300px;
     background-color: white;
-    position: fixed;
     z-index: 1;
-    overflow-x: hidden;
+    overflow: hidden;
     transition: all .2s ease-out;
 }
 
