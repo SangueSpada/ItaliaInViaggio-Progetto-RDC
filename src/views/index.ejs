@@ -1,44 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" type="text/css" href="../personal_dist/style.css" />
-    <script type="text/javascript" src="../function.js"></script>
-    <title>Index</title>
-</head>
-<body>
- 
-
-    <div id="controls">
-        <select id="borgo">
-
-          <optgroup id="Piemonte" label="Piemonte">
-          </optgroup>
-
-
-        </select>
-
-          
-
-          <% nomi.forEach(item=>{%>
-
-            $("#borgo").find('optgroup[label="<%item.regione%>"]').append("<option value="<%=item.nome%>"><%=item.nome%></option>");
-     
-            <%});%>
-
-
-
-    </div>
-    <div id="panel"></div>
-    <div id="map"></div>
-    
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-    <title>Anulare</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="..\bootstrap-5.1.3\dist\css\bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="../personal_dist/our.css">
+        <link href="https://fonts.googleapis.com/css?family=Georgia" rel="stylesheet">
+        <script type="application/javascript" src="..\bootstrap-5.1.3\dist\js\bootstrap.bundle.min.js"></script>
+        <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        
+        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+        <title>Anulare</title>
+    <style>
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 210pt;
+            height: 300pt;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 0 solid rgba(0, 0, 0, .125);
+            border-radius: .25rem;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+        .img-card{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            height: 100%;
+            width: auto;
+        }
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1rem;
+            min-height: 1;
+        }
+    </style>
+    </head>
 
 <body class="bg1">
   <div class="multi-bg">
@@ -49,20 +54,15 @@
                 <div class="col-lg-12 text-center">
                     <nav class="shadow container p-3 rounded-3 " style="background-color: #e3f2fd;">
                         <form class="row" method="get" action="">
-                            <div class="col-lg-12 mb-2">
+                            <div class="col-lg-12 mb-2" id="controls">
                               <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
-                              <select id="borgo" class="active form-control">
-                                <optgroup label="Valle D'Aosta">
-                                <option value="Bard">Bard</option>
-                                </optgroup>
-                                <optgroup label="Piemonte">
-                                <option value="Orta San Giulio">Orta San Giulio</option>
-                                <option value="Vogogna">Vogogna</option>
-                                </optgroup>
-                                <optgroup label="Lazio">
-                                <option value="Castel Gandolfo">Castel Gandofo</option>
-                                </optgroup>
-                              </select>
+                                <select id="borgo">
+                                  <optgroup id="Piemonte" label="Piemonte">
+                                  </optgroup>
+                                </select>              
+                                  <% nomi.forEach(item=>{%>
+                                    $("#borgo").find('optgroup[label="<%item.regione%>"]').append("<option value="<%=item.nome%>"><%=item.nome%></option>");
+                                    <%});%>
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
                                 <label class="active me-1 mt-1" for="dateStandard">Check-in:</label>
