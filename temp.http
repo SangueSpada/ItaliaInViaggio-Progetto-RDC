@@ -1,0 +1,313 @@
+POST http://admin:root@localhost:5984/iiv_db/
+Content-Type: application/json
+
+{
+
+ {   "nome":"Castel Gandolfo",
+        "regione":"Lazio",
+        "lat":"41.7487496",
+        "long":"12.6353254",
+        "zoom":"14"
+    },
+    {   "nome":"Bard",
+        "regione":"Valle D’Aosta",
+        "lat":"45.6099622",
+        "long":"7.7412505",
+        "zoom":"16"
+    },
+    {   "nome":"Orta San Giulio",
+        "regione":"Piemonte",
+        "lat":"45.7964467",
+        "long":"8.405217",
+        "zoom":"15"
+    },
+    {   "nome":"Vogogna",
+        "regione":"Piemonte",
+        "lat":"46.0178943",
+        "long":"8.2686205",
+        "zoom":"14"
+    },
+    {   "nome":"Moneglia",
+        "regione":"Liguria",
+        "lat":"44.2363149",
+        "long":"9.4753696",
+        "zoom":"14"
+    },
+    {   "nome":"Finalborgo",
+        "regione":"Liguria",
+        "lat":"44.1743039",
+        "long":"8.3207411",
+        "zoom":"15"
+    },
+    {   "nome":"Laigueglia",
+        "regione":"Liguria",
+        "lat":"43.9745263",
+        "long":"8.1252361",
+        "zoom":"13"
+    },
+    {   "nome":"Borgio Verezzi",
+        "regione":"Liguria",
+        "lat":"44.1615571",
+        "long":"8.2999814",
+        "zoom":"15"
+    },
+    {   "nome":"Campo Ligure",
+        "regione":"Liguria",
+        "lat":"44.5355306",
+        "long":"8.6808157",
+        "zoom":"14"
+    },
+    {   "nome":"Vernazza",
+        "regione":"Liguria",
+        "lat":"44.1355137",
+        "long":"9.6813027",
+        "zoom":"17"
+    },
+    {   "nome":"Chiusa",
+        "regione":"Trentino A.A.",
+        "lat":"46.6719942",
+        "long":"11.4809913",
+        "zoom":"12"
+    },
+    {   "nome":"Egna",
+        "regione":"Trentino A.A.",
+        "lat":"46.3170972",
+        "long":"11.2538051",
+        "zoom":"14"
+    },
+    {   "nome":"Vipiteno",
+        "regione":"Trentino A.A.",
+        "lat":"46.89475",
+        "long":"11.4116006",
+        "zoom":"14"
+    },
+    {   "nome":"Montagnana",
+        "regione":"Veneto",
+        "lat":"45.2359519",
+        "long":"11.4151783",
+        "zoom":"13"
+    },
+    {   "nome":"Venzone",
+        "regione":"Friuli Venezia Giulia",
+        "lat":"46.3516202",
+        "long":"13.1053373",
+        "zoom":"12"
+    },
+    {   "nome":"Brisighella",
+        "regione":"Emilia Romagna",
+        "lat":"44.2237502",
+        "long":"11.7573768",
+        "zoom":"14"
+    },
+    {   "nome":"Buonconvento",
+        "regione":"Toscana",
+        "lat":"43.1493309",
+        "long":"11.403648",
+        "zoom":"12"
+    },
+    {   "nome":"Grottammare",
+        "regione":"Marche",
+        "lat":"42.9857826",
+        "long":"13.8268442",
+        "zoom":"13"
+    },
+    {   "nome":"Castiglione Del Lago",
+        "regione":"Umbria",
+        "lat":"43.1228452",
+        "long":"12.0181044",
+        "zoom":"14"
+    },
+    {   "nome":"Spello",
+        "regione":"Umbria",
+        "lat":"42.9913514",
+        "long":"12.6447022",
+        "zoom":"14"
+    },
+    {   "nome":"Passignano Sul Trasimeno",
+        "regione":"Umbria",
+        "lat":"43.1907563",
+        "long":"12.1226707",
+        "zoom":"14"
+    },
+    {   "nome":"Tagliacozzo",
+        "regione":"Abruzzo",
+        "lat":"42.0689524",
+        "long":"13.2438809",
+        "zoom":"15"
+    },
+    {   "nome":"Vietri Sul Mare",
+        "regione":"Campania",
+        "lat":"40.6710441",
+        "long":"14.7179463",
+        "zoom":"15"
+    },
+    {   "nome":"Chianalea",
+        "regione":"Calabria",
+        "lat":"38.2550275",
+        "long":"15.713607",
+        "zoom":"17"
+    },
+    {   "nome":"Cefalù",
+        "regione":"Sicilia",
+        "lat":"38.0327328",
+        "long":"13.9903872",
+        "zoom":"14"
+    }      
+    
+    
+}
+
+
+
+[
+    {   "nome":"Castel Gandolfo",
+        "regione":"Lazio",
+        "lat":"41.7487496",
+        "long":"12.6353254",
+        "zoom":"14"
+    },
+    {   "nome":"Bard",
+        "regione":"Valle D’Aosta",
+        "lat":"45.6099622",
+        "long":"7.7412505",
+        "zoom":"16"
+    },
+    {   "nome":"Orta San Giulio",
+        "regione":"Piemonte",
+        "lat":"45.7964467",
+        "long":"8.405217",
+        "zoom":"15"
+    },
+    {   "nome":"Vogogna",
+        "regione":"Piemonte",
+        "lat":"46.0178943",
+        "long":"8.2686205",
+        "zoom":"14"
+    },
+    {   "nome":"Moneglia",
+        "regione":"Liguria",
+        "lat":"44.2363149",
+        "long":"9.4753696",
+        "zoom":"14"
+    },
+    {   "nome":"Finalborgo",
+        "regione":"Liguria",
+        "lat":"44.1743039",
+        "long":"8.3207411",
+        "zoom":"15"
+    },
+    {   "nome":"Laigueglia",
+        "regione":"Liguria",
+        "lat":"43.9745263",
+        "long":"8.1252361",
+        "zoom":"13"
+    },
+    {   "nome":"Borgio Verezzi",
+        "regione":"Liguria",
+        "lat":"44.1615571",
+        "long":"8.2999814",
+        "zoom":"15"
+    },
+    {   "nome":"Campo Ligure",
+        "regione":"Liguria",
+        "lat":"44.5355306",
+        "long":"8.6808157",
+        "zoom":"14"
+    },
+    {   "nome":"Vernazza",
+        "regione":"Liguria",
+        "lat":"44.1355137",
+        "long":"9.6813027",
+        "zoom":"17"
+    },
+    {   "nome":"Chiusa",
+        "regione":"Trentino A.A.",
+        "lat":"46.6719942",
+        "long":"11.4809913",
+        "zoom":"12"
+    },
+    {   "nome":"Egna",
+        "regione":"Trentino A.A.",
+        "lat":"46.3170972",
+        "long":"11.2538051",
+        "zoom":"14"
+    },
+    {   "nome":"Vipiteno",
+        "regione":"Trentino A.A.",
+        "lat":"46.89475",
+        "long":"11.4116006",
+        "zoom":"14"
+    },
+    {   "nome":"Montagnana",
+        "regione":"Veneto",
+        "lat":"45.2359519",
+        "long":"11.4151783",
+        "zoom":"13"
+    },
+    {   "nome":"Venzone",
+        "regione":"Friuli Venezia Giulia",
+        "lat":"46.3516202",
+        "long":"13.1053373",
+        "zoom":"12"
+    },
+    {   "nome":"Brisighella",
+        "regione":"Emilia Romagna",
+        "lat":"44.2237502",
+        "long":"11.7573768",
+        "zoom":"14"
+    },
+    {   "nome":"Buonconvento",
+        "regione":"Toscana",
+        "lat":"43.1493309",
+        "long":"11.403648",
+        "zoom":"12"
+    },
+    {   "nome":"Grottammare",
+        "regione":"Marche",
+        "lat":"42.9857826",
+        "long":"13.8268442",
+        "zoom":"13"
+    },
+    {   "nome":"Castiglione Del Lago",
+        "regione":"Umbria",
+        "lat":"43.1228452",
+        "long":"12.0181044",
+        "zoom":"14"
+    },
+    {   "nome":"Spello",
+        "regione":"Umbria",
+        "lat":"42.9913514",
+        "long":"12.6447022",
+        "zoom":"14"
+    },
+    {   "nome":"Passignano Sul Trasimeno",
+        "regione":"Umbria",
+        "lat":"43.1907563",
+        "long":"12.1226707",
+        "zoom":"14"
+    },
+    {   "nome":"Tagliacozzo",
+        "regione":"Abruzzo",
+        "lat":"42.0689524",
+        "long":"13.2438809",
+        "zoom":"15"
+    },
+    {   "nome":"Vietri Sul Mare",
+        "regione":"Campania",
+        "lat":"40.6710441",
+        "long":"14.7179463",
+        "zoom":"15"
+    },
+    {   "nome":"Chianalea",
+        "regione":"Calabria",
+        "lat":"38.2550275",
+        "long":"15.713607",
+        "zoom":"17"
+    },
+    {   "nome":"Cefalù",
+        "regione":"Sicilia",
+        "lat":"38.0327328",
+        "long":"13.9903872",
+        "zoom":"14"
+    }
+]

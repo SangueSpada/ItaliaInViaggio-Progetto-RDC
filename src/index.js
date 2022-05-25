@@ -2,7 +2,10 @@ const express = require('express');
 const bodyParser=require('body-parser');
 const path = require('path');
 const winston = require('winston');
-const reqcouch=require('request');
+const { URLSearchParams } = require('url');
+const { stringify } = require('querystring');
+const qs=require('qs');
+const axios=require('axios').default;
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
 const app = express();
@@ -14,20 +17,20 @@ app.set('view engine', 'ejs');
 
 app.get('/',urlencodedParser, (req, res) => {
 
-  var resp=9;
-  const p=new Promise(function(resolve,reject){
-    reqcouch({
+  var resp;
 
-      url:'http://admin:root@couchdb:5984/_all_dbs',
-      method: 'GET',
-      headers: {'content-type': 'application/json'}
-    },function(error,response,body){
-    if(error){res.send(error);return ;}
-    else{
-      
-      resolve(resp=body);}
-    
-    });
+const p=new Promise(function(resolve,reject){
+
+let json={
+  "selector":{
+      "_id": {"$gt":null}
+  },
+  "fields": ["_id","_rev","nome","regione","lat","long","zoom"]
+};
+
+axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
+.then(function(response){resolve(resp=response.data.docs);})
+.catch(function(error){res.send(error);return;});
 
   });
 
@@ -43,7 +46,7 @@ p.then(value=>{
     couchdb: resp
   };*/
   // { environment }
-  res.render('index',{api_key:process.env.API_MAPS});
+  res.render('index',{api_key:process.env.API_MAPS,nomi:resp});
 });
 
   
