@@ -13,16 +13,12 @@
   
     <div id="controls">
         <select id="borgo">
-            <optgroup label="Valle D'Aosta">
-            <option value="Bard">Bard</option>
-            </optgroup>
-            <optgroup label="Piemonte">
-            <option value="Orta San Giulio">Orta San Giulio</option>
-            <option value="Vogogna">Vogogna</option>
-            </optgroup>
-            <optgroup label="Lazio">
-            <option value="Castel Gandolfo">Castel Gandofo</option>
-            </optgroup>
+          <% nomi.forEach(item=>{%>
+         
+            
+            <option value="<%=item.nome%>"><%=item.nome%></option>
+            
+            <%});%>
         </select>
     </div>
     <div id="prova"><p>aoaoaoaoa</p></div>
