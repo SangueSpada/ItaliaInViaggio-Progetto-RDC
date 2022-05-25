@@ -15,8 +15,15 @@
         <select id="borgo">
           <% nomi.forEach(item=>{%>
          
+
+
             
+            <optgroup label="<%=item.regione%>">
             <option value="<%=item.nome%>"><%=item.nome%></option>
+          </optgroup>
+
+
+
             
             <%});%>
         </select>

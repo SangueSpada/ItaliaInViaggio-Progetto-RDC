@@ -25,7 +25,7 @@ let json={
   "selector":{
       "_id": {"$gt":null}
   },
-  "fields": ["_id","_rev","nome","lat","long","zoom"]
+  "fields": ["_id","_rev","nome","regione","lat","long","zoom"]
 };
 
 axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
