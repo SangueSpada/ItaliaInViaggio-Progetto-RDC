@@ -97,18 +97,22 @@
 
                                 </select>     
                              
-                                <% var nome=[];var regione=[];%>
+                                <% var nome=[];var regione=[];var lats=[];var longs=[];%>
 
                                 <% nomi.forEach(item=>
                                     {
                                     nome.push(item.nome);
-                                    regione.push(item.regione);       
+                                    regione.push(item.regione);
+                                    lats.push(item.lat);
+                                    longs.push(item.long);       
                                     })
                                     
                                     %>
                                     <script>
                                         var n="<%=nome%>".split(',');
                                         var r="<%=regione%>".split(',');
+                                        var la="<%=lats%>".split(',');
+                                        var lo="<%=longs%>".split(',');
                                     </script>
                                  
                      
@@ -137,6 +141,7 @@
                     </nav>
                 </div>
             </div>
+            <div id="meteo"></div>
             <div id="ao">
               <div id="panel"></div>
               <div id="map"></div>
@@ -352,21 +357,53 @@
       
       defer
     ></script>
-    <!--src="https://maps.googleapis.com/maps/api/js?key=<%=api_key%>&callback=initMap&libraries=places"-->
+
 </body>
 <script>
 
 
-for(var i=0;i<n.length;i++){
 
-    popola(n[i],r[i]);
+function tempo(lat,long){
+
+
+var httpreq= new XMLHttpRequest();
+httpreq.onreadystatechange= function(e){
+    if(this.readyState==4 && this.status == 200){
+        console.log("installato tutto, l api key funge ...");
+
+       document.getElementById("meteo").textContent=(this.responseText).list.weather.main;
+    }
+    else if(this.readyState==4 && this.status ==500){
+        console.log(this.responseText);
+    }
+    else if(this.readyState==4 && this.status !=500 & this.status!=200){
+        console.log(this.responseText);
+    }
+
+}
+
+var url="https://api.openweathermap.org/data/2.5/forecast/daily?lat="+lat+"&lon="+long+"&cnt=10&appid=";
+
+httpreq.open("POST","/owm",true);
+
+httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+httpreq.send('url='+url);
+
 
 }
 
 
-function popola(nome,regione){
+for(var i=0;i<n.length;i++){
 
-    $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option value="+nome+">"+nome+"</option>");
+//console.log(n+' '+r+' '+la+' '+lo);
+    popola(n[i],r[i],la[i],lo[i]);
+
+}
+
+
+function popola(nome,regione,lat,long){
+
+    $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option onclick=\"tempo("+lat+","+long+")\" value="+nome+">"+nome+"</option>");
 
 }
 

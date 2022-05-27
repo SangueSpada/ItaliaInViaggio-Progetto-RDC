@@ -21,6 +21,8 @@ app.get('/',urlencodedParser, (req, res) => {
 
 const p=new Promise(function(resolve,reject){
 
+
+//api couchdb all borgs names
 let json={
   "selector":{
       "_id": {"$gt":null}
@@ -31,31 +33,37 @@ let json={
 axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
 .then(function(response){resolve(resp=response.data.docs);})
 .catch(function(error){res.send(error);return;});
+///////////////////////////
 
   });
 
 
 p.then(value=>{
 
-  /*
-  const environment = {
-    title: 'Docker with Nginx and Express',
-    node: process.env.NODE_ENV,
-    instance: process.env.INSTANCE,
-    port: process.env.PORT,
-    couchdb: resp
-  };*/
-  // { environment }
+
+
   res.render('index',{api_key:process.env.API_MAPS,nomi:resp});
 });
 
-  
+
 });
 
 app.get('/ao',urlencodedParser, (req, res) => {
   res.sendFile('src/views/ao.html');
   res.end();
 });
+
+app.post('/owm',urlencodedParser, function(req,res){
+
+var url=req.body.url+"&lon="+req.body.lon+"&cnt="+req.body.cnt+"&appid="+req.body.appid+process.env.API_WHEATHER;
+
+axios.get(url,{ headers:{'Content-Type': 'application/json'}})
+.then(function(response){res.status(200).send(response);})
+.catch(function(error){res.status(500).send(error);return;});
+
+
+});
+
 
 app.listen(process.env.PORT, () => {
   winston.info(`NODE_ENV: ${process.env.NODE_ENV}`);
