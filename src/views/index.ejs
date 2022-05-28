@@ -141,34 +141,48 @@
                     </nav>
                 </div>
             </div>
-            <div id="meteo">
+            <div id="meteo" hidden="true">
+                <div style="padding: 30pt;"></div>
                 <table class="table">
                     <thead>
-                        <tr>
+                        <tr id="date">
 
-                            <th class="col-auto" id="1" style="text-align: center;"></th>
-                            <th class="col-auto" id="2" style="text-align: center;"></th>
-                            <th class="col-auto" id="3" style="text-align: center;"></th>
-                            <th class="col-auto" id="4" style="text-align: center;"></th>
-                            <th class="col-auto" id="5" style="text-align: center;"></th>
-                            <th class="col-auto" id="6" style="text-align: center;"></th>
-                            <th class="col-auto" id="7" style="text-align: center;"></th>
-                            <th class="col-auto" id="8" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
                         </tr>
-                        <tr>
-                            <td colspan="8">
-                                <hr>
-                            </td>
-                        </tr>
+                        
                     </thead>
 
                     <tbody>
 
-<tr>
+<tr id="icone">
 
-    <td class="col-auto py-3" style="text-align: center;"></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
 
+</tr>
 
+<tr id="descrizioni">
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
 
 
 </tr>
@@ -409,13 +423,28 @@ httpreq.responseType='json';
 httpreq.onreadystatechange= function(e){
     if(this.readyState==4 && this.status == 200){
         let meteos=this.response;
-        for(var t=0;t<meteos.length;t++){
+        $("#meteo")[0].hidden=false;
+       //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
+       $("#date").find("th").each(function(index){
+           var data=new Date(meteos[index].dt*1000);
+       $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));});
 
-       document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
-        var url_icon='http://openweathermap.org/img/wn/meteos[t].weather[0].icon@2x.png';
+       $("#icone").find("td").each(function(index){
 
-                                        }
+        var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png';
+        $(this).find("img")[0].src=url_icon;
+       });
+
+       $("#descrizioni").find("td").each(function(index){
+        $(this)[0].textContent=meteos[index].weather[0].description;
+       });
+       
+
+                                        
     }
+
+
+
     else if(this.readyState==4 && this.status ==500){
         console.log('errore 500 '+this.response);
     }
