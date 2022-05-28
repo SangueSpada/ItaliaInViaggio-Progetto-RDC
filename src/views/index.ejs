@@ -141,7 +141,45 @@
                     </nav>
                 </div>
             </div>
-            <div id="meteo"></div>
+            <div id="meteo">
+                <table class="table">
+                    <thead>
+                        <tr>
+
+                            <th class="col-auto" id="1" style="text-align: center;"></th>
+                            <th class="col-auto" id="2" style="text-align: center;"></th>
+                            <th class="col-auto" id="3" style="text-align: center;"></th>
+                            <th class="col-auto" id="4" style="text-align: center;"></th>
+                            <th class="col-auto" id="5" style="text-align: center;"></th>
+                            <th class="col-auto" id="6" style="text-align: center;"></th>
+                            <th class="col-auto" id="7" style="text-align: center;"></th>
+                            <th class="col-auto" id="8" style="text-align: center;"></th>
+                        </tr>
+                        <tr>
+                            <td colspan="8">
+                                <hr>
+                            </td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+<tr>
+
+    <td class="col-auto py-3" style="text-align: center;"></td>
+
+
+
+
+</tr>
+
+
+                    </tbody>
+
+
+
+                </table>
+            </div>
             <div id="ao">
               <div id="panel"></div>
               <div id="map"></div>
@@ -367,22 +405,27 @@ function tempo(lat,long){
 
 
 var httpreq= new XMLHttpRequest();
+httpreq.responseType='json';
 httpreq.onreadystatechange= function(e){
     if(this.readyState==4 && this.status == 200){
-        console.log("installato tutto, l api key funge ...");
+        let meteos=this.response;
+        for(var t=0;t<meteos.length;t++){
 
-       document.getElementById("meteo").textContent=(this.responseText).list.weather.main;
+       document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
+        var url_icon='http://openweathermap.org/img/wn/meteos[t].weather[0].icon@2x.png';
+
+                                        }
     }
     else if(this.readyState==4 && this.status ==500){
-        console.log(this.responseText);
+        console.log('errore 500 '+this.response);
     }
     else if(this.readyState==4 && this.status !=500 & this.status!=200){
-        console.log(this.responseText);
+        console.log(this.response);
     }
 
 }
 
-var url="https://api.openweathermap.org/data/2.5/forecast/daily?lat="+lat+"&lon="+long+"&cnt=10&appid=";
+var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid=";
 
 httpreq.open("POST","/owm",true);
 
