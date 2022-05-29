@@ -161,42 +161,39 @@
 
                     <tbody>
 
-<tr id="icone">
+                        <tr id="icone">
+                        
+                            <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                            <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                            <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                            <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                            <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                            <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                            <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                            <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                        
+                        </tr>
 
-    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
-    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
-    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
-    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
-    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
-    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
-    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
-    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
-
-</tr>
-
-<tr id="descrizioni">
-<td class="h5 col-auto py-3" style="text-align: center;"></td>
-<td class="h5 col-auto py-3" style="text-align: center;"></td>
-<td class="h5 col-auto py-3" style="text-align: center;"></td>
-<td class="h5 col-auto py-3" style="text-align: center;"></td>
-<td class="h5 col-auto py-3" style="text-align: center;"></td>
-<td class="h5 col-auto py-3" style="text-align: center;"></td>
-<td class="h5 col-auto py-3" style="text-align: center;"></td>
-<td class="h5 col-auto py-3" style="text-align: center;"></td>
-
-
-</tr>
+                        <tr id="descrizioni">
+                        <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                        <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                        <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                        <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                        <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                        <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                        <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                        <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                        
+                        
+                        </tr>
 
 
                     </tbody>
-
-
-
                 </table>
             </div>
-            <div id="ao">
-              <div id="panel"></div>
-              <div id="map"></div>
+            <div class="row "id="ao">
+                <div id="map"></div>
+                <div id="panel"></div>
 
               <div id="listing">
                 <table id="resultsTable">
@@ -405,7 +402,7 @@
 
     <script
 
-      src="https://maps.googleapis.com/maps/api/js?key=<%=api_key%>&callback=initMap&libraries=places"
+      src="https://maps.googleapis.com/maps/api/js?key=<%=maps_key%>&callback=initMap&libraries=places"
       
       defer
     ></script>
@@ -416,43 +413,44 @@
 
 
 function tempo(lat,long){
+    console.log("aoaoaoa");
 
 
-var httpreq= new XMLHttpRequest();
-httpreq.responseType='json';
-httpreq.onreadystatechange= function(e){
-    if(this.readyState==4 && this.status == 200){
-        let meteos=this.response;
-        $("#meteo")[0].hidden=false;
-       //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
-       $("#date").find("th").each(function(index){
-           var data=new Date(meteos[index].dt*1000);
-       $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));});
+    var httpreq= new XMLHttpRequest();
+    httpreq.responseType='json';
+    httpreq.onreadystatechange= function(e){
+        if(this.readyState==4 && this.status == 200){
+            let meteos=this.response;
+            $("#meteo")[0].hidden=false;
+           //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
+           $("#date").find("th").each(function(index){
+               var data=new Date(meteos[index].dt*1000);
+           $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));});
 
-       $("#icone").find("td").each(function(index){
+           $("#icone").find("td").each(function(index){
 
-        var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png';
-        $(this).find("img")[0].src=url_icon;
-       });
+            var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png';
+            $(this).find("img")[0].src=url_icon;
+           });
 
-       $("#descrizioni").find("td").each(function(index){
-        $(this)[0].textContent=meteos[index].weather[0].description;
-       });
-       
+           $("#descrizioni").find("td").each(function(index){
+            $(this)[0].textContent=meteos[index].weather[0].description;
+           });
 
-                                        
+
+
+        }
+
+
+
+        else if(this.readyState==4 && this.status ==500){
+            console.log('errore 500 '+this.response);
+         }
+        else if(this.readyState==4 && this.status !=500 & this.status!=200){
+            console.log(this.response);
+         }   
+
     }
-
-
-
-    else if(this.readyState==4 && this.status ==500){
-        console.log('errore 500 '+this.response);
-    }
-    else if(this.readyState==4 && this.status !=500 & this.status!=200){
-        console.log(this.response);
-    }
-
-}
 
 var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid=";
 
@@ -472,10 +470,9 @@ for(var i=0;i<n.length;i++){
 
 }
 
-
 function popola(nome,regione,lat,long){
 
-    $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option onclick=\"tempo("+lat+","+long+")\" value="+nome+">"+nome+"</option>");
+    $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option onclick=\"tempo("+lat+","+long+")\" value=\""+nome+"\">"+nome+"</option>");
 
 }
 

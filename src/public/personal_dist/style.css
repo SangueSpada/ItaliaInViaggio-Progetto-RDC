@@ -1,154 +1,47 @@
-.starter-template {
-  padding: 40px 15px;
-  text-align: center;
-}
+/* Always set the map height explicitly to define the size of the div
+     * element that contains the map. */
+     #map {
+      top: 10px;
+      width: 100%;
+      height: 700px;
+      background-color: grey;
+    }
 
- #map {
-    height: 100%;
-    margin-top: 20px;
-    width: 100%;
-    position: fixed;
-  }
-  .map-container{
-    overflow:hidden;
-    padding-bottom:56.25%;
-    position:relative;
-    height:0;
-  }
-  .map-container iframe{
-    left:0;
-    top:0;
-    height:100%;
-    width:100%;
-    position:absolute;
+    /* Optional: Makes the sample page fill the window. */
+    #panel {
+      width: 100%;
+      height: 800px;
+      background-color: white;
+      position: relative;
+      z-index: 1;
+      overflow-x: hidden;
+      transition: all .2s ease-out;
   }
   
-  table {
-    font-size: 12px;
+  .open {
+      width: 250px;
   }
   
-  .hotel-search {
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    background: #fff;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 440px;
-    z-index: 1;
+  /* Styling for place details */
+  .hero {
+      width: 100%;
+      height: auto;
+      max-height: 166px;
+      display: block;
   }
   
-  
-  #listing {
-    position: absolute;
-    width: 200px;
-    height: 470px;
-    overflow: auto;
-    left: 442px;
-    top: 0px;
-    cursor: pointer;
-    overflow-x: hidden;
+  .place,
+  p {
+      font-family: 'open sans', arial, sans-serif;
+      padding-left: 18px;
+      padding-right: 18px;
   }
   
-  #findhotels {
-    font-size: 14px;
+  .details {
+      color: darkslategrey;
   }
   
-  #locationField {
-    -webkit-box-flex: 1 1 190px;
-    -ms-flex: 1 1 190px;
-    flex: 1 1 190px;
-    margin: 0 8px;
+  a {
+      text-decoration: none;
+      color: cadetblue;
   }
-  
-  #controls {
-    -webkit-box-flex: 1 1 140px;
-    -ms-flex: 1 1 140px;
-    flex: 1 1 140px;
-  }
-  
-  #autocomplete {
-    width: 100%;
-  }
-  
-  #country {
-    width: 100%;
-  }
-  
-  .placeIcon {
-    width: 20px;
-    height: 34px;
-    margin: 4px;
-  }
-  
-  .hotelIcon {
-    width: 24px;
-    height: 24px;
-  }
-  
-  #resultsTable {
-    border-collapse: collapse;
-    width: 240px;
-  }
-  
-  #rating {
-    font-size: 13px;
-    font-family: Arial Unicode MS;
-  }
-  
-  .iw_table_row {
-    height: 18px;
-  }
-  
-  .iw_attribute_name {
-    font-weight: bold;
-    text-align: right;
-  }
-  
-  .iw_table_icon {
-    text-align: right;
-  }
-
-  /* panel */
-
-  #panel {
-    height: 100%;
-    width: 300px;
-    background-color: white;
-    z-index: 1;
-    overflow: hidden;
-    transition: all .2s ease-out;
-}
-
-.open {
-    width: 250px;
-}
-
-/* Styling for place details */
-.hero {
-    width: 100%;
-    height: auto;
-    max-height: 166px;
-    display: block;
-}
-
-.place,
-p {
-    font-family: 'open sans', arial, sans-serif;
-    padding-left: 18px;
-    padding-right: 18px;
-}
-
-.details {
-    color: darkslategrey;
-}
-
-a {
-    text-decoration: none;
-    color: cadetblue;
-}
-  
