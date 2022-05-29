@@ -62,12 +62,17 @@
                         <form class="row" method="get" action="">
                             <div class="col-lg-12 mb-2" id="controls">
                               <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
-                                <select id="borgo">
+                                <select id="borgo" class="form-control">
+                                    <optgroup label="Valle D'Aosta">
+                                    <option value="Bard">Bard</option>
+                                    </optgroup>
                                   <optgroup id="Piemonte" label="Piemonte">
                                   </optgroup>
                                 </select>              
                                   <% nomi.forEach(item=>{%>
-                                    $("#borgo").find('optgroup[label="<%item.regione%>"]').append("<option value="<%=item.nome%>"><%=item.nome%></option>");
+                                    <script>
+                                    $("#borgo").find('optgroup[label="<%item.regione%>"]').append("<option value=<%=item.nome%>><%=item.nome%></option>");
+                                    </script>
                                     <%});%>
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
@@ -93,9 +98,11 @@
                     </nav>
                 </div>
             </div>
-            <div id="ao">
-              <div id="panel"></div>
-              <div id="map"></div>
+            
+            <div class="row "id="ao">
+                <div id="map"></div>
+                <div id="panel"></div>
+              
 
               <div id="listing">
                 <table id="resultsTable">

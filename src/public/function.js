@@ -83,7 +83,7 @@ function initMap() {
     
     let request = {
       location: pos,
-      radius:10000,
+      radius:3000,
       type: 'lodging'
     };
 
@@ -101,6 +101,7 @@ function initMap() {
   getNearbyPlaces();
 
   function createMarkers(places) {
+    console.log(places);
     places.forEach(place => {
       let marker = new google.maps.Marker({
         position: place.geometry.location,
@@ -110,7 +111,7 @@ function initMap() {
       google.maps.event.addListener(marker, 'click', () => {
         let request = {
         placeId: place.place_id,
-        fields: ['name', 'formatted_address', 'geometry', 'rating','website','telephone', 'photos']
+        fields: ['name', 'formatted_address', 'geometry', 'rating','website', 'photos']
         };
         /* Only fetch the details of a place when the user clicks on a marker.
         * If we fetch the details for all place results as soon as we get
