@@ -57,7 +57,7 @@ app.post('/owm',urlencodedParser, function(req,res){
 
 var url=req.body.url+"&lon="+req.body.lon+"&exclude="+req.body.exclude+"&appid="+req.body.appid+process.env.API_WHEATHER;
 axios.get(url,{headers: {'Accept':'text/plain'}})
-.then(function(response){console.log(response.data.daily);res.status(200).send(response.data.daily);})
+.then(function(response){res.status(200).send(response.data.daily);})
 .catch(function(error){res.status(500).send(error);return;});
 
 
