@@ -42,7 +42,7 @@ p.then(value=>{
 
 
 
-  res.render('index',{api_key:process.env.API_MAPS,nomi:resp});
+  res.render('index',{maps_key:process.env.API_MAPS, nomi:resp});
 });
 
 

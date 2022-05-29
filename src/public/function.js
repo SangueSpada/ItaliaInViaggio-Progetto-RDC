@@ -3,32 +3,17 @@ var selectBorgo;
 let service;
 let currentInfoWindow;
 var position={lat:"",lng:"",zoom:""};
-var borghi=[
-  {  nome:"Castel Gandolfo",
-      lat:"41.7487496",
-      long:"12.6353254",
-      zoom:"14"
-  },
-  {   nome:"Bard",
-      lat:"45.6099622",
-      long:"7.7412505",
-      zoom:"16"
-  },
-  {   nome:"Orta San Giulio",
-      lat:"45.7964467",
-      long:"8.405217",
-      zoom:"15"
-  },
-  {   nome:"Vogogna",
-      lat:"46.0178943",
-      long:"8.2686205",
-      zoom:"14"
-  }];
+var borghi=[];
 
 
 
 
 function initMap() {
+  for(var i=0;i<n.length;i++){
+    //console.log(n[i],r[i],la[i],lo[i]);
+    borghi.push({nome:n[i],regione:r[i],lat:la[i],long:lo[i],zoom:"14"})
+    
+    }
   
   selectBorgo = document.getElementById("borgo");
   google.maps.event.addDomListener(selectBorgo,"change",() => {
@@ -64,7 +49,7 @@ function initMap() {
   });
 
 
-  console.log(position);
+  //console.log(position);
   var infoWindow = new google.maps.InfoWindow;
   currentInfoWindow = infoWindow;
   
@@ -72,7 +57,7 @@ function initMap() {
       center: { lat: parseFloat(position.lat), lng: parseFloat(position.lng) },
       zoom: parseInt(position.zoom)
     });
-  console.log(map);
+  //console.log(map);
     
 
 
