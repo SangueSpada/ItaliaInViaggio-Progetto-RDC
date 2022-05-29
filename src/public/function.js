@@ -32,7 +32,6 @@ function initMap() {
   
   selectBorgo = document.getElementById("borgo");
   google.maps.event.addDomListener(selectBorgo,"change",() => {
-    console.log("è cambiato");
  
     let selection =selectBorgo.value;
     borghi.forEach(borgo =>{

@@ -63,17 +63,60 @@
                             <div class="col-lg-12 mb-2" id="controls">
                               <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
                                 <select id="borgo" class="form-control">
-                                    <optgroup label="Valle D'Aosta">
-                                    <option value="Bard">Bard</option>
-                                    </optgroup>
                                   <optgroup id="Piemonte" label="Piemonte">
                                   </optgroup>
-                                </select>              
-                                  <% nomi.forEach(item=>{%>
+                                  <optgroup id="Valle D’Aosta" label="Valle D’Aosta">
+                                </optgroup>
+                                <optgroup id="Lazio" label="Lazio">
+                                </optgroup>
+                                <optgroup id="Liguria" label="Liguria">
+                                </optgroup>
+                                <optgroup id="Trentino A.A." label="Trentino A.A.">
+                                </optgroup>
+                                <optgroup id="Veneto" label="Veneto">
+                                </optgroup>
+                                <optgroup id="Friuli Venezia Giulia" label="Friuli Venezia Giulia">
+                                </optgroup>
+                                <optgroup id="Emilia Romagna" label="Emilia Romagna">
+                                </optgroup>
+                                <optgroup id="Toscana" label="Toscana">
+                                </optgroup>
+                                <optgroup id="Marche" label="Marche">
+                                </optgroup>
+                                <optgroup id="Umbria" label="Umbria">
+                                </optgroup>
+                                <optgroup id="Abruzzo" label="Abruzzo">
+                                </optgroup>
+                                <optgroup id="Campania" label="Campania">
+                                </optgroup>
+                                <optgroup id="Calabria" label="Calabria">
+                                </optgroup>
+                                <optgroup id="Sicilia" label="Sicilia">
+                                </optgroup>
+
+
+                                </select>     
+                             
+                                <% var nome=[];var regione=[];var lats=[];var longs=[];%>
+
+                                <% nomi.forEach(item=>
+                                    {
+                                    nome.push(item.nome);
+                                    regione.push(item.regione);
+                                    lats.push(item.lat);
+                                    longs.push(item.long);       
+                                    })
+                                    
+                                    %>
                                     <script>
-                                    $("#borgo").find('optgroup[label="<%item.regione%>"]').append("<option value=<%=item.nome%>><%=item.nome%></option>");
+                                        var n="<%=nome%>".split(',');
+                                        var r="<%=regione%>".split(',');
+                                        var la="<%=lats%>".split(',');
+                                        var lo="<%=longs%>".split(',');
                                     </script>
-                                    <%});%>
+                                 
+                     
+
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
                                 <label class="active me-1 mt-1" for="dateStandard">Check-in:</label>
@@ -98,11 +141,62 @@
                     </nav>
                 </div>
             </div>
-            
+            <div id="meteo" hidden="true">
+                <div style="padding: 30pt;"></div>
+                <table class="table">
+                    <thead>
+                        <tr id="date">
+
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                            <th class="h3 col-auto" style="text-align: center;"></th>
+                        </tr>
+                        
+                    </thead>
+
+                    <tbody>
+
+<tr id="icone">
+
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+    <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+
+</tr>
+
+<tr id="descrizioni">
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+<td class="h5 col-auto py-3" style="text-align: center;"></td>
+
+
+</tr>
+
+
+                    </tbody>
+
+
+
+                </table>
+            </div>
             <div class="row "id="ao">
                 <div id="map"></div>
                 <div id="panel"></div>
-              
 
               <div id="listing">
                 <table id="resultsTable">
@@ -315,6 +409,75 @@
       
       defer
     ></script>
-    <!--src="https://maps.googleapis.com/maps/api/js?key=<%=api_key%>&callback=initMap&libraries=places"-->
+
 </body>
+<script>
+
+
+
+function tempo(lat,long){
+
+
+var httpreq= new XMLHttpRequest();
+httpreq.responseType='json';
+httpreq.onreadystatechange= function(e){
+    if(this.readyState==4 && this.status == 200){
+        let meteos=this.response;
+        $("#meteo")[0].hidden=false;
+       //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
+       $("#date").find("th").each(function(index){
+           var data=new Date(meteos[index].dt*1000);
+       $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));});
+
+       $("#icone").find("td").each(function(index){
+
+        var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png';
+        $(this).find("img")[0].src=url_icon;
+       });
+
+       $("#descrizioni").find("td").each(function(index){
+        $(this)[0].textContent=meteos[index].weather[0].description;
+       });
+       
+
+                                        
+    }
+
+
+
+    else if(this.readyState==4 && this.status ==500){
+        console.log('errore 500 '+this.response);
+    }
+    else if(this.readyState==4 && this.status !=500 & this.status!=200){
+        console.log(this.response);
+    }
+
+}
+
+var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid=";
+
+httpreq.open("POST","/owm",true);
+
+httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+httpreq.send('url='+url);
+
+
+}
+
+
+for(var i=0;i<n.length;i++){
+
+//console.log(n+' '+r+' '+la+' '+lo);
+    popola(n[i],r[i],la[i],lo[i]);
+
+}
+
+
+function popola(nome,regione,lat,long){
+
+    $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option onclick=\"tempo("+lat+","+long+")\" value="+nome+">"+nome+"</option>");
+
+}
+
+</script>
 </html>
