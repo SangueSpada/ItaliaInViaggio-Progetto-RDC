@@ -31,6 +31,10 @@ h1, h2, h3, h4, h5, h6 {
     -webkit-text-stroke-color: rgba(255, 219, 151, 0.663);
     text-shadow: 2px 2px #000000;
 }
+.index-paragraph {
+    color: rgba(255, 224, 224, 0.777);
+    font-style: italic;
+}
 .title-paragraph{
     color: cornflowerblue;
     font-weight: bold;
