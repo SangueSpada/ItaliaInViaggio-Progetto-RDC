@@ -175,3 +175,167 @@ function initMap() {
 
 }
 window.initMap = initMap;
+
+function checkin_fun() {
+
+
+  var checkin = document.getElementById("CheckInDate");
+  var checkout = document.getElementById("CheckOutDate");
+  var in_date = new Date(checkin.value);
+  var out_date = in_date;
+  var today = new Date();
+  if (in_date <= today) {
+      alert("data non valida!");
+      checkin.value = new Date();
+      checkout.value = new Date();
+  } else {
+      out_date.setDate(out_date.getDate() + 1);
+      checkout.value = out_date.toISOString().split('T')[0];
+  }
+}
+
+function checkout_fun() {
+
+  var checkin = document.getElementById("CheckInDate");
+  var checkout = document.getElementById("CheckOutDate");
+  var in_date;
+  var out_date = new Date(checkout.value);
+  if (checkin.value == '') {
+      alert("Scegli prima la data di partenza");
+      checkout.value = new Date();
+      return
+  } else {
+      in_date = new Date(checkin.value);
+      if (in_date >= out_date) {
+          alert("data non valida!");
+          checkout.value = new Date();
+      }
+  }
+}
+
+function lessBtnRangeA() {
+  var lessBtn = document.getElementById("lessBtnA");
+  var moreBtn = document.getElementById("moreBtnA");
+  var part = document.getElementById("adulti");
+
+  if (part.valueAsNumber == 1) {
+      lessBtn.disabled = true;
+  } else {
+      lessBtn.disabled = false;
+      moreBtn.disabled = false;
+      part.value = part.valueAsNumber - 1;
+  }
+}
+
+function moreBtnRangeA() {
+  var lessBtn = document.getElementById("lessBtnA");
+  var moreBtn = document.getElementById("moreBtnA");
+  var part = document.getElementById("adulti");
+
+  if (part.valueAsNumber == 10) {
+      moreBtn.disabled = true;
+  } else {
+      moreBtn.disabled = false;
+      lessBtn.disabled = false;
+      part.value = part.valueAsNumber + 1;
+  }
+}
+function lessBtnRangeR() {
+  var lessBtn = document.getElementById("lessBtnR");
+  var moreBtn = document.getElementById("moreBtnR");
+  var part = document.getElementById("ragazzi");
+
+  if (part.valueAsNumber == 0) {
+      lessBtn.disabled = true;
+  } else {
+      lessBtn.disabled = false;
+      moreBtn.disabled = false;
+      part.value = part.valueAsNumber - 1;
+  }
+}
+
+function moreBtnRangeR() {
+  var lessBtn = document.getElementById("lessBtnR");
+  var moreBtn = document.getElementById("moreBtnR");
+  var part = document.getElementById("ragazzi");
+
+  if (part.valueAsNumber == 10) {
+      moreBtn.disabled = true;
+  } else {
+      moreBtn.disabled = false;
+      lessBtn.disabled = false;
+      part.value = part.valueAsNumber + 1;
+  }
+}
+
+function tempo(citta){
+  console.log(citta);
+  for(var i=0;i<n.length;i++){
+      if(n[i]==citta){
+          var lat=la[i];
+          var long=lo[i];
+          break;
+      }
+  }
+  
+
+
+  var httpreq= new XMLHttpRequest();
+  httpreq.responseType='json';
+  httpreq.onreadystatechange= function(e){
+      if(this.readyState==4 && this.status == 200){
+          let meteos=this.response;
+          $("#meteo")[0].hidden=false;
+         //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
+         $("#date").find("th").each(function(index){
+             var data=new Date(meteos[index].dt*1000);
+         $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));});
+
+         $("#icone").find("td").each(function(index){
+
+          var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png';
+          $(this).find("img")[0].src=url_icon;
+         });
+
+         $("#descrizioni").find("td").each(function(index){
+          $(this)[0].textContent=meteos[index].weather[0].description;
+         });
+
+
+
+      }
+
+
+
+      else if(this.readyState==4 && this.status ==500){
+          console.log('errore 500 '+this.response);
+       }
+      else if(this.readyState==4 && this.status !=500 & this.status!=200){
+          console.log(this.response);
+       }   
+
+  }
+
+var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid=";
+
+httpreq.open("POST","/owm",true);
+
+httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+httpreq.send('url='+url);
+
+
+}
+//tempo(document.getElementById("testo_ricerca").value);
+
+
+
+
+function popola(nome,regione,lat,long){
+
+  $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option value=\""+nome+"\">"+nome+"</option>");
+
+}
+
+
+
+

@@ -56,13 +56,16 @@
     <%- include('navbar')%>
         <div style="padding: 40pt;"></div>
         <div class="container cont">
+            <h1 class="text-center index-subtitle">Scopri i borghi più belli d'Italia</h1>
+            <h3 class="index-paragraph text-center">Scegli il borgo che vorresti visitare o parti subito alla scoperta di quelli consigliati per te!</h3>
+            <div style="padding: 10pt;"></div>
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <nav class="shadow container p-3 rounded-3 " style="background-color: #e3f2fd;">
-                        <form class="row" method="get" action="">
+                        <form class="row" method="post" action="/borgo">
                             <div class="col-lg-12 mb-2" id="controls">
                               <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
-                                <select id="borgo" class="form-control" onclick=tempo(this.value)>
+                                <select id="borgo" id="testo_ricerca" name="testo_ricerca" aria-placeholder="Scegli un borgo" class="form-control" onclick=tempo(this.value)>
                                   <optgroup id="Piemonte" label="Piemonte">
                                   </optgroup>
                                   <optgroup id="Valle D’Aosta" label="Valle D’Aosta">
@@ -113,6 +116,10 @@
                                         var r="<%=regione%>".split(',');
                                         var la="<%=lats%>".split(',');
                                         var lo="<%=longs%>".split(',');
+                                        for(var i=0;i<n.length;i++){
+                                        //console.log(n+' '+r+' '+la+' '+lo);
+                                        popola(n[i],r[i],la[i],lo[i]);
+                                        }
                                     </script>
                                  
                      
@@ -126,21 +133,31 @@
                                 <label class="active me-1 mt-1" for="dateStandard">Check-out:</label>
                                 <input type="date" id="CheckOutDate" onchange="checkout_fun();" name="CheckOut" required>
                             </div>
-                            <div class="col-lg-3 mt-2 d-flex justify-content-center">
-                                <label class="active me-2 mt-1">Partecipanti:</label>
+                            <div class="col-lg-2 mt-2 d-flex justify-content-center">
+                                <label class="active me-2 mt-1">Adulti:</label>
                                 <div class="btn-group">
-                                    <button type="button" id="lessBtn" class="btn btn-light rounded-circle" onclick="lessBtnRange()">-</button>
-                                    <input type="number" value="1" name="partecipants" id="partecipants" class="form-control-plaintext text-center" readonly style="width: 25pt;">
-                                    <button type="button" id="moreBtn" class="btn btn-light rounded-circle" onclick="moreBtnRange()">+</button>
+                                    <button type="button" id="lessBtnA" class="btn btn-light rounded-circle" onclick="lessBtnRangeA()">-</button>
+                                    <input type="number" value="1" name="adulti" id="adulti" class="form-control-plaintext text-center" readonly style="width: 25pt;">
+                                    <button type="button" id="moreBtnA" class="btn btn-light rounded-circle" onclick="moreBtnRangeA()">+</button>
                                 </div>
                             </div>
-                            <div class="col-md-3 mt-2 d-flex justify-content-center">
+                            <div class="col-lg-2 mt-2 d-flex justify-content-center">
+                                <label class="active me-2 mt-1">Ragazzi:</label>
+                                <div class="btn-group">
+                                    <button type="button" id="lessBtnR" class="btn btn-light rounded-circle" onclick="lessBtnRangeR()">-</button>
+                                    <input type="number" value="0" name="ragazzi" id="ragazzi" class="form-control-plaintext text-center" readonly style="width: 25pt;">
+                                    <button type="button" id="moreBtnR" class="btn btn-light rounded-circle" onclick="moreBtnRangeR()">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-2 mt-2 d-flex justify-content-center">
                                 <button class="btn btn-primary rounded-3 fw-bold" onclick="validSearch()">Cerca <i class="ms-2 bi bi-search"></i></button>
                             </div>
                         </form>
                     </nav>
                 </div>
             </div>
+            <h3 class="index-paragraph text-center mt-4">allora praticamente qua un link per fare la ricerca fortunata</h3>
             <div id="meteo" hidden="true">
                 <div style="padding: 30pt;"></div>
                 <table class="table">
@@ -191,44 +208,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="row "id="ao">
-                <div id="map"></div>
-                <div id="panel"></div>
 
-              <div id="listing">
-                <table id="resultsTable">
-                  <tbody id="results"></tbody>
-                </table>
-              </div>
-            
-              <div style="display: none">
-                <div id="info-content">
-                  <table>
-                  
-                    <tr id="iw-url-row" class="iw_table_row">
-                      <td id="iw-icon" class="iw_table_icon"></td>
-                      <td id="iw-url"></td>
-                    </tr>
-                    <tr id="iw-address-row" class="iw_table_row">
-                      <td class="iw_attribute_name">Indirizzo:</td>
-                      <td id="iw-address"></td>
-                    </tr>
-                    <tr id="iw-phone-row" class="iw_table_row">
-                      <td class="iw_attribute_name">Telefono:</td>
-                      <td id="iw-phone"></td>
-                    </tr>
-                    <tr id="iw-rating-row" class="iw_table_row">
-                      <td class="iw_attribute_name">Recensioni:</td>
-                      <td id="iw-rating"></td>
-                    </tr>
-                    <tr id="iw-website-row" class="iw_table_row">
-                      <td class="iw_attribute_name">Sito Web:</td>
-                      <td id="iw-website"></td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </div>
             <div class="text-center mt-5 mb-5">
                 <a name="zona_scopri"></a>
 
@@ -397,92 +377,10 @@
 </div>
     
 
-
-
-
     <script
-
       src="https://maps.googleapis.com/maps/api/js?key=<%=maps_key%>&callback=initMap&libraries=places"
-      
       defer
     ></script>
 
 </body>
-<script>
-
-
-
-function tempo(citta){
-    console.log(citta);
-    for(var i=0;i<n.length;i++){
-        if(n[i]==citta){
-            var lat=la[i];
-            var long=lo[i];
-            break;
-        }
-    }
-    
-
-
-    var httpreq= new XMLHttpRequest();
-    httpreq.responseType='json';
-    httpreq.onreadystatechange= function(e){
-        if(this.readyState==4 && this.status == 200){
-            let meteos=this.response;
-            $("#meteo")[0].hidden=false;
-           //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
-           $("#date").find("th").each(function(index){
-               var data=new Date(meteos[index].dt*1000);
-           $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));});
-
-           $("#icone").find("td").each(function(index){
-
-            var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png';
-            $(this).find("img")[0].src=url_icon;
-           });
-
-           $("#descrizioni").find("td").each(function(index){
-            $(this)[0].textContent=meteos[index].weather[0].description;
-           });
-
-
-
-        }
-
-
-
-        else if(this.readyState==4 && this.status ==500){
-            console.log('errore 500 '+this.response);
-         }
-        else if(this.readyState==4 && this.status !=500 & this.status!=200){
-            console.log(this.response);
-         }   
-
-    }
-
-var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid=";
-
-httpreq.open("POST","/owm",true);
-
-httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-httpreq.send('url='+url);
-
-
-}
-
-
-for(var i=0;i<n.length;i++){
-
-//console.log(n+' '+r+' '+la+' '+lo);
-    popola(n[i],r[i],la[i],lo[i]);
-
-}
-
-function popola(nome,regione,lat,long){
-
-    $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option value=\""+nome+"\">"+nome+"</option>");
-
-}
-
-</script>
 </html>
