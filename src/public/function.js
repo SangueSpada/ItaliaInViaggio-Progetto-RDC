@@ -332,7 +332,7 @@ httpreq.send('url='+url);
 
 function popola(nome,regione,lat,long){
 
-  $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option value=\""+nome+"\">"+nome+"</option>");
+  $("#borgo").find('optgroup[id='+"\""+regione+"\""+']').append("<option value=\""+nome+"\">"+nome+"</option>");
 
 }
 

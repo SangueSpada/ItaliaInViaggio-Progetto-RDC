@@ -4,7 +4,7 @@ const path = require('path');
 const winston = require('winston');
 const { URLSearchParams } = require('url');
 const { stringify } = require('querystring');
-const qs=require('qs');
+const fs=require('fs');
 const axios=require('axios').default;
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
@@ -14,13 +14,13 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-var resp;
+var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
 
 
 
 app.get('/',urlencodedParser, (req, res) => {
-  
+  var resp;
+
 
   const p=new Promise(function(resolve,reject){
 
@@ -42,6 +42,42 @@ app.get('/',urlencodedParser, (req, res) => {
 
     res.render('index',{maps_key:process.env.API_MAPS, nomi:resp});
   });
+
+});
+
+
+
+
+app.get('/consigliati',urlencodedParser,function(req,res){
+  
+    res.render('consigliati',{stazioni:stazioni,results:[]});
+
+  
+});
+
+app.post('/consigliati',urlencodedParser,function(req,res){
+  var stazione=req.body.stazione;
+  var resp;
+
+  const p=new Promise(function(resolve,reject){
+
+
+    //api couchdb all borgs names
+    let json={
+      "selector":{"_id": {"$gt":null}},
+      "fields": ["nome","lat","long"]
+    };
+  
+    axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
+    .then(function(response){resolve(resp=response.data.docs);})
+    .catch(function(error){res.send(error);return;});
+    ///////////////////////////
+    stazioni[stazione]
+      });
+  
+
+
+
 
 });
 
