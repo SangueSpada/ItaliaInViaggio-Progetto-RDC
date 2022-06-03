@@ -72,8 +72,16 @@ app.post('/consigliati',urlencodedParser,function(req,res){
     .then(function(response){resolve(resp=response.data.docs);})
     .catch(function(error){res.send(error);return;});
     ///////////////////////////
-    stazioni[stazione]
-      });
+/*
+ var lat=getlatfromtrenitalia(stazione)
+ var lon=getlonfromtrenitalia(stazione);
+
+
+*/
+
+
+
+  });
   
 
 
