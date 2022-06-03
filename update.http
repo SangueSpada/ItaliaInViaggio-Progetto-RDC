@@ -14,3 +14,21 @@ Content-Type: application/json
     
 
 }
+
+###
+GET https://www.booking.com/searchresults.it.html?ss=castel%20gandolfo&checkin_year=2022&checkin_month=10&checkin_monthday=1&checkout_year=2022&checkout_month=10&checkout_monthday=2&no_rooms=1&group_adults=1&group_children=0
+
+
+###
+Content-Type: application/json
+ {
+    "ss":"Castel Gandolfo",
+    "checkin_year":"2022",
+    "checkin_month":"06",
+    "checkin_monthday":"5",
+    "checkout_year":"2022",
+    "checkout_month":"06",
+    "checkout_monthday":"7",
+    "no_rooms":"1",
+    "group_adults":"1"
+  }

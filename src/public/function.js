@@ -75,7 +75,7 @@ function initMap() {
       google.maps.event.addListener(marker, 'click', () => {
         let request = {
         placeId: place.place_id,
-        fields: ['name', 'formatted_address', 'geometry', 'rating','website', 'photos']
+        fields: ['name', 'formatted_address','formatted_phone_number', 'geometry', 'rating','user_ratings_total','website', 'photos']
         };
         /* Only fetch the details of a place when the user clicks on a marker.
         * If we fetch the details for all place results as soon as we get
@@ -130,7 +130,7 @@ function initMap() {
     if (placeResult.rating != null) {
     let rating = document.createElement('p');
     rating.classList.add('details');
-    rating.textContent = `Rating: ${placeResult.rating} \u272e`;
+    rating.textContent = 'Rating: '+placeResult.rating +' \u272e'+' ('+placeResult.user_ratings_total+')';
     infoPane.appendChild(rating);
     }
     let address = document.createElement('p');
@@ -146,6 +146,15 @@ function initMap() {
     websiteLink.href = placeResult.website;
     websitePara.appendChild(websiteLink);
     infoPane.appendChild(websitePara);
+    let telephone = document.createElement('p');
+    let telephoneLink = document.createElement('a');
+    let number = document.createTextNode(placeResult.formatted_phone_number);
+    telephoneLink.appendChild(number);
+    telephoneLink.title=placeResult.formatted_phone_number;
+    telephoneLink.href="tel:"+placeResult.formatted_phone_number;
+    telephone.appendChild(telephoneLink);
+    infoPane.appendChild(telephone);
+
     }
 
     // Open the infoPane
