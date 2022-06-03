@@ -113,7 +113,7 @@ app.post('/borgo', urlencodedParser, function(req, res) {
   const p=new Promise(function(resolve,reject){
     let json={
       "selector":{"_id": {"$gt":null}},
-      "fields": ["_id","_rev","nome","regione","lat","long","zoom"]
+      "fields": ["_id","_rev","nome","regione","lat","long","zoom","foto","descrizione"]
     };
 
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
@@ -127,6 +127,7 @@ app.post('/borgo', urlencodedParser, function(req, res) {
   p.then(value=>{
     resp.forEach(item=>{
       if(item.nome==luogo){
+        console.log(item);
         borg=item;
         return;
       }
