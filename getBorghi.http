@@ -5,5 +5,5 @@ Content-Type: application/json
     "selector":{
         "_id": {"$gt":null}
     },
-    "fields": ["_id","_rev","nome","regione","lat","long","zoom"]
+    "fields": ["_id","_rev","nome","regione","lat","long","zoom","foto","descrizione"]
 }

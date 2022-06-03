@@ -1,0 +1,11 @@
+
+
+POST https://www.lefrecce.it/Channels.Website.BFF.WEB/website/ticket/solutions
+Content-Type: application/json
+
+{"departureLocationId":830008409,"arrivalLocationId":830008703,"departureTime":"2022-06-03T15:00:00.000+02:00","adults":1,"children":0,"criteria":{"frecceOnly":false,"regionalOnly":false,"noChanges":false,"order":"DEPARTURE_DATE","offset":0,"limit":10},"advancedSearchRequest":{"bestFare":false}}
+
+
+###
+
+GET https://www.lefrecce.it/Channels.Website.BFF.WEB/website/cart?cartId=8eaa922d-dbed-4d1b-958f-a4b77b94c12b
