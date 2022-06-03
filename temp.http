@@ -1,3 +1,9 @@
+GET http://admin:root@localhost:5984/_all_dbs
+
+
+
+###
+
 POST http://admin:root@localhost:5984/iiv_db/
 Content-Type: application/json
 

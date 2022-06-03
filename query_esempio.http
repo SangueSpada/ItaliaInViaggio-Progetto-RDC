@@ -15,7 +15,7 @@ GET http://admin:root@localhost:5984/iiv_db/_all_docs
 
 GET http://admin:root@localhost:5984/iiv_db/id_elemento
 
-
+###
 POST http://admin:root@localhost:5984/iiv_db/_find
 Content-Type: application/json
 

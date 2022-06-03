@@ -7,3 +7,17 @@ Content-Type: application/json
     },
     "fields": ["_id","_rev","nome","regione","lat","long","zoom","foto","descrizione"]
 }
+
+###
+
+GET http://admin:root@localhost:5984/iiv_db/1777e1e73129dcc1da7cea8e68000ee1
+
+
+
+###
+POST http://admin:root@localhost:5984/iiv_db/
+Content-Type: application/json
+
+{
+
+}
