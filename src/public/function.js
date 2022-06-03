@@ -2,20 +2,11 @@ let map;
 var selectBorgo;
 let service;
 let currentInfoWindow;
-var position={lat:"",lng:"",zoom:""};
-var borghi=[];
-
-
 
 
 function initMap() {
-  for(var i=0;i<n.length;i++){
-    //console.log(n[i],r[i],la[i],lo[i]);
-    borghi.push({nome:n[i],regione:r[i],lat:la[i],long:lo[i],zoom:"14"})
-    
-    }
-  
-  selectBorgo = document.getElementById("borgo");
+
+  /*selectBorgo = document.getElementById("borgo");
   google.maps.event.addDomListener(selectBorgo,"change",() => {
  
     let selection =selectBorgo.value;
@@ -36,20 +27,9 @@ function initMap() {
         }
       }
     });
-  });
-
-  selection=document.getElementById('borgo').value;
-  borghi.forEach(borgo =>{
-      if(borgo.nome==selection){
-        console.log(borgo.nome);
-        position.lat=borgo.lat;
-        position.lng=borgo.long;
-        position.zoom=borgo.zoom;
-      }
-  });
-
-
-  //console.log(position);
+  });*/
+  var position={lat:la,lng:lo,zoom:zo};
+  console.log(position);
   var infoWindow = new google.maps.InfoWindow;
   currentInfoWindow = infoWindow;
   
@@ -328,13 +308,6 @@ httpreq.send('url='+url);
 //tempo(document.getElementById("testo_ricerca").value);
 
 
-
-
-function popola(nome,regione,lat,long){
-
-  $("#borgo").find('optgroup[id='+"\""+regione+"\""+']').append("<option value=\""+nome+"\">"+nome+"</option>");
-
-}
 
 
 
