@@ -75,41 +75,46 @@
             </div>
             <div style="padding: 40pt;"></div>
             <div class="row">
-                    <div class="row "id="ao">
-                        <div id="map"></div>
-                        <div id="panel"></div>
-        
-                      <div id="listing">
-                        <table id="resultsTable">
-                          <tbody id="results"></tbody>
-                        </table>
-                      </div>
-                        <div style="display: none" id="info-content">
-                          <table>
-                          
-                            <tr id="iw-url-row" class="iw_table_row">
-                              <td id="iw-icon" class="iw_table_icon"></td>
-                              <td id="iw-url"></td>
-                            </tr>
-                            <tr id="iw-address-row" class="iw_table_row">
-                              <td class="iw_attribute_name">Indirizzo:</td>
-                              <td id="iw-address"></td>
-                            </tr>
-                            <tr id="iw-phone-row" class="iw_table_row">
-                              <td class="iw_attribute_name">Telefono:</td>
-                              <td id="iw-phone"></td>
-                            </tr>
-                            <tr id="iw-rating-row" class="iw_table_row">
-                              <td class="iw_attribute_name">Recensioni:</td>
-                              <td id="iw-rating"></td>
-                            </tr>
-                            <tr id="iw-website-row" class="iw_table_row">
-                              <td class="iw_attribute_name">Sito Web:</td>
-                              <td id="iw-website"></td>
-                            </tr>
-                          </table>
-                        </div>
+                    <div class="col me-2 "id="map">
                     </div>
+                    <div class="col-lg-3" id="hotelList" style="background-color: white;">
+
+                    </div>
+            </div>
+            <div class="row mt-4">
+                <div id="panel"></div>
+                <div id="listing">
+                    <table id="resultsTable">
+                      <tbody id="results"></tbody>
+                    </table>
+                  </div>
+                    <div style="display: none" id="info-content">
+                      <table>
+                      
+                        <tr id="iw-url-row" class="iw_table_row">
+                          <td id="iw-icon" class="iw_table_icon"></td>
+                          <td id="iw-url"></td>
+                        </tr>
+                        <tr id="iw-address-row" class="iw_table_row">
+                          <td class="iw_attribute_name">Indirizzo:</td>
+                          <td id="iw-address"></td>
+                        </tr>
+                        <tr id="iw-phone-row" class="iw_table_row">
+                          <td class="iw_attribute_name">Telefono:</td>
+                          <td id="iw-phone"></td>
+                        </tr>
+                        <tr id="iw-rating-row" class="iw_table_row">
+                          <td class="iw_attribute_name">Recensioni:</td>
+                          <td id="iw-rating"></td>
+                        </tr>
+                        <tr id="iw-website-row" class="iw_table_row">
+                          <td class="iw_attribute_name">Sito Web:</td>
+                          <td id="iw-website"></td>
+                        </tr>
+                      </table>
+                    </div>
+            </div>
+            <div class="row">
                     <nav class="shadow container p-3 rounded-3" style="background-color: #e3f2fd;">
                         <form class="row" method="post" action="/borgo">
                             <div class="col-lg-6 mb-2">
@@ -151,7 +156,6 @@
                     </nav>
 
                     <div style="padding: 20pt;"></div>
-                </div>
             </div>
         </div>
         <%- include('footer'); -%>
@@ -198,7 +202,6 @@
     var lo="<%=borgo.long%>";
     var zo="<%=borgo.zoom%>";                         
 </script>
-
 <script src="https://maps.googleapis.com/maps/api/js?key=<%=maps_key%>&callback=initMap&libraries=places" defer></script>
 
 </html>

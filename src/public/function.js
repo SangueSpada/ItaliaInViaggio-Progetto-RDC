@@ -1,3 +1,5 @@
+
+
 let map;
 var selectBorgo;
 let service;
@@ -6,6 +8,7 @@ let currentInfoWindow;
 
 function initMap() {
 
+  
   /*selectBorgo = document.getElementById("borgo");
   google.maps.event.addDomListener(selectBorgo,"change",() => {
  
@@ -29,7 +32,7 @@ function initMap() {
     });
   });*/
   var position={lat:la,lng:lo,zoom:zo};
-  console.log(position);
+  //console.log(position);
   var infoWindow = new google.maps.InfoWindow;
   currentInfoWindow = infoWindow;
   
@@ -59,19 +62,49 @@ function initMap() {
   function nearbyCallback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     createMarkers(results);
+    //popola(results);
     }
   }
 
   getNearbyPlaces();
 
+function popola(places){
+  console.log(places);
+  places.forEach(place => {
+    let marker = new google.maps.Marker({
+      position: place.geometry.location,
+      map: map,
+      title: place.name
+    });
+    google.maps.event.addListener(marker, 'click', () => {
+      let request = {
+                      placeId: place.place_id,
+                      fields: ['name', 'formatted_address','formatted_phone_number', 'geometry', 'rating','user_ratings_total','website', 'photos']
+                    };
+      service.getDetails(request, (placeResult, status) => {
+      showDetails(placeResult, marker, status);
+      });
+    });
+  });
+}
+
+
   function createMarkers(places) {
-    console.log(places);
-    places.forEach(place => {
+    //console.log(places);
+    let markers=[];
+    places.forEach((place,index) => {
+      console.log(place);
+      loadHotels(place);
       let marker = new google.maps.Marker({
         position: place.geometry.location,
         map: map,
-        title: place.name
+        title: place.name,
+        icon: { url:place.icon,scaledSize:google.maps.Size("1px","1px")}, //non funziona la size ma vabbe
+        label: String(index+1),
+        animation: google.maps.Animation.DROP
       });
+      markers.push(marker);
+      var PR;
       google.maps.event.addListener(marker, 'click', () => {
         let request = {
         placeId: place.place_id,
@@ -80,11 +113,46 @@ function initMap() {
         /* Only fetch the details of a place when the user clicks on a marker.
         * If we fetch the details for all place results as soon as we get
         * the search response, we will hit API rate limits. */
+
         service.getDetails(request, (placeResult, status) => {
-        showDetails(placeResult, marker, status);
+          //PR=placeResult;
+          showDetails(placeResult, marker, status);
         });
       });
+      
     });
+  }
+
+  function loadHotels(placeResult){
+    console.log(placeResult);
+    let hotelPane = document.getElementById('hotelList');
+    let row = document.createElement('div');
+    row.classList.add('row');
+    let divPhoto = document.createElement('div');
+    divPhoto.classList.add('col-lg-4');
+    let photo = document.createElement('img');
+    photo.classList.add("photoList")
+    photo.src=placeResult.photos[0].getUrl();
+    divPhoto.appendChild(photo);
+    row.appendChild(divPhoto);
+
+    let divTitle = document.createElement('div');
+    divTitle.classList.add('col-lg-4');
+    let title = document.createElement('h6');
+    title.textContent = placeResult.name;
+    divTitle.appendChild(title);
+    row.appendChild(divTitle);
+
+    let divRating = document.createElement('div');
+    divRating.classList.add('col-lg-4');
+    let rating = document.createElement('p');
+    rating.textContent = 'Rating: '+placeResult.rating +' \u272e'+' ('+placeResult.user_ratings_total+')';
+    divRating.appendChild(rating);
+    row.appendChild(divRating);
+
+
+    hotelPane.appendChild(row);
+
 
   }
 
@@ -164,6 +232,8 @@ function initMap() {
 
 }
 window.initMap = initMap;
+
+
 
 function checkin_fun() {
 
@@ -315,7 +385,6 @@ httpreq.send('url='+url);
 
 }
 //tempo(document.getElementById("testo_ricerca").value);
-
 
 
 
