@@ -37,7 +37,7 @@
                     <button type='button' data-bs-target='#carosello' data-bs-slide-to="0" class='active' aria-current='true' aria-label='Slide "0" '></button>
                     <% (borgo.foto).forEach( (item,index) => {%>
                         <%if(index!=0){ %>
-                            <button type='button' data-bs-target='#carouselPrimi' data-bs-slide-to="<%=index%>" aria-label='Slide "<%=index%>"'></button>
+                            <button type='button' data-bs-target='#carosello' data-bs-slide-to="<%=index%>" aria-label='Slide "<%=index%>"'></button>
                         <% } %>
                       <% }) %>
                 </div>
@@ -73,21 +73,18 @@
                     <%=borgo.descrizione%> 
                 </h4>
             </div>
-            <div style="padding: 40pt;"></div>
-            <div class="row">
-                    <div class="col me-2 "id="map">
-                    </div>
-                    <div class="col-lg-3" id="hotelList" style="background-color: white;">
-
-                    </div>
+            <div class="row mt-2 mb-5">
+                <div id="map">
+                </div>
             </div>
-            <div class="row mt-4">
-                <div id="panel"></div>
-                <div id="listing">
+            <div class="row mt-5 mb-5">
+                <div class="col mb-2">
+                    <div id="panel"></div>
+                    <div id="listing">
                     <table id="resultsTable">
                       <tbody id="results"></tbody>
                     </table>
-                  </div>
+                    </div>
                     <div style="display: none" id="info-content">
                       <table>
                       
@@ -113,12 +110,27 @@
                         </tr>
                       </table>
                     </div>
+                </div>
+                <div class="col-lg-5 mb-2 table-wrapper-scroll-y my-custom-scrollbar">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">foto</th>
+                              <th scope="col">Nome Hotel</th>
+                              <th scope="col">Recensioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hotelList">
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="row">
+            <div class="row mt-4">
                     <nav class="shadow container p-3 rounded-3" style="background-color: #e3f2fd;">
                         <form class="row" method="post" action="/borgo">
                             <div class="col-lg-6 mb-2">
-                                <input type="text" class="active form-control" placeholder="Seleziona la stazione di partenza" id="stazione_partenza" name="stazione_partenza" onchange="getStazioni()"> 
+                                <input type="text" class="active form-control" id="stazionePartenza" name="stazionePartenza" placeholder="Cerca un borgo" onchange="getStazioni()" required> 
                             </div>
                             <div class="col-lg-6 mb-2" id="controls">
                               <input type="text" class="active form-control" id="borgo" name="borgo" value="<%=borgo.nome%>" readonly>     
@@ -161,10 +173,30 @@
         <%- include('footer'); -%>
 </body>
 <script>
+    $( function() {
+      var cache = {};
+      $( "#stazionePartenza" ).autocomplete({
+        minLength: 2,
+        source: function( request, response ) {
+          var term = request.term;
+          if ( term in cache ) {
+            response( cache[ term ] );
+            return;
+          }
+        
+          $.getJSON( "search.php", request, function( data, status, xhr ) {
+            cache[ term ] = data;
+            response( data );
+          });
+        }
+      });
+    });
+  
     
 
-    //window.history.pushState("", "<%=borgo.nome%>", "<%=borgo.nome%>");
-    //window.location.href='/<%=borgo.nome%>';
+
+
+
     //effetto scroll rallentato
     $(function() {
 
