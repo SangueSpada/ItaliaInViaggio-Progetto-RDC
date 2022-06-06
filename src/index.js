@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const bodyParser=require('body-parser');
 const path = require('path');
 const winston = require('winston');
@@ -8,7 +9,11 @@ const fs=require('fs');
 const axios=require('axios').default;
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
-const app = express();
+
+
+const Trenitalia = require("api-trenitalia");
+const moment = require('moment');
+const { resolve } = require('path');
 
 app.use(express.static(path.join(__dirname, '/public')));
 
@@ -140,12 +145,37 @@ app.post('/borgo', urlencodedParser, function(req, res) {
         return;
       }
     });
-    res.render('titolo.ejs', { maps_key:process.env.API_MAPS,nomi:resp, borgo: borg, search: ricerca,  res: '' });
+    res.render('titolo.ejs', { maps_key:process.env.API_MAPS, borgo: borg, search: ricerca,solutions:'', res: '' });
       
 
   });
 
 });
+
+app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
+  var stazioni;
+  try{
+    const t = new Trenitalia();
+    stazioni = await t.autocomplete(req.query.term);
+    var nomi=[];
+    stazioni.forEach(item =>{nomi.push(item.name)});
+    res.send(nomi);
+  }
+  catch (error){
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+app.post('/searchTsolutions',urlencodedParser, async function(req, res) {
+  var stazioneP=req.body.stazionePartenza;
+
+  res.render('titolo.ejs', { maps_key:process.env.API_MAPS,nomi:resp, borgo: borg, search: ricerca, solutions:'', res: '' });
+
+});
+    
+
+
 
 
 app.listen(process.env.PORT, () => {

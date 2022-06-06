@@ -24,6 +24,11 @@
 
 
     <title>Offerta cercata</title>
+    <style>
+      .ui-autocomplete-loading {
+        background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+      }
+      </style>
 </head>
 
 <body class="bg2">
@@ -128,20 +133,74 @@
             </div>
             <div class="row mt-4">
                     <nav class="shadow container p-3 rounded-3" style="background-color: #e3f2fd;">
-                        <form class="row" method="post" action="/borgo">
+                        <form class="row" method="post" action="/getTsolutions">
                             <div class="col-lg-6 mb-2">
-                                <input type="text" class="active form-control" id="stazionePartenza" name="stazionePartenza" placeholder="Cerca un borgo" onchange="getStazioni()" required> 
+                                <input type="text" class="active form-control" id="stazionePartenza" name="stazionePartenza" placeholder="Cerca un borgo" required> 
                             </div>
                             <div class="col-lg-6 mb-2" id="controls">
-                              <input type="text" class="active form-control" id="borgo" name="borgo" value="<%=borgo.nome%>" readonly>     
+                              <input type="text" class="active form-control" id="stazioneArrivo" name="stazioneArrivo" value="<%=borgo.nome%>" readonly>     
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
-                                <label class="active me-1 mt-1" for="dateStandard" >Check-in:</label>
-                                <input type="date" id="CheckInDate" onchange="checkin_fun();" name="CheckIn" value="<%= search[1] || '' %>" required>
+                                <label class="active me-1 mt-1" for="dateStandard" >Partenza:</label>
+                                <input type="date"  class="form-control" id="dataPartenza" onchange="checkin_fun();" name="dataPartenza" value="<%= search[1] || '' %>" required>
+                                <select class="form-select-sm" id="oraPartenza">
+                                  <option value="0">00:00</option>
+                                  <option value="1">01:00</option>
+                                  <option value="2">02:00</option>
+                                  <option value="3">03:00</option>
+                                  <option value="4">04:00</option>
+                                  <option value="5">05:00</option>
+                                  <option value="6">06:00</option>
+                                  <option value="7">07:00</option>
+                                  <option value="8">08:00</option>
+                                  <option value="9">09:00</option>
+                                  <option value="10">10:00</option>
+                                  <option value="11">11:00</option>
+                                  <option value="12">12:00</option>
+                                  <option value="13">13:00</option>
+                                  <option value="14">14:00</option>
+                                  <option value="15">15:00</option>
+                                  <option value="16">16:00</option>
+                                  <option value="17">17:00</option>
+                                  <option value="18">18:00</option>
+                                  <option value="19">19:00</option>
+                                  <option value="20">20:00</option>
+                                  <option value="21">21:00</option>
+                                  <option value="22">22:00</option>
+                                  <option value="23">23:00</option>
+
+                                </select>
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
-                                <label class="active me-1 mt-1" for="dateStandard">Check-out:</label>
-                                <input type="date" id="CheckOutDate" onchange="checkout_fun();" name="CheckOut" value="<%= search[2] || '' %>" required>
+                                <label class="active me-1 mt-1" for="dateStandard">Ritorno:</label>
+                                <input type="date" class="form-control" id="dataRitorno" onchange="checkout_fun();" name="dataRitorno" value="<%= search[2] || '' %>" required>
+                                <select class="form-select-sm" id="oraRitorno">
+                                  <option value="0">00:00</option>
+                                  <option value="1">01:00</option>
+                                  <option value="2">02:00</option>
+                                  <option value="3">03:00</option>
+                                  <option value="4">04:00</option>
+                                  <option value="5">05:00</option>
+                                  <option value="6">06:00</option>
+                                  <option value="7">07:00</option>
+                                  <option value="8">08:00</option>
+                                  <option value="9">09:00</option>
+                                  <option value="10">10:00</option>
+                                  <option value="11">11:00</option>
+                                  <option value="12">12:00</option>
+                                  <option value="13">13:00</option>
+                                  <option value="14">14:00</option>
+                                  <option value="15">15:00</option>
+                                  <option value="16">16:00</option>
+                                  <option value="17">17:00</option>
+                                  <option value="18">18:00</option>
+                                  <option value="19">19:00</option>
+                                  <option value="20">20:00</option>
+                                  <option value="21">21:00</option>
+                                  <option value="22">22:00</option>
+                                  <option value="23">23:00</option>
+
+                                </select>
                             </div>
                             <div class="col-lg-2 mt-2 d-flex justify-content-center">
                                 <label class="active me-2 mt-1">Adulti:</label>
@@ -169,28 +228,48 @@
 
                     <div style="padding: 20pt;"></div>
             </div>
-        </div>
+            <div id="trainSolutions">
+              <div class="card mb-3 solCard">
+                <div class="row no-gutters">
+                  <div class="col-md-4">
+                    <img src="../media/borghi/unavilable.jpg" class="card-img" style="height: 100px;" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+      </div>
         <%- include('footer'); -%>
 </body>
 <script>
+    var db;
     $( function() {
-      var cache = {};
       $( "#stazionePartenza" ).autocomplete({
-        minLength: 2,
-        source: function( request, response ) {
-          var term = request.term;
-          if ( term in cache ) {
-            response( cache[ term ] );
-            return;
-          }
-        
-          $.getJSON( "search.php", request, function( data, status, xhr ) {
-            cache[ term ] = data;
+        minLength: 3,
+        source: function( request, response ) {        
+          $.getJSON( '/stazioni_autocomplete',request, function(data) {
+            db=data;
             response( data );
           });
         }
       });
     });
+    function validSearch(){ 
+        var search= document.getElementById("stazionePartenza");
+        console.log(db);
+        if(!db.includes(search.value)){
+            console.log(search.value);
+            alert("Attenzione la stazione inserita non è valida");
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    }
   
     
 
