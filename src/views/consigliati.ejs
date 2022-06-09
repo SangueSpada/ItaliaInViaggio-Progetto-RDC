@@ -58,73 +58,12 @@
 
             <div class="col-lg-12 text-center">
                 <nav class="shadow container p-3 rounded-3 " style="background-color: #e3f2fd;">
-                    <form class="row" method="post" action="/borgo">
+                    <form class="row" method="post" action="/consigliati">
                         <div class="col-lg-12 mb-2" id="controls">
                           <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
-                            <select id="borgo" id="testo_ricerca" name="testo_ricerca" aria-placeholder="Scegli un borgo" class="form-control" onclick=tempo(this.value)>
-                              <optgroup id="Piemonte" label="Piemonte">
-                              </optgroup>
-                              <optgroup id="Valle D’Aosta" label="Valle D’Aosta">
-                            </optgroup>
-                            <optgroup id="Lazio" label="Lazio">
-                            </optgroup>
-                            <optgroup id="Liguria" label="Liguria">
-                            </optgroup>
-                            <optgroup id="Trentino Alto Adige" label="Trentino A.A.">
-                            </optgroup>
-                            <optgroup id="Veneto" label="Veneto">
-                            </optgroup>
-                            <optgroup id="Friuli Venezia Giulia" label="Friuli Venezia Giulia">
-                            </optgroup>
-                            <optgroup id="Emilia Romagna" label="Emilia Romagna">
-                            </optgroup>
-                            <optgroup id="Toscana" label="Toscana">
-                            </optgroup>
-                            <optgroup id="Marche" label="Marche">
-                            </optgroup>
-                            <optgroup id="Umbria" label="Umbria">
-                            </optgroup>
-                            <optgroup id="Abruzzo" label="Abruzzo">
-                            </optgroup>
-                            <optgroup id="Campania" label="Campania">
-                            </optgroup>
-                            <optgroup id="Calabria" label="Calabria">
-                            </optgroup>
-                            <optgroup id="Sicilia" label="Sicilia">
-                            </optgroup>
-                            <optgroup id="Basilicata" label="Basilicata">
-                            </optgroup>
-                            <optgroup id="Lombardia" label="Lombardia">
-                            </optgroup>
-                            <optgroup id="Molise" label="Molise">
-                            </optgroup>
-                            <optgroup id="Puglia" label="Puglia">
-                            </optgroup>
-                            <optgroup id="Sardegna" label="Sardegna">
-                            </optgroup>
-                            <optgroup id="N/A" label="Regioni non definite">
-                            </optgroup>
-
-
-                            </select>     
-                         
-                            <% var nome=[];var regione=[];%>
-
-                            <% stazioni.forEach(item=>
-                                {
-                                nome.push(item.name);
-                                regione.push(item.region);       
-                                })
-                                
-                                %>
-                                <script>
-                                    var n="<%=nome%>".split(',');
-                                    var r="<%=regione%>".split(',');
-                                    for(var i=0;i<n.length;i++){
-                                    //console.log(n+' '+r+' '+la+' '+lo);
-                                    popola(n[i],r[i],null,null);
-                                    }
-                                </script>
+                        
+                            <input type="text" class="active form-control" id="stazionePartenza" name="stazione" placeholder="Cerca un borgo" required> 
+                    
                              
                  
 
@@ -144,6 +83,10 @@
             <div style="padding: 40pt;"></div>
             <div class="col-lg-12 text-center">
                 <% if(results.length!=0){ %>
+                  
+
+
+
                 <h1 class="display-3 index-subtitle">Tutte le offerte attive</h1>
                 <% } 
                 else{ %> 
@@ -158,14 +101,14 @@
                             <% results.forEach(item => {%>
                             <div class="card">
                                 <svg  xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                <image href="" class="card-img-top"></image>
+                                <image src="" class="card-img-top" name="<%=item.nome%>"></image>
                                 </svg>
                                 <div class="card-body">
                                     <h4 class="card-title">
-                                        
+                                        <%=item.nome%>
                                     </h4>
                                     <h6 class="card-subtitle">
-                                        a partire da <span class=" h4 fw-bold"> €</span>  per 1 <i class="bi bi-person-fill"></i></h6> 
+                                        con distanza di <span class=" h4 fw-bold"> <%=item.distanza%></span>  </h6> 
                                     <p class="card-text desc pt-2">
                                         
                                     </p>
@@ -185,34 +128,31 @@
     <script>
 
 
+var db;
+    $( function() {
+      $( "#stazionePartenza" ).autocomplete({
+        minLength: 3,
+        source: function( request, response ) {        
+          $.getJSON( '/stazioni_autocomplete',request, function(data) {
+            db=data;
+            response( data );
+          });
+        }
+      });
+    });
+    function validSearch(){ 
+        var search= document.getElementById("stazionePartenza");
+        console.log(db);
+        if(!db.includes(search.value)){
+            console.log(search.value);
+            alert("Attenzione la stazione inserita non è valida");
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    }
 
 
-
-        $('.desc').each(function() {
-        var str50=$(this).text().substr(0,100);
-        $(this).html(str50+'...');
-        });
-    
-        window.sr = ScrollReveal();
-        sr.reveal('.navbar', {
-            duration: 2000,
-            origin: 'bottom'
-        });
-        sr.reveal('.showcase-left', {
-            duration: 2000,
-            origin: 'top',
-            distance: '300px'
-    
-    
-        });
-        /*
-        sr.reveal('.showcase-btn', {
-            duration: 2000,
-            delay: 500,
-            origin: 'bottom',
-            distance: '300px'
-    
-        });*/
+        
     
         //effetto scroll rallentato
         $(function() {
@@ -245,7 +185,15 @@
     
         });
     
+        
+       /* $('.image').each(function() {
+      let b= $(this).name;
+      let borghii="<=borghi>";
+      let f=borghii[b].foto[0];    
+    $(this).src=f;
     
+    });*/
+
     </script>
     
     </html>

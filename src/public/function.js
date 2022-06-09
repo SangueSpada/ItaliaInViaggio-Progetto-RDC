@@ -1,21 +1,15 @@
+
+
 let map;
 var selectBorgo;
 let service;
 let currentInfoWindow;
-var position={lat:"",lng:"",zoom:""};
-var borghi=[];
-
-
 
 
 function initMap() {
-  for(var i=0;i<n.length;i++){
-    //console.log(n[i],r[i],la[i],lo[i]);
-    borghi.push({nome:n[i],regione:r[i],lat:la[i],long:lo[i],zoom:"14"})
-    
-    }
+
   
-  selectBorgo = document.getElementById("borgo");
+  /*selectBorgo = document.getElementById("borgo");
   google.maps.event.addDomListener(selectBorgo,"change",() => {
  
     let selection =selectBorgo.value;
@@ -36,19 +30,8 @@ function initMap() {
         }
       }
     });
-  });
-
-  selection=document.getElementById('borgo').value;
-  borghi.forEach(borgo =>{
-      if(borgo.nome==selection){
-        console.log(borgo.nome);
-        position.lat=borgo.lat;
-        position.lng=borgo.long;
-        position.zoom=borgo.zoom;
-      }
-  });
-
-
+  });*/
+  var position={lat:la,lng:lo,zoom:zo};
   //console.log(position);
   var infoWindow = new google.maps.InfoWindow;
   currentInfoWindow = infoWindow;
@@ -79,50 +62,117 @@ function initMap() {
   function nearbyCallback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     createMarkers(results);
+    //popola(results);
     }
   }
 
   getNearbyPlaces();
 
   function createMarkers(places) {
-    console.log(places);
-    places.forEach(place => {
+    //console.log(places);
+    let markers=[];
+    places.forEach((place,index) => {
+      //console.log(place);
+      loadHotels(place, index);
       let marker = new google.maps.Marker({
         position: place.geometry.location,
         map: map,
-        title: place.name
+        title: place.name,
+        icon: { url:place.icon,scaledSize:google.maps.Size("1px","1px")}, //non funziona la size ma vabbe
+        label: String(index+1),
+        animation: google.maps.Animation.DROP
       });
+      markers.push(marker);
       google.maps.event.addListener(marker, 'click', () => {
         let request = {
         placeId: place.place_id,
-        fields: ['name', 'formatted_address', 'geometry', 'rating','website', 'photos']
+        fields: ['name', 'formatted_address','formatted_phone_number', 'geometry', 'rating','user_ratings_total','website', 'photos']
         };
         /* Only fetch the details of a place when the user clicks on a marker.
         * If we fetch the details for all place results as soon as we get
         * the search response, we will hit API rate limits. */
+
         service.getDetails(request, (placeResult, status) => {
-        showDetails(placeResult, marker, status);
+          //PR=placeResult;
+          showDetails(placeResult, marker, status);
         });
       });
+      
     });
+  }
+
+  function makeCarousel(photo,index,btnInd,carImg){
+    var photoLink = photo.getUrl();
+    var divCaorusel = document.createElement('div');
+    divCaorusel.classList.add("carousel");
+    divCaorusel.id="caroselloHotel";
+    if(index==0){
+      btnInd+='<button type="button" data-bs-target="#caroselloHotel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 0 "></button>'
+      carImg+='<div class="carousel-item active"><img style="width:100%; max-height: 400px;;  margin: auto;" src="'+photoLink+'"></div>'
+    }
+    else{
+      btnInd += '<button type="button" data-bs-target="#caroselloHotel" data-bs-slide-to="'+index+'"class="active" aria-current="true" aria-label="Slide 0 "'+index+'" "></button>'
+      carImg+='<div class="carousel-item"><img style="width:100%; max-height: 400px;;  margin: auto;" src="'+photoLink+'"></div>'
+    }
+    return [btnInd,carImg];
+  }
+
+  function loadHotels(placeResult, index){
+    //console.log(placeResult);
+    let hotelTable = document.getElementById('hotelList');
+    let row = document.createElement('tr');
+    //<th scope="row">1</th>
+    let thIndex = document.createElement('th');
+    thIndex.scope= "row";
+    let btnIndex = document.createElement('button');
+    btnIndex.classList.add("btn")
+    btnIndex.name="btnHotel";
+    btnIndex.id=placeResult.place_id;
+    btnIndex.addEventListener("click",function(){ showPanel2(placeResult.place_id); });
+    btnIndex.textContent = index+1;
+    thIndex.appendChild(btnIndex);
+    row.appendChild(thIndex);
+    //<td><img class="photoList">#photo</img></td>
+    let tdPhoto = document.createElement('td');
+    let photo = document.createElement('img');
+    photo.classList.add("photoList")
+    photo.src= (placeResult.photos != null) ? placeResult.photos[0].getUrl() : "../media/borghi/unavilable.jpg";
+    tdPhoto.appendChild(photo);
+    row.appendChild(tdPhoto);
+    //<td class="h6">Nome hotel</td>
+    let tdTitle = document.createElement('td');
+    tdTitle.classList.add("h6");
+    tdTitle.textContent = placeResult.name;
+    row.appendChild(tdTitle);
+    //<td>#recensioni</td>
+    let divRating = document.createElement('td');
+    divRating.textContent = 'Rating: '+placeResult.rating +' \u272e'+' ('+placeResult.user_ratings_total+')';
+    row.appendChild(divRating);
+
+
+    hotelTable.appendChild(row);
+
 
   }
 
   function showDetails(placeResult, marker, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
+      
     let placeInfowindow = new google.maps.InfoWindow();
     placeInfowindow.setContent('<div><strong>' + placeResult.name +
         '</strong><br>' + 'Rating: ' + placeResult.rating + '</div>');
     placeInfowindow.open(marker.map, marker);
     currentInfoWindow.close();
     currentInfoWindow = placeInfowindow;
-    showPanel(placeResult);
+    showPanel(placeResult,status);
     } else {
     console.log('showDetails failed: ' + status);
     }
   }
 
-  function showPanel(placeResult) {
+  function showPanel(placeResult,status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+      console.log(placeResult);
     var infoPane = document.getElementById('panel');
     // If infoPane is already open, close it
     if (infoPane.classList.contains("open")) {
@@ -135,11 +185,27 @@ function initMap() {
     }
 
     if (placeResult.photos != null) {
-      let firstPhoto = placeResult.photos[0];
+      var divCarousel = document.createElement('div');
+        divCarousel.classList.add("carousel");
+        divCarousel.id="caroselloHotel";
+        var btnIndicators='';
+        var carouselImages='';
+        (placeResult.photos).forEach((p,index) => {
+            let writes= makeCarousel(p,index,btnIndicators,carouselImages);  
+            btnIndicators=writes[0];
+            carouselImages=writes[1];  
+          });
+          console.log(btnIndicators);
+          console.log(carouselImages);
+        var writeCarousel='<div class="carousel-indicators">'+btnIndicators+'</div><div class="carousel-inner" id="primi_carousel">'+carouselImages+'</div><button class="carousel-control-prev" type="button" data-bs-target="#caroselloHotel" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button><button class="carousel-control-next" type="button" data-bs-target="#caroselloHotel" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span></button>'
+        divCarousel.insertAdjacentHTML("beforeend",writeCarousel);
+      
+      /*let firstPhoto = placeResult.photos[0];
       let photo = document.createElement('img');
       photo.classList.add('hero');
       photo.src = firstPhoto.getUrl();
-      infoPane.appendChild(photo);
+      infoPane.appendChild(photo);*/
+      infoPane.appendChild(divCarousel);
   }
 
     // Add place details with text formatting
@@ -150,7 +216,7 @@ function initMap() {
     if (placeResult.rating != null) {
     let rating = document.createElement('p');
     rating.classList.add('details');
-    rating.textContent = `Rating: ${placeResult.rating} \u272e`;
+    rating.textContent = 'Rating: '+placeResult.rating +' \u272e'+' ('+placeResult.user_ratings_total+')';
     infoPane.appendChild(rating);
     }
     let address = document.createElement('p');
@@ -164,17 +230,72 @@ function initMap() {
     websiteLink.appendChild(websiteUrl);
     websiteLink.title = placeResult.website;
     websiteLink.href = placeResult.website;
+    websiteLink.target="_blank";
     websitePara.appendChild(websiteLink);
     infoPane.appendChild(websitePara);
     }
-
+    if (placeResult.formatted_phone_number) {
+    let telephone = document.createElement('p');
+    let telephoneLink = document.createElement('a');
+    let number = document.createTextNode(placeResult.formatted_phone_number);
+    telephoneLink.appendChild(number);
+    telephoneLink.title=placeResult.formatted_phone_number;
+    telephoneLink.href="tel:"+placeResult.formatted_phone_number;
+    telephone.appendChild(telephoneLink);
+    infoPane.appendChild(telephone);
+    }
     // Open the infoPane
     infoPane.classList.add("open");
+    }
+    else {
+      console.log('showDetails failed: ' + status);
+      }
   }
+  function showPanel2(id) {
+    let request = {
+      placeId: id,
+      fields: ['name', 'formatted_address','formatted_phone_number', 'geometry', 'rating','user_ratings_total','website', 'photos']
+      };
+    service.getDetails(request, (placeResult,status) => {showPanel(placeResult,status); });
+    
+  }
+/*
+  <div id="carosello" class="carousel">
+  <div class="carousel-indicators">
+      <button type='button' data-bs-target='#carosello' data-bs-slide-to="0" class='active' aria-current='true' aria-label='Slide "0" '></button>
+      <% (borgo.foto).forEach( (item,index) => {%>
+          <%if(index!=0){ %>
+              <button type='button' data-bs-target='#carosello' data-bs-slide-to="<%=index%>" aria-label='Slide "<%=index%>"'></button>
+          <% } %>
+        <% }) %>
+  </div>
+  
+  <div class="carousel-inner" id="primi_carousel">
+      <div class="carousel-item active">
+          <img style="width:100%; height:800px;  margin: auto;" src="<%=borgo.foto[0]%>">
+      </div>
+      <% (borgo.foto).forEach( (item,index) => {%>
+          <%if(index!=0){ %>   
+              <div class="carousel-item">
+              <img style="width:100%; height:800px;  margin: auto;" src="<%=item%>">
+              </div>
+          <% } %> 
+      <% }) %> 
+  </div>        
+  <button class="carousel-control-prev" type="button" data-bs-target="#carosello" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carosello" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 
-
+</div> */
 }
 window.initMap = initMap;
+
+
 
 function checkin_fun() {
 
@@ -327,14 +448,6 @@ httpreq.send('url='+url);
 }
 //tempo(document.getElementById("testo_ricerca").value);
 
-
-
-
-function popola(nome,regione,lat,long){
-
-  $("#borgo").find('optgroup[id='+"\""+regione+"\""+']').append("<option value=\""+nome+"\">"+nome+"</option>");
-
-}
 
 
 

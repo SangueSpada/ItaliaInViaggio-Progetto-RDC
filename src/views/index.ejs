@@ -64,74 +64,15 @@
                     <nav class="shadow container p-3 rounded-3 " style="background-color: #e3f2fd;">
                         <form class="row" method="post" action="/borgo">
                             <div class="col-lg-12 mb-2" id="controls">
-                              <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
-                                <select id="borgo" id="testo_ricerca" name="testo_ricerca" aria-placeholder="Scegli un borgo" class="form-control" onclick=tempo(this.value)>
-                                  <optgroup id="Piemonte" label="Piemonte">
-                                  </optgroup>
-                                  <optgroup id="Valle D’Aosta" label="Valle D’Aosta">
-                                </optgroup>
-                                <optgroup id="Lazio" label="Lazio">
-                                </optgroup>
-                                <optgroup id="Liguria" label="Liguria">
-                                </optgroup>
-                                <optgroup id="Trentino A.A." label="Trentino A.A.">
-                                </optgroup>
-                                <optgroup id="Veneto" label="Veneto">
-                                </optgroup>
-                                <optgroup id="Friuli Venezia Giulia" label="Friuli Venezia Giulia">
-                                </optgroup>
-                                <optgroup id="Emilia Romagna" label="Emilia Romagna">
-                                </optgroup>
-                                <optgroup id="Toscana" label="Toscana">
-                                </optgroup>
-                                <optgroup id="Marche" label="Marche">
-                                </optgroup>
-                                <optgroup id="Umbria" label="Umbria">
-                                </optgroup>
-                                <optgroup id="Abruzzo" label="Abruzzo">
-                                </optgroup>
-                                <optgroup id="Campania" label="Campania">
-                                </optgroup>
-                                <optgroup id="Calabria" label="Calabria">
-                                </optgroup>
-                                <optgroup id="Sicilia" label="Sicilia">
-                                </optgroup>
-
-
-                                </select>     
-                             
-                                <% var nome=[];var regione=[];var lats=[];var longs=[];%>
-
-                                <% nomi.forEach(item=>
-                                    {
-                                    nome.push(item.nome);
-                                    regione.push(item.regione);
-                                    lats.push(item.lat);
-                                    longs.push(item.long);       
-                                    })
-                                    
-                                    %>
-                                    <script>
-                                        var n="<%=nome%>".split(',');
-                                        var r="<%=regione%>".split(',');
-                                        var la="<%=lats%>".split(',');
-                                        var lo="<%=longs%>".split(',');
-                                        for(var i=0;i<n.length;i++){
-                                        //console.log(n+' '+r+' '+la+' '+lo);
-                                        popola(n[i],r[i],la[i],lo[i]);
-                                        }
-                                    </script>
-                                 
-                     
-
+                                <input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Dove vuoi andare?" required>                       
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
-                                <label class="active me-1 mt-1" for="dateStandard">Check-in:</label>
-                                <input type="date" id="CheckInDate" onchange="checkin_fun();" name="CheckIn" required>
+                                <label class="active me-1 mt-1" for="dateStandard">Partenza:</label>
+                                <input type="date" id="CheckInDate" onchange="checkin_fun();" name="CheckIn">
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
-                                <label class="active me-1 mt-1" for="dateStandard">Check-out:</label>
-                                <input type="date" id="CheckOutDate" onchange="checkout_fun();" name="CheckOut" required>
+                                <label class="active me-1 mt-1" for="dateStandard">Ritorno:</label>
+                                <input type="date" id="CheckOutDate" onchange="checkout_fun();" name="CheckOut">
                             </div>
                             <div class="col-lg-2 mt-2 d-flex justify-content-center">
                                 <label class="active me-2 mt-1">Adulti:</label>
@@ -375,12 +316,72 @@
         </div>
         <%- include('footer'); -%>
 </div>
-    
 
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=<%=maps_key%>&callback=initMap&libraries=places"
-      defer
-    ></script>
+<!-- gestione searchbox autocomplete-->
+
+<% var nome=[];var regione=[];var lats=[];var longs=[]; var zoom=[];%>
+<% nomi.forEach(item=>{
+    nome.push(item.nome);
+    regione.push(item.regione);
+    lats.push(item.lat);
+    longs.push(item.long);
+    zoom.push(item.zoom);       
+    })
+%>
+<script>
+    var borgo="<%=nome%>".split(',');
+    var regione="<%=regione%>".split(',');
+    var la ="<%=lats%>".split(',');
+    var lo="<%=longs%>".split(','); 
+    var db_string="[";
+    borgo.forEach((item,index) => {db_string+='{"label":"'+item+'", "category":"'+regione[index]+'"},' });
+    db_string=db_string.slice(0,-1);
+    db_string+=']';
+    var db=JSON.parse(db_string);
+    
+    $( function() {
+        $.widget( "custom.catcomplete", $.ui.autocomplete, {
+          _create: function() {
+            this._super();
+            this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+          },
+          _renderMenu: function( ul, items ) {
+            var that = this,
+              currentCategory = "";
+            $.each( items, function( index, item ) {
+              var li;
+              if ( item.category != currentCategory ) {
+                ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+                currentCategory = item.category;
+              }
+              li = that._renderItemData( ul, item );
+              if ( item.category ) {
+                li.attr( "aria-label", item.category + " : " + item.label );
+              }
+            });
+          }
+        });
+
+        $( "#testo_ricerca" ).catcomplete({
+          delay: 0,
+          source: db
+        });
+    });
+
+    function validSearch(){ 
+        var search= document.getElementById("testo_ricerca");
+        var db="<%=nome%>".split(',');
+        console.log(db);
+        if(!db.includes(search.value)){
+            console.log(search.value);
+            alert("Attenzione il borgo inserito non è valido");
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    }
+</script>
+
+<!-- fine gestione searchbox autocomplete-->
 
 </body>
 </html>
