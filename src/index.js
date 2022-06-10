@@ -108,7 +108,6 @@ Promise.all([p0,p1]).then(value=>{
 let consigliati;
 
 consigliati=algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi);
-console.log(consigliati);
 res.render('consigliati',{stazioni:stazioni,results:consigliati,borghi:tutti_borghi});
 
 
@@ -178,17 +177,30 @@ app.post('/borgo', urlencodedParser, function(req, res) {
 
 app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
   var stazioni;
-  try{
-    const t = new Trenitalia();
-    stazioni = await t.autocomplete(req.query.term);
-    var nomi=[];
-    stazioni.forEach(item =>{nomi.push(item.name)});
-    res.send(nomi);
-  }
-  catch (error){
-    console.log(error);
-    res.sendStatus(500);
-  }
+
+
+
+
+  const p=new Promise(function(resolve,reject){
+
+let nome=req.query.term;
+    let url='https://www.lefrecce.it/Channels.Website.BFF.WEB/website/locations/search?name='+nome+'&limit=6'
+    axios.get(url)
+    .then(function(result){resolve(stazioni=result.data);})
+    .catch(function(error){res.sendStatus(500).send(error);
+                            return;});
+      });
+  
+  
+    p.then(value=>{
+      var nomi=[];
+      stazioni.forEach(item =>{nomi.push(item.name)});
+      res.send(nomi);
+  
+    });
+  
+
+
 });
 
 app.post('/searchTsolutions',urlencodedParser, async function(req, res) {
@@ -199,6 +211,7 @@ app.post('/searchTsolutions',urlencodedParser, async function(req, res) {
 
 });
     
+
 
 
 
