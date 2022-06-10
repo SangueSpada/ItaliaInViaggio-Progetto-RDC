@@ -107,6 +107,7 @@ Promise.all([p0,p1]).then(value=>{
 
 let consigliati;
 
+
 consigliati=algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi);
 res.render('consigliati',{stazioni:stazioni,results:consigliati,borghi:tutti_borghi});
 

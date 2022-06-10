@@ -100,7 +100,6 @@ function initMap() {
         label: String(nres+1),
         animation: google.maps.Animation.DROP
       });
-      markers.push(marker);
       google.maps.event.addListener(marker, 'click', () => {
         let request = {
         placeId: place.place_id,
