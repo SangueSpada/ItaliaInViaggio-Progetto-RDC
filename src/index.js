@@ -193,8 +193,9 @@ app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
 
 app.post('/searchTsolutions',urlencodedParser, async function(req, res) {
   var stazioneP=req.body.stazionePartenza;
+  
 
-  res.render('titolo.ejs', { maps_key:process.env.API_MAPS,nomi:resp, borgo: borg, search: ricerca, solutions:'', res: '' });
+ res.send(solutions);
 
 });
     
