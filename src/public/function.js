@@ -4,33 +4,46 @@ let map;
 var selectBorgo;
 let service;
 let currentInfoWindow;
+let getNextPage;
+let nres = 0;
 
 
 function initMap() {
-
+  function LoadMoreHotelControl(controlDiv) {
+    // Set CSS for the control border.
+    const controlUI = document.createElement("div");
+   
+    controlUI.style.backgroundColor = "#fff";
+    controlUI.style.border = "2px solid #fff";
+    controlUI.style.borderRadius = "3px";
+    controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+    controlUI.style.cursor = "pointer";
+    controlUI.style.marginTop = "8px";
+    controlUI.style.marginBottom = "22px";
+    controlUI.style.textAlign = "center";
+    controlUI.title = "Click to load more hotels";
+    controlDiv.appendChild(controlUI);
   
-  /*selectBorgo = document.getElementById("borgo");
-  google.maps.event.addDomListener(selectBorgo,"change",() => {
- 
-    let selection =selectBorgo.value;
-    borghi.forEach(borgo =>{
-      if(borgo.nome==selection){
-        console.log(borgo.nome);
-        position.lat=borgo.lat;
-        position.lng=borgo.long;
-        position.zoom=borgo.zoom;
-        try{
-          map.setCenter({ lat: parseFloat(position.lat), lng: parseFloat(position.lng) });
-          map.setZoom(parseInt(position.zoom));
-          getNearbyPlaces();
-          console.log("posti aggiornati");
-        }
-        catch (error) {
-          console.log(error);
-        }
+    // Set CSS for the control interior.
+    const controlText = document.createElement("div");
+  
+    controlText.style.color = "rgb(25,25,25)";
+    controlText.style.fontFamily = "Roboto,Arial,sans-serif";
+    controlText.style.fontSize = "16px";
+    controlText.style.lineHeight = "38px";
+    controlText.style.paddingLeft = "5px";
+    controlText.style.paddingRight = "5px";
+    controlText.innerHTML = "Carica altri risultati";
+    controlUI.appendChild(controlText);
+  
+    // Setup the click event listeners: simply set the map to Chicago.
+    controlUI.addEventListener("click", () => {
+      this.disabled=true;
+      if (getNextPage) {
+        getNextPage();
       }
     });
-  });*/
+  }
   var position={lat:la,lng:lo,zoom:zo};
   //console.log(position);
   var infoWindow = new google.maps.InfoWindow;
@@ -42,7 +55,9 @@ function initMap() {
     });
   //console.log(map);
     
-
+  const centerControlDiv = document.createElement("div");
+  LoadMoreHotelControl(centerControlDiv);
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 
   // Perform a Places Nearby Search Request
   function getNearbyPlaces() {
@@ -51,38 +66,40 @@ function initMap() {
     let request = {
       location: pos,
       radius:3000,
-      type: 'lodging'
+      type: 'lodging',
+      rankBy: google.maps.places.RankBy.PROMINENCE
     };
 
     service = new google.maps.places.PlacesService(map);
     service.nearbySearch(request, nearbyCallback);
   }
-
-  // Handle the results (up to 20) of the Nearby Search
-  function nearbyCallback(results, status) {
-    if (status == google.maps.places.PlacesServiceStatus.OK) {
-    createMarkers(results);
-    //popola(results);
+  function nearbyCallback(results, status, pagination) {
+    if (status !== "OK" || !results) return;
+    else{ 
+      createMarkers(results);     
+      centerControlDiv.disabled= !pagination || !pagination.hasNextPage;
+      if (pagination && pagination.hasNextPage) {
+        getNextPage = () => {
+          // Note: nextPage will call the same handler function as the initial call
+          pagination.nextPage();
+        }
+      }
     }
   }
-
   getNearbyPlaces();
 
   function createMarkers(places) {
     //console.log(places);
-    let markers=[];
-    places.forEach((place,index) => {
+    places.forEach((place) => {
       //console.log(place);
-      loadHotels(place, index);
+      nres = loadHotels(place, nres);
       let marker = new google.maps.Marker({
         position: place.geometry.location,
         map: map,
         title: place.name,
-        icon: { url:place.icon,scaledSize:google.maps.Size("1px","1px")}, //non funziona la size ma vabbe
-        label: String(index+1),
+        label: String(nres+1),
         animation: google.maps.Animation.DROP
       });
-      markers.push(marker);
       google.maps.event.addListener(marker, 'click', () => {
         let request = {
         placeId: place.place_id,
@@ -128,9 +145,13 @@ function initMap() {
     btnIndex.classList.add("btn")
     btnIndex.name="btnHotel";
     btnIndex.id=placeResult.place_id;
-    btnIndex.addEventListener("click",function(){ showPanel2(placeResult.place_id); });
+    btnIndex.addEventListener("click",function(){ 
+      showPanel2(placeResult.place_id);
+      map.setCenter(placeResult.geometry.location); 
+    });
     btnIndex.textContent = index+1;
     thIndex.appendChild(btnIndex);
+
     row.appendChild(thIndex);
     //<td><img class="photoList">#photo</img></td>
     let tdPhoto = document.createElement('td');
@@ -151,6 +172,8 @@ function initMap() {
 
 
     hotelTable.appendChild(row);
+
+    return index+1;
 
 
   }
@@ -195,8 +218,8 @@ function initMap() {
             btnIndicators=writes[0];
             carouselImages=writes[1];  
           });
-          console.log(btnIndicators);
-          console.log(carouselImages);
+          //console.log(btnIndicators);
+          //console.log(carouselImages);
         var writeCarousel='<div class="carousel-indicators">'+btnIndicators+'</div><div class="carousel-inner" id="primi_carousel">'+carouselImages+'</div><button class="carousel-control-prev" type="button" data-bs-target="#caroselloHotel" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button><button class="carousel-control-next" type="button" data-bs-target="#caroselloHotel" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span></button>'
         divCarousel.insertAdjacentHTML("beforeend",writeCarousel);
       
