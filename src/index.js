@@ -181,6 +181,7 @@ app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
   try{
     const t = new Trenitalia();
     stazioni = await t.autocomplete(req.query.term);
+    console.log(stazioni);
     var nomi=[];
     stazioni.forEach(item =>{nomi.push(item.name)});
     res.send(nomi);
