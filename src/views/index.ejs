@@ -384,4 +384,64 @@
 <!-- fine gestione searchbox autocomplete-->
 
 </body>
+
+
+
+<script> 
+
+/*
+function tempo(citta){ 
+    console.log(citta); 
+    for(var i=0;i<n.length;i++){ 
+        if(n[i]==citta){ 
+            var lat=la[i]; 
+            var long=lo[i]; 
+            break; 
+        } 
+    } 
+     
+    var httpreq= new XMLHttpRequest(); 
+    httpreq.responseType='json'; 
+    httpreq.onreadystatechange= function(e){ 
+        if(this.readyState==4 && this.status == 200){ 
+            let meteos=this.response; 
+            $("#meteo")[0].hidden=false; 
+           //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++'); 
+           $("#date").find("th").each(function(index){ 
+               var data=new Date(meteos[index].dt*1000); 
+           $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));}); 
+           $("#icone").find("td").each(function(index){ 
+            var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png'; 
+            $(this).find("img")[0].src=url_icon; 
+           }); 
+           $("#descrizioni").find("td").each(function(index){ 
+            $(this)[0].textContent=meteos[index].weather[0].description; 
+           }); 
+        } 
+        else if(this.readyState==4 && this.status ==500){ 
+            console.log('errore 500 '+this.response); 
+         } 
+        else if(this.readyState==4 && this.status !=500 & this.status!=200){ 
+            console.log(this.response); 
+         }    
+    } 
+var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid="; 
+httpreq.open("POST","/owm",true); 
+httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded"); 
+httpreq.send('url='+url); 
+} 
+for(var i=0;i<n.length;i++){ 
+//console.log(n+' '+r+' '+la+' '+lo); 
+    popola(n[i],r[i],la[i],lo[i]); 
+} 
+function popola(nome,regione,lat,long){ 
+    $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option value=\""+nome+"\">"+nome+"</option>"); 
+} 
+*/
+</script>
+
+
+
+
+
 </html>

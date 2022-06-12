@@ -63,12 +63,17 @@
                           <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
                         
                             <input type="text" class="active form-control" id="stazionePartenza" name="stazione" placeholder="Cerca un borgo" required> 
-                    
-                             
-                 
 
                         </div>
                        
+                        <div class="col-lg-3 mt-2 d-flex justify-content-center">
+                            <label class="active me-1 mt-1" for="dateStandard">Partenza:</label>
+                            <input type="date" id="CheckInDate" onchange="checkin_fun();" name="CheckIn">
+                        </div>
+                        <div class="col-lg-3 mt-2 d-flex justify-content-center">
+                            <label class="active me-1 mt-1" for="dateStandard">Ritorno:</label>
+                            <input type="date" id="CheckOutDate" onchange="checkout_fun();" name="CheckOut">
+                        </div>
                         
                         
                         
@@ -114,7 +119,7 @@
                                     </p>
                                 </div>
                                     <div class="showcase-btn text-lg-end d-flex ms-2 mb-2">
-                                        <a href="" class="btn btn-primary">Scopri di più</a>
+                                        <a href="" class="btn btn-primary"> <%=item.punti%></a>
                                     </div>
                                 
                             </div>
@@ -185,6 +190,13 @@ var db;
     
         });
     
+    let data=new Date();
+    data.setDate(data.getDate()+6);
+    $("#CheckInDate")[0].max=(data).toISOString().split("T")[0];
+
+    data.setDate(data.getDate()+1);
+    $("#CheckOutDate")[0].max=(data).toISOString().split("T")[0];
+
     </script>
     
     </html>

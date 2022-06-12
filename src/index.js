@@ -21,6 +21,29 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
 
+const punti_meteo={
+
+  Thunderstorm: 0,
+  Drizzle: 10,
+  Rain:5,
+  Snow: 18,
+  Mist:5,
+  Smoke:4,
+  Haze:7,
+  Dust:4,
+  Fog:4,
+  Sand:3,
+  Ash:3,
+  Squall:0,
+  Tornado:0,
+  Clear:26,
+  Clouds:16
+
+
+};
+
+
+
 
 
 app.get('/',urlencodedParser, (req, res) => {
@@ -60,8 +83,11 @@ app.get('/consigliati',urlencodedParser,function(req,res){
   
 });
 
-app.post('/consigliati',urlencodedParser,function(req,res){
+app.post('/consigliati',urlencodedParser,async function(req,res){
   let stazione=req.body.stazione;
+  let partenza=new Date(req.body.CheckIn);
+  let ritorno= new Date(req.body.CheckOut);
+
   stazione=stazione.replaceAll(' ','%20');
   let tutti_borghi;
   let staz_andata;
@@ -99,7 +125,7 @@ app.post('/consigliati',urlencodedParser,function(req,res){
   ///////////////////////////////////////
   });
 
-Promise.all([p0,p1]).then(value=>{
+Promise.all([p0,p1]).then( async function(value){
   if(!staz_andata){res.send('<h1>non è stata trovata la stazione con osm</h1>');res.end();}
 
   let lat=staz_andata.lat;
@@ -108,7 +134,8 @@ Promise.all([p0,p1]).then(value=>{
 let consigliati;
 
 
-consigliati=algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi);
+
+consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi,partenza,ritorno);
 res.render('consigliati',{stazioni:stazioni,results:consigliati,borghi:tutti_borghi});
 
 
@@ -126,6 +153,7 @@ app.get('/ao',urlencodedParser, (req, res) => {
 });
 
 app.post('/owm',urlencodedParser, function(req,res){
+  console.log("owm");
 var url=req.body.url+"&lon="+req.body.lon+"&exclude="+req.body.exclude+"&appid="+req.body.appid+process.env.API_WHEATHER;
 axios.get(url,{headers: {'Accept':'text/plain'}})
 .then(function(response){res.status(200).send(response.data.daily);})
@@ -216,35 +244,105 @@ app.post('/searchTsolutions',urlencodedParser, async function(req, res) {
 
 
 
-function algoritmo_consigliati(lat,lon,borghi){
-
- // console.log(db);
-  //console.log(lat);
-  //console.log(lon);
+async function algoritmo_consigliati(lat,lon,borghi,partenza,ritorno){
 
 
-
-
+ return new Promise(async function(resolve){
+ritorno.setHours(23,59,59);
+partenza.setHours(0,0,0);
+//console.log('di js '+partenza.valueOf()+' '+ritorno.valueOf());
+let consig=[];
+// ordino per distanza i borghi
 let distanze=[];
 for(let r=0;r<borghi.length;r++){
   let t={};
   t.nome=borghi[r].nome;
+  t.lat=borghi[r].lat;
+  t.lon=borghi[r].long;
+  t.punti=0;
   t.distanza=getDistanceFromLatLonInKm(parseFloat(borghi[r].lat),parseFloat(borghi[r].long),parseFloat(lat),parseFloat(lon));
   distanze.push(t);
 }
 
-distanze.sort(compare_distance);
+//distanze.sort(compare_distance);
+//////////////////////////////////
 
-return distanze;
+let temp=[];
+for(let j=0;j<distanze.length;j++){
+  //distanze[j]= get_meteo_borgo(distanze[j],partenza,ritorno);
+  temp.push(distanze[j]= await get_meteo_borgo(distanze[j],partenza,ritorno));
+}
+
+
+for(let k=0;k<distanze.length;k++){
+let d=distanze[k];
+d["punteggio"]=d.distanza-(d.punti*2);
+
+
+}
+
+distanze.sort(compare_points);
+
+
+
+
+
+
+//console.log(distanze);
+resolve(distanze);
+
+
+}); 
+
 
 };
 
-function compare_distance(a,b){
 
-  if(a.distanza<b.distanza){
+
+function get_meteo_borgo(distanze,partenza,ritorno){
+
+  return new Promise(resolve=>{
+
+    let url="https://api.openweathermap.org/data/2.5/onecall?lat="+distanze.lat+"&lon="+distanze.lon+"&exclude=alerts&appid="+process.env.API_WHEATHER; 
+
+
+axios.get(url)
+.then(function(result){
+
+    for(let k=0;k<8;k++){
+      let dt=new Date(result.data.daily[k].dt*1000).valueOf();
+
+      if(dt>=partenza.valueOf() && dt<= (ritorno.valueOf())){
+       
+       let keyy=result.data.daily[k].weather[0].main
+       let punteggio=punti_meteo[keyy];
+       distanze["punti"]=distanze["punti"]+punteggio;
+
+                                                            }
+                        }
+          resolve(distanze);
+
+})
+.catch(function(error){
+  console.log(error);
+  resolve(error);
+});
+
+  });
+
+
+}
+
+
+
+
+
+function compare_points(a,b){
+
+  if(a.punteggio<b.punteggio){
     return -1;
   }
-  if(a.distanza>b.distanza){
+  if(a.punteggio>b.punteggio){
     return 1;
   }
   return 0;
