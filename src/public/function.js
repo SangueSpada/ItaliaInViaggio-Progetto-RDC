@@ -412,6 +412,7 @@ function moreBtnRangeR() {
   }
 }
 
+/*
 function tempo(citta){
   console.log(citta);
   for(var i=0;i<n.length;i++){
@@ -469,6 +470,8 @@ httpreq.send('url='+url);
 
 
 }
+
+*/
 //tempo(document.getElementById("testo_ricerca").value);
 
 

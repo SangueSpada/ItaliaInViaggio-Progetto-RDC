@@ -389,16 +389,35 @@
 
 <script> 
 
-/*
-function tempo(citta){ 
-    console.log(citta); 
-    for(var i=0;i<n.length;i++){ 
-        if(n[i]==citta){ 
+
+
+
+const barraricerca=$("#testo_ricerca");
+barraricerca.change(function(e){
+   // console.log('cambiato');
+    tempo(e.target.value);
+
+})
+
+
+
+
+
+
+function tempo(citta){
+    let find=0; 
+    for(var i=0;i<borgo.length;i++){ 
+        if(borgo[i]==citta){
+            find=1; 
             var lat=la[i]; 
             var long=lo[i]; 
             break; 
         } 
-    } 
+    }
+    if(!find){return;}
+    
+    console.log(citta); 
+
      
     var httpreq= new XMLHttpRequest(); 
     httpreq.responseType='json'; 
@@ -425,19 +444,15 @@ function tempo(citta){
             console.log(this.response); 
          }    
     } 
-var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid="; 
+//process.env.API_WHEATHER/var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid="; 
+let body='lat='+lat+'&lon='+long;
 httpreq.open("POST","/owm",true); 
 httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded"); 
-httpreq.send('url='+url); 
+httpreq.send(body); 
 } 
-for(var i=0;i<n.length;i++){ 
-//console.log(n+' '+r+' '+la+' '+lo); 
-    popola(n[i],r[i],la[i],lo[i]); 
-} 
-function popola(nome,regione,lat,long){ 
-    $("#borgo").find('optgroup[label='+"\""+regione+"\""+']').append("<option value=\""+nome+"\">"+nome+"</option>"); 
-} 
-*/
+
+
+
 </script>
 
 

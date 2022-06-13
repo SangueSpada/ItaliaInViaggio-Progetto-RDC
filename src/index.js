@@ -3,23 +3,22 @@ const app = express();
 const bodyParser=require('body-parser');
 const path = require('path');
 const winston = require('winston');
-const { URLSearchParams } = require('url');
-const { stringify } = require('querystring');
+
 const fs=require('fs');
 const axios=require('axios').default;
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
 
 
-const Trenitalia = require("api-trenitalia");
-const moment = require('moment');
-const { resolve } = require('path');
+
 
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
+
+
 
 const punti_meteo={
 
@@ -154,7 +153,9 @@ app.get('/ao',urlencodedParser, (req, res) => {
 
 app.post('/owm',urlencodedParser, function(req,res){
   console.log("owm");
-var url=req.body.url+"&lon="+req.body.lon+"&exclude="+req.body.exclude+"&appid="+req.body.appid+process.env.API_WHEATHER;
+  var url='https://api.openweathermap.org/data/2.5/onecall?lat='+req.body.lat+'&lon='+req.body.lon+'&exclude=alerts&appid='+process.env.API_WHEATHER;
+//var url=req.body.url+"&lon="+req.body.lon+"&exclude="+req.body.exclude+"&appid="+req.body.appid+process.env.API_WHEATHER;
+console.log(url);
 axios.get(url,{headers: {'Accept':'text/plain'}})
 .then(function(response){res.status(200).send(response.data.daily);})
 .catch(function(error){res.status(500).send(error);return;});
