@@ -78,18 +78,56 @@
                                 <div class="card mb-3">
                                     <div class="row no-gutters">
                                       <div class="col-md-4">
-                                        <img src="<%=item.foto%>" class="card-img" style="height: 100px;" alt="...">
+
+                                        <div id="carosello" class="carousel" data-bs-ride="carousel" >
+                                            <div class="carousel-indicators">
+                                                <button type='button' data-bs-target='#carosello' data-bs-slide-to="0" class='active' aria-current='true' aria-label='Slide "0" '></button>
+                                                <% (item.foto).forEach( (it,index) => {%>
+                                                    <%if(index!=0){ %>
+                                                        <button type='button' data-bs-target='#carosello' data-bs-slide-to="<%=index%>" aria-label='Slide "<%=index%>"'></button>
+                                                    <% } %>
+                                                  <% }) %>
+                                            </div>
+                                            
+                                            <div class="carousel-inner" id="primi_carousel">
+                                                <div class="carousel-item active">
+                                                    <img style="width:100%; height:240px;  margin: auto;" src="<%=item.foto[0]%>">
+                                                </div>
+                                                <% (item.foto).forEach( (it,index) => {%>
+                                                    <%if(index!=0){ %>   
+                                                        <div class="carousel-item">
+                                                        <img style="width:100%; height:240px;  margin: auto;" src="<%=it%>">
+                                                        </div>
+                                                    <% } %> 
+                                                <% }) %> 
+                                            </div>        
+
+                                          </div>
+
+
+                                    <!--   <img src="<%=item.foto%>" class="card-img" style="height: 100px;" alt="..."> -->
                                       </div>
                                       <div class="col-md-8">
                                         <div class="card-body">
-                                          <h5 class="card-title"><%=item.nome%></h5>
+                                          <h4 style="color: blue;" class="card-title"><%=item.nome%></h4>
                                           <h6 class="card-subtitle">
                                             con distanza di <span class=" h4 fw-bold"> <%=item.distanza%> km</span></h6> 
-                                            <p class="card-text desc pt-2">descrizione da inserire abbreviata... </p>
+                                            <p class="card-text desc pt-2"><%=item.descrizione%> </p>
+                                            <div >
+                                           <% item.main.forEach((m,idx) => {%>
+                                            <div style="display: inline-block;">
+                                                <h5 class="card-text">  <%=m%> </h5>
+                                                <img src="http://openweathermap.org/img/wn/<%=item.icona[idx]%>@2x.png">
+                                         <!--   <h6 class="card-text"><%=m%>  <span><img src="http://openweathermap.org/img/wn/<%=item.icona[idx]%>@2x.png"></span></h6> -->
+                                            </div>
+                                            <% }) %> 
+                                        </div>
+
                                         </div>
                                         <div class="text-lg-end d-flex ms-2 mb-2">
                                             <a href="/borgo?borgo=<%=item.nome%>" class="btn btn-primary"> Scopri di più</a>
                                         </div>
+                                        
                                       </div>
                                     </div>
                                   </div>

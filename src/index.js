@@ -98,7 +98,7 @@ app.post('/consigliati',urlencodedParser,async function(req,res){
     //api couchdb all borgs names
     let json={
       "selector":{"_id": {"$gt":null}},
-      "fields": ["nome","lat","long"]
+      "fields": ["nome","lat","long","foto","descrizione"]
     };
   
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
@@ -135,7 +135,8 @@ let consigliati;
 
 
 consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi,partenza,ritorno);
-res.render('consigliati',{stazioni:stazioni,results:consigliati,borghi:tutti_borghi});
+console.log(consigliati);
+res.render('consigliati',{stazioni:stazioni,results:consigliati});
 
 
 });
@@ -145,12 +146,12 @@ res.render('consigliati',{stazioni:stazioni,results:consigliati,borghi:tutti_bor
 });
 
 
-
+/*
 app.get('/ao',urlencodedParser, (req, res) => {
   res.sendFile('src/views/ao.html');
   res.end();
 });
-
+*/
 app.post('/owm',urlencodedParser, function(req,res){
   console.log("owm");
   var url='https://api.openweathermap.org/data/2.5/onecall?lat='+req.body.lat+'&lon='+req.body.lon+'&exclude=alerts&appid='+process.env.API_WHEATHER;
@@ -252,7 +253,6 @@ async function algoritmo_consigliati(lat,lon,borghi,partenza,ritorno){
 ritorno.setHours(23,59,59);
 partenza.setHours(0,0,0);
 //console.log('di js '+partenza.valueOf()+' '+ritorno.valueOf());
-let consig=[];
 // ordino per distanza i borghi
 let distanze=[];
 for(let r=0;r<borghi.length;r++){
@@ -263,8 +263,9 @@ for(let r=0;r<borghi.length;r++){
   t.punti=0;
   t.foto=borghi[r].foto;
   t.descrizione=borghi[r].descrizione;
+  t.main=[];
+  t.icona=[];
   t.distanza=getDistanceFromLatLonInKm(parseFloat(borghi[r].lat),parseFloat(borghi[r].long),parseFloat(lat),parseFloat(lon));
-  console.log(borghi[r],t);
   distanze.push(t);
 }
 
@@ -320,6 +321,8 @@ axios.get(url)
        
        let keyy=result.data.daily[k].weather[0].main
        let punteggio=punti_meteo[keyy];
+       distanze["main"].push(keyy);
+       distanze["icona"].push(result.data.daily[k].weather[0].icon);
        distanze["punti"]=distanze["punti"]+punteggio;
 
                                                             }
