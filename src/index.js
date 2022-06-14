@@ -164,13 +164,13 @@ axios.get(url,{headers: {'Accept':'text/plain'}})
 });
 
 
-app.post('/borgo', urlencodedParser, function(req, res) {
+app.get('/borgo', urlencodedParser, function(req, res) {
   console.log('get /borgo');
-  var checkin = req.body.CheckIn;
-  var checkout = req.body.CheckOut;
-  var luogo = req.body.testo_ricerca;
-  var adulti = req.body.adulti;
-  var ragazzi = req.body.ragazzi;
+  var checkin = req.query.CheckIn;
+  var checkout = req.query.CheckOut;
+  var luogo = req.query.borgo;
+  var adulti = req.query.adulti;
+  var ragazzi = req.query.ragazzi;
   ricerca = [luogo, checkin, checkout, adulti,ragazzi];
   var resp;
   var borg
@@ -214,7 +214,7 @@ app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
   const p=new Promise(function(resolve,reject){
 
 let nome=req.query.term;
-    let url='https://www.lefrecce.it/Channels.Website.BFF.WEB/website/locations/search?name='+nome+'&limit=6'
+    let url='https://www.lefrecce.it/Channels.Website.BFF.WEB/website/locations/search?name='+nome+'&limit=6' //chiamata REST a le frecce per autocomplete stazioni
     axios.get(url)
     .then(function(result){resolve(stazioni=result.data);})
     .catch(function(error){res.sendStatus(500).send(error);
@@ -261,7 +261,10 @@ for(let r=0;r<borghi.length;r++){
   t.lat=borghi[r].lat;
   t.lon=borghi[r].long;
   t.punti=0;
+  t.foto=borghi[r].foto;
+  t.descrizione=borghi[r].descrizione;
   t.distanza=getDistanceFromLatLonInKm(parseFloat(borghi[r].lat),parseFloat(borghi[r].long),parseFloat(lat),parseFloat(lon));
+  console.log(borghi[r],t);
   distanze.push(t);
 }
 

@@ -22,47 +22,20 @@
         <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
         <title>Anulare</title>
-    <style>
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            width: 210pt;
-            height: 300pt;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 0 solid rgba(0, 0, 0, .125);
-            border-radius: .25rem;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
-        .img-card{
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            height: 100%;
-            width: auto;
-        }
-        .card-body {
-            flex: 1 1 auto;
-            padding: 1rem;
-            min-height: 1;
-        }
-    </style>
     </head>
 
 
     <body class="bg1">
         <%- include('navbar')%>
-            <div style="padding: 40pt;"></div>
-
+        <div style="padding: 40pt;"></div>
+        <div class="container cont">
             <div class="col-lg-12 text-center">
                 <nav class="shadow container p-3 rounded-3 " style="background-color: #e3f2fd;">
                     <form class="row" method="post" action="/consigliati">
                         <div class="col-lg-12 mb-2" id="controls">
                           <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
                         
-                            <input type="text" class="active form-control" id="stazionePartenza" name="stazione" placeholder="Cerca un borgo" required> 
+                            <input type="text" class="active form-control" id="stazionePartenza" name="stazione" placeholder="Da dove vuoi partire?" required> 
 
                         </div>
                        
@@ -92,7 +65,7 @@
 
 
 
-                <h1 class="display-3 index-subtitle">Tutte le offerte attive</h1>
+                <h1 class="display-3 index-subtitle">Ecco i borghi che ti consigliamo!</h1>
                 <% } 
                 else{ %> 
                     <h1 class="display-3 index-subtitle">Inserire la stazione di partenza</h1>
@@ -100,33 +73,29 @@
                     <%}
                 %>
             </div>
-            <div class="container cont">
-                <div class="row d-flex justify-content-around">
-                        <div class="showcase-left col-md-2 mt-2" style="width: 20rem;">
+            <div class="row d-flex">
                             <% results.forEach(item => {%>
-                            <div class="card">
-                                <svg  xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                <image src="" class="card-img-top" name="<%=item.nome%>"></image>
-                                </svg>
-                                <div class="card-body">
-                                    <h4 class="card-title">
-                                        <%=item.nome%>
-                                    </h4>
-                                    <h6 class="card-subtitle">
-                                        con distanza di <span class=" h4 fw-bold"> <%=item.distanza%></span>  </h6> 
-                                    <p class="card-text desc pt-2">
-                                        
-                                    </p>
-                                </div>
-                                    <div class="showcase-btn text-lg-end d-flex ms-2 mb-2">
-                                        <a href="" class="btn btn-primary"> Scopri di più</a>
+                                <div class="card mb-3">
+                                    <div class="row no-gutters">
+                                      <div class="col-md-4">
+                                        <img src="<%=item.foto%>" class="card-img" style="height: 100px;" alt="...">
+                                      </div>
+                                      <div class="col-md-8">
+                                        <div class="card-body">
+                                          <h5 class="card-title"><%=item.nome%></h5>
+                                          <h6 class="card-subtitle">
+                                            con distanza di <span class=" h4 fw-bold"> <%=item.distanza%> km</span></h6> 
+                                            <p class="card-text desc pt-2">descrizione da inserire abbreviata... </p>
+                                        </div>
+                                        <div class="text-lg-end d-flex ms-2 mb-2">
+                                            <a href="/borgo?borgo=<%=item.nome%>" class="btn btn-primary"> Scopri di più</a>
+                                        </div>
+                                      </div>
                                     </div>
-                                
-                            </div>
+                                  </div>
                             <%});%>
-                        </div>
                 </div>
-            </div>
+        </div>
             <%- include('footer'); -%>
     
     </body>

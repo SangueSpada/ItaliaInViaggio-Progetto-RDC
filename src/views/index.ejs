@@ -62,9 +62,9 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <nav class="shadow container p-3 rounded-3 " style="background-color: #e3f2fd;">
-                        <form class="row" method="post" action="/borgo">
+                        <form class="row" method="get" action="/borgo">
                             <div class="col-lg-12 mb-2" id="controls">
-                                <input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Dove vuoi andare?" required>                       
+                                <input type="text" class="active form-control" id="borgo" name="borgo" placeholder="Dove vuoi andare?" required>                       
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
                                 <label class="active me-1 mt-1" for="dateStandard">Partenza:</label>
@@ -362,14 +362,14 @@
           }
         });
 
-        $( "#testo_ricerca" ).catcomplete({
+        $( "#borgo" ).catcomplete({
           delay: 0,
           source: db
         });
     });
 
     function validSearch(){ 
-        var search= document.getElementById("testo_ricerca");
+        var search= document.getElementById("borgo");
         var db="<%=nome%>".split(',');
         console.log(db);
         if(!db.includes(search.value)){
@@ -392,7 +392,7 @@
 
 
 
-const barraricerca=$("#testo_ricerca");
+const barraricerca=$("#borgo");
 barraricerca.change(function(e){
    // console.log('cambiato');
     tempo(e.target.value);
