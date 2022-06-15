@@ -17,7 +17,124 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
+var meteo={};
+var started=0;
 
+
+
+async function aggiorna_meteo(){
+
+  var resp;
+let done=0;
+while(!done){
+resp=await getborghifromcouchdb();
+done=! Error(resp).message.includes('ECONNREFUSED');
+
+}
+
+
+let promises=[];
+
+for(let i=0;i<resp.length;i++){
+
+let url="https://api.openweathermap.org/data/2.5/onecall?lat="+resp[i].lat+"&lon="+resp[i].long+"&exclude=alerts&appid="+process.env.API_WHEATHER; 
+
+promises.push(new Promise(function(resolve,reject){
+
+axios.get(url)
+
+.then(function(result){
+  
+  console.log(resp[i].nome);
+
+resolve(meteo[resp[i].nome]=result.data.daily);
+
+
+
+
+})
+.catch(function(error){
+ console.log(error);
+ resolve(error);
+  
+});
+
+}));
+
+}
+
+Promise.all(promises).then(function(){
+
+  //console.log(meteo);
+  meteo["TimeStamp"]=new Date();
+  let res=fs.writeFileSync(path.join(__dirname, 'public/meteo.json'),JSON.stringify(meteo));
+  console.log('aggiornato meteo...');
+   //console.log(JSON.parse(fs.readFileSync(path.join(__dirname, 'public/meteo.json'))))
+  
+   return;
+
+});
+  
+
+
+}
+
+
+async function getborghifromcouchdb(){
+  return new Promise(function(resolve){
+
+    let json={
+      "selector":{"_id": {"$gt":null}},
+      "fields": ["nome","lat","long"]
+    };
+
+    axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
+    // .then(function(response){console.log('response....');connected=1;resolve(resp=response.data.docs);})
+    .then(function(response){resolve(resp=response.data.docs);}) 
+    .catch(function(error){
+      
+      resolve(error);});
+
+
+
+
+  })
+
+}
+
+function ogni_3_ore(){
+  meteo=JSON.parse(fs.readFileSync(path.join(__dirname, 'public/meteo.json')));
+  let ins=process.env.INSTANCE;
+
+  if(ins=='node1'){
+  let ultimo_agg=new Date(meteo['TimeStamp']);
+  let data_corrente=new Date();
+  
+  if((Math.abs(data_corrente.valueOf()-ultimo_agg.valueOf()))<10800000){
+    console.log('già aggiornato il meteo...');
+    return;
+  }
+  else{
+    console.log('aggiorno il meteo...');
+  aggiorna_meteo();}
+  }
+  else{
+    if(!started && (Math.abs(new Date().valueOf()-new Date(meteo['TimeStamp']).valueOf()))>30000000){
+     console.log('è toccato a me aggiornare al posto di node1');
+      aggiorna_meteo();
+    }
+    started=1;
+    console.log('leggo solo il meteo ...');
+
+  }
+
+}
+
+ogni_3_ore();
+setInterval(ogni_3_ore,10800000);
+
+
+///////////////////////////////
 
 
 const punti_meteo={
@@ -125,7 +242,7 @@ app.post('/consigliati',urlencodedParser,async function(req,res){
   });
 
 Promise.all([p0,p1]).then( async function(value){
-  if(!staz_andata){res.send('<h1>non è stata trovata la stazione con osm</h1>');res.end();}
+  if(!staz_andata){console.log('<h1>non è stata trovata la stazione con osm</h1>');}
 
   let lat=staz_andata.lat;
   let long=staz_andata.lon;
@@ -271,7 +388,6 @@ for(let r=0;r<borghi.length;r++){
 
 //distanze.sort(compare_distance);
 //////////////////////////////////
-
 let temp=[];
 for(let j=0;j<distanze.length;j++){
   //distanze[j]= get_meteo_borgo(distanze[j],partenza,ritorno);
@@ -306,6 +422,31 @@ resolve(distanze);
 
 function get_meteo_borgo(distanze,partenza,ritorno){
 
+  let name=distanze.nome;
+  let m=meteo[name]; //response.data.daily
+  console.log(meteo);
+  return new Promise(resolve =>{
+
+    for(let k=0;k<8;k++){
+      let dt=new Date(m[k].dt*1000).valueOf();
+
+      if(dt>=partenza.valueOf() && dt<= (ritorno.valueOf())){
+       
+       let keyy=m[k].weather[0].main
+       let punteggio=punti_meteo[keyy];
+       distanze["main"].push(keyy);
+       distanze["icona"].push(m[k].weather[0].icon);
+       distanze["punti"]=distanze["punti"]+punteggio;
+
+                                                            }
+                        }
+      resolve(distanze);
+
+
+
+  });
+  /*
+
   return new Promise(resolve=>{
 
     let url="https://api.openweathermap.org/data/2.5/onecall?lat="+distanze.lat+"&lon="+distanze.lon+"&exclude=alerts&appid="+process.env.API_WHEATHER; 
@@ -337,7 +478,7 @@ axios.get(url)
 
   });
 
-
+*/
 }
 
 
@@ -379,7 +520,7 @@ function deg2rad(deg) {
 
 
 app.listen(process.env.PORT, () => {
-  winston.info(`NODE_ENV: ${process.env.NODE_ENV}`);
-  winston.info(`INSTANCE: ${process.env.INSTANCE}`);
-  winston.info(`EXPRESS: ${process.env.PORT}`);
+//  winston.info(`NODE_ENV: ${process.env.NODE_ENV}`);
+  //winston.info(`INSTANCE: ${process.env.INSTANCE}`);
+  //winston.info(`EXPRESS: ${process.env.PORT}`);
 });
