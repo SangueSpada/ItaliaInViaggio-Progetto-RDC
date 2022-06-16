@@ -3,7 +3,7 @@ const app = express();
 const bodyParser=require('body-parser');
 const path = require('path');
 const winston = require('winston');
-
+var request=require('request');
 const fs=require('fs');
 const axios=require('axios').default;
 require('dotenv').config({path: path.join(__dirname,'/.env')});
@@ -18,7 +18,6 @@ var started=0;
 var client_id = process.env.CLIENT_ID_CALENDAR;
 var client_secret = process.env.SECRET_ID_CALENDAR;
 var red_uri = process.env.RED_URI;
-var a_t;
 
 
 async function aggiorna_meteo(){
@@ -108,7 +107,8 @@ function ogni_3_ore(){
   if(ins=='node1'){
   let ultimo_agg=new Date(meteo['TimeStamp']);
   let data_corrente=new Date();
-  
+  console.log('ultimo aggiornamento meteo: '+ultimo_agg);
+  console.log('data corrente: '+data_corrente);
   if((Math.abs(data_corrente.valueOf()-ultimo_agg.valueOf()))<10800000){
     console.log('già aggiornato il meteo...');
     return;
@@ -332,6 +332,74 @@ app.get('/calendar',urlencodedParser,function(req,res){
 let url="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state={}&redirect_uri=" + red_uri + "&client_id=" + client_id;
 
 res.render('calendar.ejs', {url:url});
+
+
+});
+app.get('/seteventcalendar',urlencodedParser,function(req,res){
+
+  let a_t;
+  let data = JSON.parse(req.query.state);
+ 
+    
+    var formData = {
+        code: req.query.code,
+        client_id: client_id,
+        client_secret: client_secret,
+        redirect_uri: red_uri,
+        grant_type: 'authorization_code'
+    }
+
+  /*    axios.post('https://www.googleapis.com/oauth2/v4/token',form, {headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+
+.then(function(response){ */
+
+
+//non so perchè non funziona con axios, ma solo con request
+
+request.post({ url: 'https://www.googleapis.com/oauth2/v4/token', form: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }, async function optionalCallback(err, httpResponse, body) {
+  if (err) {
+      return console.log('upload failed:', err);
+  }
+   var info = JSON.parse(body);
+  console.log("Got the token " + info.access_token);
+  a_t = info.access_token;
+      
+
+
+        var formData = {
+            summary: 'soggiulio',
+            description: 'descrizione',
+            location: 'Roma',
+            colorId: '9',
+            start: {
+                dateTime: new Date(data["in"]),
+            },
+            end: {
+                dateTime: new Date(data["out"]),
+            },
+
+        }
+
+        axios.post('https://www.googleapis.com/calendar/v3/calendars/primary/events/', formData, { headers: { 'Authorization': 'Bearer ' + a_t, 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' } })
+            .then(function(response) {
+                //var info = JSON.parse(response);
+                console.log("riuscito: " + JSON.stringify(response.data));
+            })
+            .catch(function(error) {
+                return console.error('errore: ', error);
+
+            });
+
+
+
+
+
+    })
+    /*
+    .catch(function(err){
+      console.log('upload failed:', err);
+ 
+})*/
 
 
 });
