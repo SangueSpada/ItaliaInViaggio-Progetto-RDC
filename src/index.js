@@ -271,13 +271,18 @@ app.get('/ao',urlencodedParser, (req, res) => {
 */
 app.post('/owm',urlencodedParser, function(req,res){
   console.log("owm");
-  var url='https://api.openweathermap.org/data/2.5/onecall?lat='+req.body.lat+'&lon='+req.body.lon+'&exclude=alerts&appid='+process.env.API_WHEATHER;
-//var url=req.body.url+"&lon="+req.body.lon+"&exclude="+req.body.exclude+"&appid="+req.body.appid+process.env.API_WHEATHER;
-console.log(url);
+let m=meteo[req.body.name]; //response.data.daily
+
+/*
+var url='https://api.openweathermap.org/data/2.5/onecall?lat='+req.body.lat+'&lon='+req.body.lon+'&exclude=alerts&appid='+process.env.API_WHEATHER;
 axios.get(url,{headers: {'Accept':'text/plain'}})
 .then(function(response){res.status(200).send(response.data.daily);})
 .catch(function(error){res.status(500).send(error);return;});
-
+*/
+if(m=='undefined'){res.status(500).send('errore nome borgo non trovato');}
+else{
+res.status(200).send(m);
+}
 
 });
 
@@ -424,7 +429,6 @@ function get_meteo_borgo(distanze,partenza,ritorno){
 
   let name=distanze.nome;
   let m=meteo[name]; //response.data.daily
-  console.log(meteo);
   return new Promise(resolve =>{
 
     for(let k=0;k<8;k++){

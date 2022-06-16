@@ -406,11 +406,13 @@ barraricerca.change(function(e){
 
 function tempo(citta){
     let find=0; 
+    let name;
     for(var i=0;i<borgo.length;i++){ 
         if(borgo[i]==citta){
+            name=borgo[i];
             find=1; 
-            var lat=la[i]; 
-            var long=lo[i]; 
+            //var lat=la[i]; 
+            //var long=lo[i]; 
             break; 
         } 
     }
@@ -444,8 +446,8 @@ function tempo(citta){
             console.log(this.response); 
          }    
     } 
-//process.env.API_WHEATHER/var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid="; 
-let body='lat='+lat+'&lon='+long;
+//let body='lat='+lat+'&lon='+long;
+let body='name='+name;
 httpreq.open("POST","/owm",true); 
 httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded"); 
 httpreq.send(body); 
