@@ -8,10 +8,6 @@ const fs=require('fs');
 const axios=require('axios').default;
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
-
-
-
-
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.set('views', path.join(__dirname, 'views'));
@@ -19,7 +15,10 @@ app.set('view engine', 'ejs');
 var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
 var meteo={};
 var started=0;
-
+var client_id = process.env.CLIENT_ID_CALENDAR;
+var client_secret = process.env.SECRET_ID_CALENDAR;
+var red_uri = process.env.RED_URI;
+var a_t;
 
 
 async function aggiorna_meteo(){
@@ -45,7 +44,7 @@ axios.get(url)
 
 .then(function(result){
   
-  console.log(resp[i].nome);
+ // console.log(resp[i].nome);
 
 resolve(meteo[resp[i].nome]=result.data.daily);
 
@@ -252,7 +251,7 @@ let consigliati;
 
 
 consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi,partenza,ritorno);
-console.log(consigliati);
+//console.log(consigliati);
 res.render('consigliati',{stazioni:stazioni,results:consigliati});
 
 
@@ -316,7 +315,7 @@ app.get('/borgo', urlencodedParser, function(req, res) {
   p.then(value=>{
     resp.forEach(item=>{
       if(item.nome==luogo){
-        console.log(item);
+        //console.log(item);
         borg=item;
         return;
       }
@@ -325,6 +324,15 @@ app.get('/borgo', urlencodedParser, function(req, res) {
       
 
   });
+
+});
+
+app.get('/calendar',urlencodedParser,function(req,res){
+
+let url="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state={}&redirect_uri=" + red_uri + "&client_id=" + client_id;
+
+res.render('calendar.ejs', {url:url});
+
 
 });
 
@@ -449,40 +457,7 @@ function get_meteo_borgo(distanze,partenza,ritorno){
 
 
   });
-  /*
-
-  return new Promise(resolve=>{
-
-    let url="https://api.openweathermap.org/data/2.5/onecall?lat="+distanze.lat+"&lon="+distanze.lon+"&exclude=alerts&appid="+process.env.API_WHEATHER; 
-
-
-axios.get(url)
-.then(function(result){
-
-    for(let k=0;k<8;k++){
-      let dt=new Date(result.data.daily[k].dt*1000).valueOf();
-
-      if(dt>=partenza.valueOf() && dt<= (ritorno.valueOf())){
-       
-       let keyy=result.data.daily[k].weather[0].main
-       let punteggio=punti_meteo[keyy];
-       distanze["main"].push(keyy);
-       distanze["icona"].push(result.data.daily[k].weather[0].icon);
-       distanze["punti"]=distanze["punti"]+punteggio;
-
-                                                            }
-                        }
-          resolve(distanze);
-
-})
-.catch(function(error){
-  console.log(error);
-  resolve(error);
-});
-
-  });
-
-*/
+ 
 }
 
 

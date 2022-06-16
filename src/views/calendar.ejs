@@ -54,13 +54,23 @@
 
 
 <div class="container cont">
-    
 
+    <form id="form" action="">
+    <input id="checkin" class="date" onchange="setcheckin()" required>
+    <input id="checkout" class="date" onchange="setcheckout()" required>
+    <input type="submit" value="aggiungi viaggio a google calendar">
 
+</form>
 
 </div>
-
-
-
-
     </body>
+
+    <script>
+        $('#form')[0].action="<%=url%>"
+        var url='<%=url%>';
+        function setcheckin(){
+
+        }
+        function setcheckout(){}
+    </script>
+    </html>
