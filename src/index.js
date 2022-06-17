@@ -9,7 +9,7 @@ const axios=require('axios').default;
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
 app.use(express.static(path.join(__dirname, '/public')));
-
+app.use(express.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
@@ -83,7 +83,7 @@ async function getborghifromcouchdb(){
 
     let json={
       "selector":{"_id": {"$gt":null}},
-      "fields": ["nome","lat","long"]
+      "fields": ["nome","lat","long","foto","descrizione"]
     };
 
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
@@ -193,7 +193,7 @@ app.get('/',urlencodedParser, (req, res) => {
 
 app.get('/consigliati',urlencodedParser,function(req,res){
   
-    res.render('consigliati',{stazioni:stazioni,results:[]});
+    res.render('consigliati',{stazioni:stazioni,results:[],err:''});
 
   
 });
@@ -228,12 +228,15 @@ app.post('/consigliati',urlencodedParser,async function(req,res){
     axios.get('https://nominatim.openstreetmap.org/search?q='+stazione+',Italia&format=json&addressdetails=1',{headers: {'Accept':'json'}})
     .then(function(response){
       response=response.data;
+      if(response.length==0){resolve();}
+      else{
         for(let i=0;i<response.length;i++){
           if(response[i].type==="station"){
             resolve(staz_andata=response[i]);
             break;
           }
-        }
+        }        resolve();
+      }
     })
     .catch(function(error){console.log(error);res.send(error);return;});
 
@@ -241,7 +244,11 @@ app.post('/consigliati',urlencodedParser,async function(req,res){
   });
 
 Promise.all([p0,p1]).then( async function(value){
-  if(!staz_andata){console.log('<h1>non è stata trovata la stazione con osm</h1>');}
+  if(!staz_andata){
+    
+    res.render('consigliati',{stazioni:stazioni,results:[],err:'stazione non trovata su open street map, riprovare con un\' altra'});
+
+  return;}
 
   let lat=staz_andata.lat;
   let long=staz_andata.lon;
@@ -563,6 +570,118 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 function deg2rad(deg) { 
   return deg * (Math.PI/180) 
 }
+
+
+
+
+app.post('/api/consigliati',urlencodedParser,async function(req,res){
+
+  let staz_par;
+  let inn;
+  let outt;
+  let min_date=new Date();
+  let max_date=new Date();
+  max_date.setDate(max_date.getDate()+7);
+
+try{
+  staz_par=req.body.partenza;
+  staz_par=staz_par.replaceAll(' ','%20');
+  if(staz_par==''){
+    res.send({'err':'inserire una stazione di partenza valida '});
+
+    return;
+  }
+
+}
+catch(err){
+  res.send({'err':'inserire una stazione di partenza in partenza key '});
+  return;
+}
+
+  let staz_andata;
+
+   inn=new Date(req.body.checkin);
+   outt=new Date(req.body.checkout);
+
+   if(inn=='Invalid Date' || outt=='Invalid Date'){
+    res.send({'err':'date non inserite o non valide'});
+    return;
+   }
+
+   else if(!(inn.valueOf()>min_date.valueOf() && outt.valueOf()<max_date.valueOf())){
+    res.send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
+    return;
+   }
+
+
+
+
+
+const borghi=await getborghifromcouchdb();
+
+
+const p1=new Promise(function(resolve,reject){
+  // api openstreetmap for coordinates of departure station
+  axios.get('https://nominatim.openstreetmap.org/search?q='+staz_par+',Italia&format=json&addressdetails=1',{headers: {'Accept':'json'}})
+  .then(function(response){
+    response=response.data;
+    //console.log(response);
+    if(response.length==0){
+      resolve();}
+    else{
+      for(let i=0;i<response.length;i++){
+        if(response[i].type==="station"){
+          resolve(staz_andata=response[i]);
+          break;
+        }
+      }
+    resolve();}
+  })
+  .catch(function(error){res.send(error);return;});
+
+///////////////////////////////////////
+});
+
+p1.then( async function(value){
+  //console.log(staz_andata);
+  if(!staz_andata){
+    res.send({'err':'stazione non trovata su open street map, riprovare con un\' altra'});
+  return;}
+
+  let lat=staz_andata.lat;
+  let long=staz_andata.lon;
+
+let consigliati;
+consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),borghi,inn,outt);
+if(!consigliati){
+  res.send({'err':'consigliati non trovati'});
+  return;
+
+}
+else{
+  let c;
+  for(let r=0;r<consigliati.length;r++){
+    c=consigliati[r];
+    delete c.foto;
+    delete c.punti;
+    delete c.icona;
+    delete c.punteggio;
+  }
+  
+  
+  
+  res.send({'result':consigliati})}
+
+});
+
+
+
+
+
+
+});
+
+
 
 
 
