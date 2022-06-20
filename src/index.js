@@ -263,7 +263,10 @@ let consigliati;
 
 consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi,partenza,ritorno);
 //console.log(consigliati);
-res.render('consigliati',{stazioni:stazioni,results:consigliati});
+let date=getDates(partenza,ritorno);
+
+
+res.render('consigliati',{stazioni:stazioni,results:consigliati,dates:date});
 
 
 });
@@ -272,6 +275,12 @@ res.render('consigliati',{stazioni:stazioni,results:consigliati});
 
 });
 
+function getDates(start, end) {
+  for (var arr = [], dt = start; dt <= end; dt.setDate(dt.getDate() + 1)) {
+      arr.push(dt.getDate()+'/'+(dt.getMonth()+1));
+  }
+  return arr;
+}
 
 /*
 app.get('/ao',urlencodedParser, (req, res) => {
@@ -661,8 +670,7 @@ else{
   }
   
   
-  
-  res.send({'result':consigliati})}
+res.send({'result':consigliati})}
 
 });
 

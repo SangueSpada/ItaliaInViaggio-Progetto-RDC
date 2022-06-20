@@ -78,7 +78,65 @@
                     <%=borgo.descrizione%> 
                 </h4>
             </div>
+
+
+            <div id="meteo" hidden="true">
+              <div style="padding: 15pt;"></div>
+              <table class="table">
+                  <thead>
+                      <tr id="date">
+
+                          <th class="h3 col-auto" style="text-align: center;"></th>
+                          <th class="h3 col-auto" style="text-align: center;"></th>
+                          <th class="h3 col-auto" style="text-align: center;"></th>
+                          <th class="h3 col-auto" style="text-align: center;"></th>
+                          <th class="h3 col-auto" style="text-align: center;"></th>
+                          <th class="h3 col-auto" style="text-align: center;"></th>
+                          <th class="h3 col-auto" style="text-align: center;"></th>
+                          <th class="h3 col-auto" style="text-align: center;"></th>
+                      </tr>
+                      
+                  </thead>
+
+                  <tbody>
+
+                      <tr id="icone">
+                      
+                          <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                          <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                          <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                          <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                          <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                          <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                          <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                          <td class="col-auto py-3" style="text-align: center;"><img src=""></td>
+                      
+                      </tr>
+
+                      <tr id="descrizioni">
+                      <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                      <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                      <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                      <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                      <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                      <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                      <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                      <td class="h5 col-auto py-3" style="text-align: center;"></td>
+                      
+                      
+                      </tr>
+
+
+                  </tbody>
+              </table>
+          </div>
+
+
+
+
             <div class="row mt-2 mb-5">
+              <div style="padding: 15pt;"></div>
+
                 <div id="map">
                 </div>
             </div>
@@ -248,6 +306,52 @@
         <%- include('footer'); -%>
 </body>
 <script>
+
+
+function display_meteo(){
+
+  var httpreq= new XMLHttpRequest(); 
+    httpreq.responseType='json'; 
+    httpreq.onreadystatechange= function(e){ 
+        if(this.readyState==4 && this.status == 200){ 
+            let meteos=this.response; 
+            $("#meteo")[0].hidden=false; 
+           //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++'); 
+           $("#date").find("th").each(function(index){ 
+               var data=new Date(meteos[index].dt*1000); 
+           $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));}); 
+           $("#icone").find("td").each(function(index){ 
+            var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png'; 
+            $(this).find("img")[0].src=url_icon; 
+           }); 
+           $("#descrizioni").find("td").each(function(index){ 
+            $(this)[0].textContent=meteos[index].weather[0].description; 
+           }); 
+        } 
+        else if(this.readyState==4 && this.status ==500){ 
+            console.log('errore 500 '+this.response); 
+         } 
+        else if(this.readyState==4 && this.status !=500 & this.status!=200){ 
+            console.log(this.response); 
+         }    
+    } 
+//let body='lat='+lat+'&lon='+long;
+let body='name=<%=borgo.nome%>';
+console.log('<%=borgo.nome%>');
+httpreq.open("POST","/owm",true); 
+httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded"); 
+httpreq.send(body); 
+
+}
+
+display_meteo();
+
+
+
+
+
+
+
     var db;
     $( function() {
       $( "#stazionePartenza" ).autocomplete({

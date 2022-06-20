@@ -3,12 +3,12 @@ Content-Type: application/json
 
 {
     "selector":{
-        "nome":"Bard"
+        "_id": {"$gt":null}
     },
-    "fields": ["_id","_rev","nome","lat","long","zoom"]
+    "fields": ["_id","_rev","nome","lat","long","zoom","regione","descrizione","foto"]
 }
 
-
+###
 
 GET http://admin:root@localhost:5984/iiv_db/_all_docs
 
