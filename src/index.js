@@ -12,7 +12,11 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
 var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
+const Trenitalia = require('./trenitalia.js');
+
 var meteo={};
 var started=0;
 var client_id = process.env.CLIENT_ID_CALENDAR;
@@ -412,47 +416,27 @@ request.post({ url: 'https://www.googleapis.com/oauth2/v4/token', form: formData
 });
 
 app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
-  var stazioni;
-
-  const p=new Promise(function(resolve,reject){
-
-    let nome=req.query.term;
-    let url='https://www.lefrecce.it/Channels.Website.BFF.WEB/website/locations/search?name='+nome+'&limit=6' //chiamata REST a le frecce per autocomplete stazioni
-    axios.get(url)
-    .then(function(result){resolve(stazioni=result.data);})
-    .catch(function(error){res.sendStatus(500).send(error);
-                          return;});
-  });
-  p.then(value=>{
-    var nomi=[];
-    stazioni.forEach(item =>{nomi.push(item.name)});
-    res.send(nomi);
-  });
+  const t = new Trenitalia();
+  var stazioni = await t.autocomplete(req.query.term)
+  var nomi=[];
+  stazioni.forEach(item =>{nomi.push(item.name)});
+  res.send(nomi);
 });
 
 app.post('/searchTsolutions',urlencodedParser, async function(req, res) {
-  var stazioneP=req.body.stazionePartenza;
-  const p=new Promise(function(resolve,reject){
-
-    var options = {
-      "adults":req.body
-
-    }
-    let url='https://www.lefrecce.it/Channels.Website.BFF.WEB/website/ticket/solutions' //chiamata REST a le frecce per autocomplete stazioni
-    axios.post(url,json,{ headers:{'Content-Type': 'application/json'}})
-    .then(function(result){resolve(stazioni=result.data);})
-    .catch(function(error){res.sendStatus(500).send(error);
-                          return;});
-  });
-  p.then(value=>{
-    var nomi=[];
-    stazioni.forEach(item =>{nomi.push(item.name)});
-    res.send(nomi);
-  });
-  
-
- res.send(solutions);
-
+  const t = new Trenitalia();
+  var IdSP = await t.autocomplete(req.body.stazionePartenza);
+  var IdSA = await t.autocomplete(req.body.stazioneArrivo);
+  var adulti = req.body.adulti;
+  var bambini = req.body.ragazzi;
+  let dp = (req.body.dataPartenza).split("-");
+  var orarioP = new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(req.body.oraPartenza)).toISOString().replace("Z","")+"+02:00";
+  var solutions={};
+  solutions.DepartureSolutions=await t.getOneWaySolutions(IdSP[0].id,IdSA[0].id,orarioP,adulti,bambini);
+  dp = (req.body.dataRitorno).split("-");
+  var orarioR = new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(req.body.oraRitorno)).toISOString().replace("Z","")+"+02:00";
+  solutions.BackSolutions = await t.getOneWaySolutions(IdSA[0].id,IdSP[0].id,orarioR,adulti,bambini);
+  res.send(solutions);
 });
     
 

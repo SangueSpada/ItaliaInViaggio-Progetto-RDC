@@ -133,9 +133,9 @@
             </div>
             <div class="row mt-4">
                     <nav class="shadow container p-3 rounded-3" style="background-color: #e3f2fd;">
-                        <form class="row" method="post" action="/searchTsolutions">
+                        <form class="row" method="post" action="/searchTsolutions" id="Tsolutions">
                             <div class="col-lg-6 mb-2">
-                                <input type="text" class="active form-control" id="stazionePartenza" name="stazionePartenza" placeholder="Cerca un borgo" required> 
+                                <input type="text" class="active form-control" id="stazionePartenza" name="stazionePartenza" placeholder="Stazione di partenza" required> 
                             </div>
                             <div class="col-lg-6 mb-2" id="controls">
                               <input type="text" class="active form-control" id="stazioneArrivo" name="stazioneArrivo" value="<%=borgo.nome%>" readonly>     
@@ -143,7 +143,7 @@
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
                                 <label class="active me-1 mt-1" for="dateStandard" >Partenza:</label>
                                 <input type="date"  class="form-control" id="dataPartenza" onchange="checkin_fun();" name="dataPartenza" value="<%= search[1] || '' %>" required>
-                                <select class="form-select-sm" id="oraPartenza">
+                                <select class="form-select-sm" id="oraPartenza" name="oraPartenza">
                                   <option value="0">00:00</option>
                                   <option value="1">01:00</option>
                                   <option value="2">02:00</option>
@@ -174,7 +174,7 @@
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
                                 <label class="active me-1 mt-1" for="dateStandard">Ritorno:</label>
                                 <input type="date" class="form-control" id="dataRitorno" onchange="checkout_fun();" name="dataRitorno" value="<%= search[2] || '' %>" required>
-                                <select class="form-select-sm" id="oraRitorno">
+                                <select class="form-select-sm" id="oraRitorno"name="oraRitorno">
                                   <option value="0">00:00</option>
                                   <option value="1">01:00</option>
                                   <option value="2">02:00</option>
@@ -270,8 +270,16 @@
             event.preventDefault();
         }
     }
-  
-    
+  /*  
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "/searchTsolutions"); 
+  xhr.onload = function(event){ 
+      alert("Success, server responded with: " + event.target.response); // raw response
+  }; 
+  // or onerror, onabort
+  var formData = new FormData(document.getElementById("Tsolutions")); 
+  xhr.send(formData);
+  */
 
 
 
