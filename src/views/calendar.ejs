@@ -54,13 +54,55 @@
 
 
 <div class="container cont">
-    
 
+    <form id="form" action="">
+    <input id="checkin" type="date" onchange="setcheckin()" required>
+    <input id="checkout" type="date" onchange="setcheckout()" required>
+    <input type="submit" onclick="valid()" value="aggiungi viaggio a google calendar">
 
+</form>
 
 </div>
-
-
-
-
     </body>
+
+    <script>
+        let json={};
+        var url='<%=url%>';
+        url=url.replaceAll('&amp;','&');
+
+
+function valid(){
+if(Object.keys(json).length!=2){
+
+    event.stopPropagation();
+    event.preventDefault();
+}
+else if(Object.keys(json).length==2){
+    let s=JSON.stringify(json);
+    let ss='state='+s
+    console.log(ss);
+    url=url.replace('state={}',ss);
+    $('#form')[0].action=url;
+
+    console.log(url);
+
+    document.location.href=url;
+    event.stopPropagation();
+    event.preventDefault();
+}
+}
+
+
+
+        function setcheckin(){
+            json["in"]=$('#checkin').val();
+
+
+
+        }
+        function setcheckout(){
+            json["out"]=$('#checkout').val();
+       
+        }
+    </script>
+    </html>

@@ -68,8 +68,13 @@
                 <h1 class="display-3 index-subtitle">Ecco i borghi che ti consigliamo!</h1>
                 <% } 
                 else{ %> 
+                    <div>
+                        <% if(err!=''){ %>
+                    <h2 style="color: red;"><%=err%></h2>
+                            <%}
+                            %>
                     <h1 class="display-3 index-subtitle">Inserire la stazione di partenza</h1>
-
+                        </div>
                     <%}
                 %>
             </div>
