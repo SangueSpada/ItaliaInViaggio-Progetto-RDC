@@ -97,7 +97,7 @@ function initMap() {
         position: place.geometry.location,
         map: map,
         title: place.name,
-        label: String(nres+1),
+        label: String(nres),
         animation: google.maps.Animation.DROP
       });
       google.maps.event.addListener(marker, 'click', () => {

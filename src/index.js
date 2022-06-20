@@ -326,33 +326,41 @@ app.get('/borgo', urlencodedParser, function(req, res) {
 app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
   var stazioni;
 
-
-
-
   const p=new Promise(function(resolve,reject){
 
-let nome=req.query.term;
+    let nome=req.query.term;
     let url='https://www.lefrecce.it/Channels.Website.BFF.WEB/website/locations/search?name='+nome+'&limit=6' //chiamata REST a le frecce per autocomplete stazioni
     axios.get(url)
     .then(function(result){resolve(stazioni=result.data);})
     .catch(function(error){res.sendStatus(500).send(error);
-                            return;});
-      });
-  
-  
-    p.then(value=>{
-      var nomi=[];
-      stazioni.forEach(item =>{nomi.push(item.name)});
-      res.send(nomi);
-  
-    });
-  
-
-
+                          return;});
+  });
+  p.then(value=>{
+    var nomi=[];
+    stazioni.forEach(item =>{nomi.push(item.name)});
+    res.send(nomi);
+  });
 });
 
 app.post('/searchTsolutions',urlencodedParser, async function(req, res) {
   var stazioneP=req.body.stazionePartenza;
+  const p=new Promise(function(resolve,reject){
+
+    var options = {
+      "adults":req.body
+
+    }
+    let url='https://www.lefrecce.it/Channels.Website.BFF.WEB/website/ticket/solutions' //chiamata REST a le frecce per autocomplete stazioni
+    axios.post(url,json,{ headers:{'Content-Type': 'application/json'}})
+    .then(function(result){resolve(stazioni=result.data);})
+    .catch(function(error){res.sendStatus(500).send(error);
+                          return;});
+  });
+  p.then(value=>{
+    var nomi=[];
+    stazioni.forEach(item =>{nomi.push(item.name)});
+    res.send(nomi);
+  });
   
 
  res.send(solutions);
