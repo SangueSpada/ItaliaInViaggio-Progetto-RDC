@@ -386,6 +386,46 @@ app.get('/borgo', urlencodedParser, function(req, res) {
 
 });
 
+
+/*+++++++++++++++++++++ DA COMPLETAREEEEEE +++++++++++++++++*/
+
+app.get('/borghi',urlencodedParser,function(req,res){
+  const p0=new Promise(function(resolve,reject){
+    let json={
+      "selector":{"_id": {"$gt":null}},
+      "fields": ["nome","lat","long","foto","descrizione"]
+    };
+    axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
+    .then(function(response){resolve(tutti_borghi=response.data.docs);})
+    .catch(function(error){res.send(error);return;});
+    
+  });
+  const p1=new Promise(function(resolve,reject){
+    axios.get('https://nominatim.openstreetmap.org/search?q='+stazione+',Italia&format=json&addressdetails=1',{headers: {'Accept':'json'}})
+    .then(function(response){
+      response=response.data;
+      if(response.length==0){resolve();}
+      else{
+        for(let i=0;i<response.length;i++){
+          if(response[i].type==="station"){
+            resolve(staz_andata=response[i]);
+            break;
+          }
+        }        resolve();
+      }
+    })
+    .catch(function(error){console.log(error);res.send(error);return;});
+  });
+
+  Promise.all([p0,p1]).then( async function(value){
+    res.render('borghi',{borghi:b,meteo:m});
+
+  });
+
+});
+
+/*++++++++++++++++++++++++++++++++++++++*/
+
 app.get('/calendar',urlencodedParser,function(req,res){
 
 let url="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state={}&redirect_uri=" + red_uri + "&client_id=" + client_id;
