@@ -413,6 +413,14 @@ function moreBtnRangeR() {
 }
 
 function waitinSolutions(){
+  var element = document.getElementById("depSol");
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  };
+  element = document.getElementById("backSol");
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  };
   var divP = document.getElementById("depSol");
   var divA = document.getElementById("backSol");
   let cardP = document.createElement('div');
@@ -442,11 +450,14 @@ function waitinSolutions(){
 }
 
 function cardSolutions(sol){
-
-  var element = document.getElementById("waitP");
-  element.parentNode.removeChild(element);
-  element = document.getElementById("waitA");
-  element.parentNode.removeChild(element);
+  var element = document.getElementById("depSol");
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  };
+  element = document.getElementById("backSol");
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  };
 
   var partenze = sol.DepartureSolutions;
   var ritorni = sol.BackSolutions;
