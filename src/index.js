@@ -209,6 +209,27 @@ app.post('/consigliati',urlencodedParser,async function(req,res){
   let partenza=new Date(req.body.CheckIn);
   let ritorno= new Date(req.body.CheckOut);
 
+  partenza.setHours(0,0,1);
+  ritorno.setHours(0,0,1);
+
+
+let min_date=addDays(new Date(),1);
+min_date.setHours(0,0,0);
+let max_date=addDays(min_date,6);
+max_date.setHours(23,59,59);
+
+
+
+if(!(partenza.valueOf()>=min_date.valueOf() && ritorno.valueOf()<=max_date.valueOf()) || partenza.valueOf()==ritorno.valueOf()){
+    res.send('range date non valido');
+    res.end();
+    return;
+   }
+  
+  
+  
+
+
   stazione=stazione.replaceAll(' ','%20');
   let tutti_borghi;
   let staz_andata;
@@ -265,7 +286,7 @@ let consigliati;
 
 consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi,partenza,ritorno);
 //console.log(consigliati);
-let date=getDates(partenza,ritorno);
+let date=getDates(partenza,ritorno,0);
 
 
 res.render('consigliati',{stazioni:stazioni,results:consigliati,dates:date});
@@ -277,10 +298,26 @@ res.render('consigliati',{stazioni:stazioni,results:consigliati,dates:date});
 
 });
 
-function getDates(start, end) {
+function addDays(date,days){
+  let result=new Date(date.valueOf());
+  result.setDate(result.getDate()+days);
+  return result;
+}
+
+
+function getDates(start, end,flag) {
+  if(flag){
+    for (var arr = [], dt = start; dt <= end; dt.setDate(dt.getDate() + 1)) {
+      arr.push(new Date(dt).toISOString().split('T')[0]);
+  }
+  
+  }
+
+  else{
   for (var arr = [], dt = start; dt <= end; dt.setDate(dt.getDate() + 1)) {
       arr.push(dt.getDate()+'/'+(dt.getMonth()+1));
   }
+}
   return arr;
 }
 
@@ -583,9 +620,11 @@ app.post('/api/consigliati',urlencodedParser,async function(req,res){
   let staz_par;
   let inn;
   let outt;
-  let min_date=new Date();
-  let max_date=new Date();
-  max_date.setDate(max_date.getDate()+7);
+  let min_date=addDays(new Date(),1);
+  min_date.setHours(0,0,0);
+  let max_date=addDays(min_date,6);
+  console.log("min_date: "+min_date);
+  console.log("max_date "+ max_date)
 
 try{
   staz_par=req.body.partenza;
@@ -605,14 +644,17 @@ catch(err){
   let staz_andata;
 
    inn=new Date(req.body.checkin);
+   inn.setHours(0,0,1);
    outt=new Date(req.body.checkout);
+   outt.setHours(0,0,1);
+
 
    if(inn=='Invalid Date' || outt=='Invalid Date'){
     res.send({'err':'date non inserite o non valide'});
     return;
    }
 
-   else if(!(inn.valueOf()>min_date.valueOf() && outt.valueOf()<max_date.valueOf())){
+   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()==outt.valueOf()){
     res.send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
     return;
    }
