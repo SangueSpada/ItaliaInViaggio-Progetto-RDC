@@ -287,26 +287,6 @@
             </div>
             <div class="row">
               <div class="col-lg-6" id="depSol">
-                <!--<div class="card mb-3">
-                      <div class="row card-body">
-                        <div class="col">
-                          <h4 style="font-weight: bold;">08:00
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                          </svg>
-                          12:00</h4>
-                        <h6>55 min, 1 cambio</h6>
-                        </div>
-                        <div class="col text-center">
-                          <small class="text-muted mx-2"><img src="../media/trenitalia/RE.svg" class="me-1" width="32" height="32">20000</small>
-                          <small class="text-muted mx-2"><img src="../media/trenitalia/FA.svg" class="me-1" width="90" height="32">19852</small>
-                        </div>
-                        <div class="col text-end">
-                          <h3 style="font-weight: bold; color: red;">2.1€</h3>
-                          <a class="btn btn-success" target="_blank" href="https://www.lefrecce.it/Channels.Website.WEB/">Acquista</a>
-                        </div>
-                      </div>
-                </div>-->
               </div>
               <div class="col-lg-6" id="backSol">
               </div>
@@ -383,14 +363,13 @@ function validSearch(){
   var formData = new FormData(document.getElementById("Tsolutions")); //salva i dati della form 
   var xhr = new XMLHttpRequest(); 
   xhr.onreadystatechange= function(event){ 
-      if(this.readyState==4 && this.status == 200){ 
-        //alert(event.target.response); // raw response
-        var sol = JSON.parse(event.target.response);
-        //console.log(sol);
-        alert("ok");
-        cardSolutions(sol);
-      }
- 
+    if(this.readyState==1){
+      waitinSolutions();
+    }
+    else if(this.readyState==4 && this.status == 200){ 
+      var sol = JSON.parse(event.target.response);
+      cardSolutions(sol);
+    }
   }; 
   xhr.open("POST","/searchTsolutions",true); 
   xhr.send(formData);

@@ -412,7 +412,42 @@ function moreBtnRangeR() {
   }
 }
 
+function waitinSolutions(){
+  var divP = document.getElementById("depSol");
+  var divA = document.getElementById("backSol");
+  let cardP = document.createElement('div');
+  cardP.id="waitP";
+  cardP.classList.add("card","mb-3");
+  let cardA = document.createElement('div');
+  cardA.id="waitA";
+  cardA.classList.add("card","mb-3");
+  let cardBody = document.createElement('div');
+  cardBody.classList.add("card-body");
+  let p = document.createElement('p');
+  p.classList.add("card-text","placeholder-glow");
+  let span1 = document.createElement('span');
+  span1.classList.add("placeholder","col-7");
+  let span2 = document.createElement('span');
+  span2.classList.add("placeholder","col-5");
+  let span3 = document.createElement('span');
+  span3.classList.add("placeholder","col-9");
+  p.appendChild(span1);
+  p.appendChild(span2);
+  p.appendChild(span3);
+  cardBody.appendChild(p);
+  cardP.appendChild(cardBody);
+  cardA.appendChild(cardBody.cloneNode(true));
+  divP.appendChild(cardP);
+  divA.appendChild(cardA);
+}
+
 function cardSolutions(sol){
+
+  var element = document.getElementById("waitP");
+  element.parentNode.removeChild(element);
+  element = document.getElementById("waitA");
+  element.parentNode.removeChild(element);
+
   var partenze = sol.DepartureSolutions;
   var ritorni = sol.BackSolutions;
   (partenze.solutions).forEach(item=>{
