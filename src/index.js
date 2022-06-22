@@ -6,6 +6,8 @@ const winston = require('winston');
 var request=require('request');
 const fs=require('fs');
 const axios=require('axios').default;
+const multer = require('multer');
+const upload = multer();
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
 app.use(express.static(path.join(__dirname, '/public')));
@@ -432,8 +434,9 @@ app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
   res.send(nomi);
 });
 
-app.post('/searchTsolutions',urlencodedParser, async function(req, res) {
+app.post('/searchTsolutions',upload.none(), async function(req, res) {
   const t = new Trenitalia();
+  console.log(req.body);
   var IdSP = await t.autocomplete(req.body.stazionePartenza);
   var IdSA = await t.autocomplete(req.body.stazioneArrivo);
   var adulti = req.body.adulti;

@@ -3,7 +3,7 @@
 POST https://www.lefrecce.it/Channels.Website.BFF.WEB/website/ticket/solutions
 Content-Type: application/json
 
-{"departureLocationId":830008409,"arrivalLocationId":830008703,"departureTime":"2022-06-22T09:00:00.000+02:00","adults":1,"children":0}
+{"departureLocationId":830008409,"arrivalLocationId":830008703,"departureTime":"2022-06-24T09:00:00.000+02:00","adults":1,"children":0}
 
 
 ###

@@ -412,6 +412,146 @@ function moreBtnRangeR() {
   }
 }
 
+function cardSolutions(sol){
+  var partenze = sol.DepartureSolutions;
+  var ritorni = sol.BackSolutions;
+  (partenze.solutions).forEach(item=>{
+    var s = item.solution;
+    var divP = document.getElementById("depSol");
+    let card = document.createElement('div');
+    card.classList.add("card","mb-3");
+    let cardBody = document.createElement('div');
+    cardBody.classList.add("row","card-body");
+
+    let col1 = document.createElement('div');
+    col1.classList.add("col");
+    let header1 = document.createElement('h4');
+    header1.style.fontWeight = "bold";
+    let dt = new Date(s.departureTime).toLocaleTimeString('it-IT',{ timeStyle: 'short', hour12: false });
+    let at = new Date(s.arrivalTime).toLocaleTimeString('it-IT',{ timeStyle: 'short', hour12: false });            
+    header1.innerHTML=dt+'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right me-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>'+at;
+    let header2 = document.createElement('h6');
+    if(s.nodes.length == 1){
+      header2.innerHTML=s.duration+', '+String(s.nodes.length -1)+" cambio";
+    }
+    else{
+      header2.innerHTML=s.duration+', '+String(s.nodes.length -1)+" cambi";
+    }
+    col1.appendChild(header1);
+    col1.appendChild(header2);
+
+    let col2 = document.createElement('div');
+    col2.classList.add("col","text-center");
+    (s.trains).forEach(t =>{
+      let small=document.createElement('small');
+      small.classList.add("text-muted","mx-2");
+      let img = document.createElement('img');
+      img.src ="../media/trenitalia/"+t.acronym+".svg"
+      img.classList.add("me1");
+      img.width=90;
+      img.height=32;
+      small.appendChild(img);
+      small.insertAdjacentText("beforeend",t.name);
+      col2.appendChild(small);
+    });
+    let col3 = document.createElement('div');
+    col3.classList.add("col","text-end");
+    if(s.price!=null){
+      let header3 = document.createElement('h3');
+      header3.style.fontWeight="bold";
+      header3.style.color="red";
+      header3.innerHTML=s.price.amount+"€";
+      let a1 = document.createElement('h3');
+      a1.classList.add("btn","btn-success");
+      a1.target="_blank";
+      a1.href="https://www.lefrecce.it/Channels.Website.WEB/";
+      a1.innerHTML="Acquista";
+      col3.appendChild(header3);
+      col3.appendChild(a1);
+    }
+    else{
+      let header3 = document.createElement('h3');
+      header3.style.fontWeight="bold";
+      header3.style.color="red";
+      header3.innerHTML="Non acquistabile";
+      col3.appendChild(header3);
+    }
+    cardBody.appendChild(col1);
+    cardBody.appendChild(col2);
+    cardBody.appendChild(col3);
+    card.appendChild(cardBody);
+    divP.appendChild(card);
+  });
+  (ritorni.solutions).forEach(item=>{
+    var s = item.solution;
+    var divP = document.getElementById("backSol");
+    let card = document.createElement('div');
+    card.classList.add("card","mb-3");
+    let cardBody = document.createElement('div');
+    cardBody.classList.add("row","card-body");
+
+    let col1 = document.createElement('div');
+    col1.classList.add("col");
+    let header1 = document.createElement('h4');
+    header1.style.fontWeight = "bold";
+    let dt = new Date(s.departureTime).toLocaleTimeString('it-IT',{ timeStyle: 'short', hour12: false });
+    let at = new Date(s.arrivalTime).toLocaleTimeString('it-IT',{ timeStyle: 'short', hour12: false });            
+    header1.innerHTML=dt+'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right me-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>'+at;
+    let header2 = document.createElement('h6');
+    if(s.nodes.length == 1){
+      header2.innerHTML=s.duration+', '+String(s.nodes.length -1)+" cambio";
+    }
+    else{
+      header2.innerHTML=s.duration+', '+String(s.nodes.length -1)+" cambi";
+    }
+    col1.appendChild(header1);
+    col1.appendChild(header2);
+
+    let col2 = document.createElement('div');
+    col2.classList.add("col","text-center");
+    (s.trains).forEach(t =>{
+      let small=document.createElement('small');
+      small.classList.add("text-muted","mx-2");
+      let img = document.createElement('img');
+      img.src ="../media/trenitalia/"+t.acronym+".svg"
+      img.classList.add("me1");
+      img.width=90;
+      img.height=32;
+      small.appendChild(img);
+      small.insertAdjacentText("beforeend",t.name);
+      col2.appendChild(small);
+    });
+    let col3 = document.createElement('div');
+    col3.classList.add("col","text-end");
+    if(s.price!=null){
+      let header3 = document.createElement('h3');
+      header3.style.fontWeight="bold";
+      header3.style.color="red";
+      header3.innerHTML=s.price.amount+"€";
+      let a1 = document.createElement('h3');
+      a1.classList.add("btn","btn-success");
+      a1.target="_blank";
+      a1.href="https://www.lefrecce.it/Channels.Website.WEB/";
+      a1.innerHTML="Acquista";
+      col3.appendChild(header3);
+      col3.appendChild(a1);
+    }
+    else{
+      let header3 = document.createElement('h3');
+      header3.style.fontWeight="bold";
+      header3.style.color="red";
+      header3.innerHTML="Non acquistabile";
+      col3.appendChild(header3);
+    }
+    cardBody.appendChild(col1);
+    cardBody.appendChild(col2);
+    cardBody.appendChild(col3);
+    card.appendChild(cardBody);
+    divP.appendChild(card);
+  });
+
+}
+
 /*
 function tempo(citta){
   console.log(citta);
