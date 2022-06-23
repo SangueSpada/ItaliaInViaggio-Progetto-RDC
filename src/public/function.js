@@ -234,6 +234,7 @@ function initMap() {
     // Add place details with text formatting
     let name = document.createElement('h1');
     name.classList.add('place');
+    name.id='place_id';
     name.textContent = placeResult.name;
     infoPane.appendChild(name);
     if (placeResult.rating != null) {

@@ -142,9 +142,12 @@
             <div class="row mt-5 mb-5">
                 <div class="col mb-2">
                     <div id="panel"></div>
+                    <button class="btn btn-primary" onclick="invia_seg()">segnalazioni</button>
                     <div id="listing">
                     <table id="resultsTable">
                       <tbody id="results"></tbody>
+                      
+                    
                     </table>
                     </div>
                     <div style="display: none" id="info-content">
@@ -300,6 +303,60 @@
       </div>
         <%- include('footer'); -%>
 </body>
+
+<script type="text/javascript">
+
+
+function invia_seg(){
+
+
+  if ("WebSocket" in window){ 
+ 
+              var ws=new WebSocket("ws://localhost:8080/ws");
+
+            
+ 
+               ws.onopen = function() 
+               { 
+
+                let n=document.getElementById('place_id');
+                if(n!==null){
+                  // Web Socket is connected, send data using send() 
+                  ws.send('segnalazione su hotel con name='+n.textContent);
+                  console.log('mandata');
+                }
+               }; 
+ 
+               
+               ws.onmessage = function (evt) 
+               { 
+                  var received_msg = evt.data; 
+                  console.log("Message is received..."+received_msg); 
+                  //document.write("Message is received..."+received_msg); 
+               }; 
+ 
+               ws.onclose = function() 
+               { 
+                  // websocket is closed. 
+                  console.log("Connection is closed..."); 
+               }; 
+ 
+               window.onbeforeunload = function(event) { 
+                  socket.close(); 
+               }; 
+            } 
+ 
+            else{ 
+               // The browser doesn't support WebSocket 
+               alert("WebSocket NOT supported by your Browser!"); 
+            }
+
+}
+
+</script>
+
+
+
 <script>
 
 

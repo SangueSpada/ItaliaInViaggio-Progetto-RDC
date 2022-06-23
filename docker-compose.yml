@@ -66,6 +66,7 @@ services:
     networks:
       - app-network
       - db-network
+      - rmq-network
 
   node2:
     build:
@@ -83,6 +84,7 @@ services:
     networks:
       - app-network
       - db-network
+      - rmq-network
 
   node3:
     build:
@@ -100,9 +102,27 @@ services:
     networks:
       - app-network
       - db-network
+      - rmq-network
+
+  rabbitmq:
+    build:
+      context: .
+      dockerfile: ./docker/rabbitmq/rabbitmq.dockerfile
+    hostname: my_rabbitmq
+    ports:
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+    volumes:
+      - ./docker/rabbitmq:/var/lib/rabbitmq
+    networks:
+      - rmq-network
 
 networks:
   app-network:
     driver: bridge
   db-network:
+    driver: bridge
+  rmq-network:
     driver: bridge

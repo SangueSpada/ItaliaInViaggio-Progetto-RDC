@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const enablews=require('express-ws');
 const bodyParser=require('body-parser');
 const path = require('path');
 const winston = require('winston');
@@ -7,6 +8,7 @@ var request=require('request');
 const fs=require('fs');
 const axios=require('axios').default;
 const multer = require('multer');
+var amqp=require('amqplib/callback_api')
 const upload = multer();
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
@@ -14,11 +16,13 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+enablews(app);
 
 
 var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
 const Trenitalia = require('./trenitalia.js');
-
+var codaa;
+var exchange='segnalazioni';
 var meteo={};
 var started=0;
 var client_id = process.env.CLIENT_ID_CALENDAR;
@@ -139,9 +143,65 @@ ogni_3_ore();
 setInterval(ogni_3_ore,10800000);
 
 
-///////////////////////////////
 
 
+////////////--connessione a rabbitmq--///////////////////
+
+attiva_amqp_rabbitmq();
+
+async function attiva_amqp_rabbitmq(){
+let resp;
+let done=0;
+while(!done){
+resp=await connessione_amqp();
+done=! Error(resp).message.includes('ECONNREFUSED');
+
+}
+}
+
+async function connessione_amqp(){
+
+  return new Promise(function(resolve){
+
+amqp.connect('amqp://root:root@my_rabbitmq:5672',function(err,conn){
+  if(err){
+   // console.log(err);
+    resolve(err);
+    return;
+  }
+
+  conn.createChannel(function(err1,channel){
+    if(err1){
+      //console.log(err1);
+      resolve(err1);
+      return;
+    }
+    let ex=exchange;
+
+    channel.assertExchange(ex,'direct',{durable: true});
+    codaa=channel;
+
+
+console.log('connessoooooooooooooooooooooo');
+resolve();
+
+
+    /*channel.assertQueue('segnalazioni_utenti',{durable:true},function(err2,q){
+      if(err2){
+        console.log(err2);
+        return;
+      }
+
+      channel.bindQueue(q.queue,exchange,'inattività');
+      
+
+    });*/
+
+  });
+});
+});}
+
+/////////////////////////
 const punti_meteo={
 
   Thunderstorm: 0,
@@ -163,8 +223,41 @@ const punti_meteo={
 
 };
 
+app.ws('/ws',function(ws,req){
+  ws.on('message', function incoming(message) { 
+    console.log('///////////////////////////////////////////////////////////////////');
+    console.log('received: %s', message); 
+
+    try{
+
+     codaa.publish(exchange,'inattività',Buffer.from(message));
+     ws.send('segnalazione ricevuta!'); 
 
 
+    }
+    catch(err){
+      console.log(err);
+      ws.send('errore nella segnalazione');
+    }
+
+
+
+  }); 
+
+});
+
+/*
+wss.on('connection', function connection(ws) { 
+  console.log('/////////////////////////////////////////////////');
+  console.log('connessoooooo');
+  ws.on('message', function incoming(message) { 
+    console.log('received: %s', message); 
+  }); 
+  //active_connection = ws; 
+  ws.send('segnalazione ricevuta!'); 
+  //test(); 
+}); 
+*/
 
 
 app.get('/',urlencodedParser, (req, res) => {
