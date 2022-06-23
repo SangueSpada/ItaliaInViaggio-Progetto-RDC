@@ -58,27 +58,9 @@
             </div>
             
             <div style="padding: 40pt;"></div>
-            <div class="col-lg-12 text-center">
-                <% if(results.length!=0){ %>
-                  
-
-
-
-                <h1 class="display-3 index-subtitle">Ecco i borghi che ti consigliamo!</h1>
-                <% } 
-                else{ %> 
-                    <div>
-                        <% if(err!=''){ %>
-                    <h2 style="color: red;"><%=err%></h2>
-                            <%}
-                            %>
-                    <h1 class="display-3 index-subtitle">Inserire la stazione di partenza</h1>
-                        </div>
-                    <%}
-                %>
-            </div>
+            
             <div class="row d-flex">
-                            <% results.forEach((item,i) => {%>
+                            <% borghi.forEach((item,i) => {%>
                                 <div class="card mb-3">
                                     <div class="row no-gutters">
                                     <div class="col-md-4">
@@ -114,7 +96,6 @@
                                     <div class="col-md-8">
                                         <div class="card-body row">
                                             <h4 style="color: blue;" class="card-title"><%=item.nome%></h4>
-                                            <h6 class="card-subtitle">con distanza di <span class=" h4 fw-bold"> <%=item.distanza%> km</span></h6>
                                             <div class="col-lg-8">
                                                 <p class="card-text desc pt-2"><%=item.descrizione%> </p>
                                             </div> 

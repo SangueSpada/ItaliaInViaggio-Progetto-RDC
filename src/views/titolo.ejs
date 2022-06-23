@@ -81,7 +81,7 @@
 
             <div id="meteo" hidden="true">
               <div style="padding: 15pt;"></div>
-              <table class="table">
+              <table class="table table-sm">
                   <thead>
                       <tr id="date">
 
@@ -199,7 +199,7 @@
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
                                 <label class="active me-1 mt-1" for="dateStandard" >Partenza:</label>
-                                <input type="date"  class="form-control" id="dataPartenza" onchange="checkin_fun();" name="dataPartenza" value="<%= search[1] || '' %>" required>
+                                <input type="date"  class="form-control" id="CheckInDate" onchange="checkin_fun();" name="CheckInDate" value="<%= search[1] || '' %>" required>
                                 <select class="form-select-sm" id="oraPartenza" name="oraPartenza">
                                   <option value="0">00:00</option>
                                   <option value="1">01:00</option>
@@ -230,7 +230,7 @@
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
                                 <label class="active me-1 mt-1" for="dateStandard">Ritorno:</label>
-                                <input type="date" class="form-control" id="dataRitorno" onchange="checkout_fun();" name="dataRitorno" value="<%= search[2] || '' %>" required>
+                                <input type="date" class="form-control" id="CheckOutDate" onchange="checkout_fun();" name="CheckOutDate" value="<%= search[2] || '' %>" required>
                                 <select class="form-select-sm" id="oraRitorno"name="oraRitorno">
                                   <option value="0">00:00</option>
                                   <option value="1">01:00</option>
@@ -282,6 +282,11 @@
                         </form>
 
                     </nav>
+                    <div style="padding: 20pt;"></div>
+
+
+                    <button class="btn btn-primary rounded-3 fw-bold" onclick="valid()">aggiungi viaggio a google calendar</button>
+
 
                     <div style="padding: 20pt;"></div>
             </div>
@@ -297,6 +302,37 @@
 </body>
 <script>
 
+
+var url='<%=url%>';
+url=url.replaceAll('&amp;','&');
+
+
+
+function valid() {
+let a=  $('#CheckInDate')[0].value;
+let b= $('#CheckOutDate')[0].value;
+let json={};
+
+ if(a!='' && b!=''){
+  json["in"]=a;
+  json["out"]=b;
+  json["nome"]="<%=borgo.nome%>";
+  json["descr"]="prenotato viaggio per il borgo <%=borgo.nome%>, un grazie dallo staff di Italia in viaggio!";
+  
+
+    let s=JSON.stringify(json);
+    let ss='state='+s
+    console.log(ss);
+
+    url=url.replace('state={}',ss);
+
+let newWindow= window.open(url,'name','height=600,width=450');
+if(window.focus){
+newWindow.focus();
+}
+    //document.location.href=url;
+ }
+}
 
 $( function() {
   var httpreq= new XMLHttpRequest(); 

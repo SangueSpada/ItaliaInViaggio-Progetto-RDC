@@ -288,7 +288,6 @@ consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_
 //console.log(consigliati);
 let date=getDates(partenza,ritorno,0);
 
-
 res.render('consigliati',{stazioni:stazioni,results:consigliati,dates:date});
 
 
@@ -355,6 +354,7 @@ app.get('/borgo', urlencodedParser, function(req, res) {
   ricerca = [luogo, checkin, checkout, adulti,ragazzi];
   var resp;
   var borg
+  let url="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state={}&redirect_uri=" + red_uri + "&client_id=" + client_id;
 
 
   const p=new Promise(function(resolve,reject){
@@ -379,7 +379,7 @@ app.get('/borgo', urlencodedParser, function(req, res) {
         return;
       }
     });
-    res.render('titolo.ejs', { maps_key:process.env.API_MAPS, borgo: borg, search: ricerca,solutions:'', res: '' });
+    res.render('titolo.ejs', { maps_key:process.env.API_MAPS, borgo: borg, search: ricerca,solutions:'', res: '',url:url });
       
 
   });
@@ -387,53 +387,50 @@ app.get('/borgo', urlencodedParser, function(req, res) {
 });
 
 
-/*+++++++++++++++++++++ DA COMPLETAREEEEEE +++++++++++++++++*/
 
-app.get('/borghi',urlencodedParser,function(req,res){
-  const p0=new Promise(function(resolve,reject){
-    let json={
-      "selector":{"_id": {"$gt":null}},
-      "fields": ["nome","lat","long","foto","descrizione"]
-    };
-    axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
-    .then(function(response){resolve(tutti_borghi=response.data.docs);})
-    .catch(function(error){res.send(error);return;});
-    
-  });
-  const p1=new Promise(function(resolve,reject){
-    axios.get('https://nominatim.openstreetmap.org/search?q='+stazione+',Italia&format=json&addressdetails=1',{headers: {'Accept':'json'}})
-    .then(function(response){
-      response=response.data;
-      if(response.length==0){resolve();}
-      else{
-        for(let i=0;i<response.length;i++){
-          if(response[i].type==="station"){
-            resolve(staz_andata=response[i]);
-            break;
-          }
-        }        resolve();
-      }
-    })
-    .catch(function(error){console.log(error);res.send(error);return;});
-  });
+app.get('/borghi',urlencodedParser,async function(req,res){
+  
+  const borghi=await getborghifromcouchdb();
 
-  Promise.all([p0,p1]).then( async function(value){
-    res.render('borghi',{borghi:b,meteo:m});
+  let results=[];
 
-  });
+  for(let r=0;r<borghi.length;r++){
+    let t={};
+    t.nome=borghi[r].nome;
+    t.lat=borghi[r].lat;
+    t.lon=borghi[r].long;
+    t.foto=borghi[r].foto;
+    t.descrizione=borghi[r].descrizione;
+    t.main=[];
+    t.icona=[];
+    results.push(t);
+  }
+  
+  //distanze.sort(compare_distance);
+  //////////////////////////////////
+  let p=new Date();
+  let r=addDays(new Date(),7)
+  r.setHours(23,59,59);
+  p.setHours(0,0,0);
+  let temp=[];
+  for(let j=0;j<results.length;j++){
+    temp.push(results[j]= await get_meteo_borgo(results[j],p,r));
+  }
+  //console.log(results);
+
+
+  let date=getDates(p,r,0);
+
+
+
+    res.render('borghi',{borghi:results,dates:date});
+
 
 });
 
 /*++++++++++++++++++++++++++++++++++++++*/
 
-app.get('/calendar',urlencodedParser,function(req,res){
 
-let url="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar&response_type=code&include_granted_scopes=true&state={}&redirect_uri=" + red_uri + "&client_id=" + client_id;
-
-res.render('calendar.ejs', {url:url});
-
-
-});
 app.get('/seteventcalendar',urlencodedParser,function(req,res){
 
   let a_t;
@@ -466,8 +463,8 @@ request.post({ url: 'https://www.googleapis.com/oauth2/v4/token', form: formData
 
 
         var formData = {
-            summary: 'soggiulio',
-            description: 'descrizione',
+            summary: data["nome"],
+            description: data["descr"],
             location: 'Roma',
             colorId: '9',
             start: {
@@ -507,7 +504,10 @@ app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
   const t = new Trenitalia();
   var stazioni = await t.autocomplete(req.query.term)
   var nomi=[];
-  stazioni.forEach(item =>{nomi.push(item.name)});
+  stazioni.forEach(item =>{
+    if(! (item.name).includes('Tutte Le Stazioni')){
+    nomi.push(item.name)}
+  });
   res.send(nomi);
 });
 
@@ -518,11 +518,11 @@ app.post('/searchTsolutions',upload.none(), async function(req, res) {
   var IdSA = await t.autocomplete(req.body.stazioneArrivo);
   var adulti = req.body.adulti;
   var bambini = req.body.ragazzi;
-  let dp = (req.body.dataPartenza).split("-");
+  let dp = (req.body.CheckInDate).split("-");
   var orarioP = new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(req.body.oraPartenza)).toISOString().replace("Z","")+"+02:00";
   var solutions={};
   solutions.DepartureSolutions=await t.getOneWaySolutions(IdSP[0].id,IdSA[0].id,orarioP,adulti,bambini);
-  dp = (req.body.dataRitorno).split("-");
+  dp = (req.body.CheckOutDate).split("-");
   var orarioR = new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(req.body.oraRitorno)).toISOString().replace("Z","")+"+02:00";
   solutions.BackSolutions = await t.getOneWaySolutions(IdSA[0].id,IdSP[0].id,orarioR,adulti,bambini);
   res.send(solutions);
@@ -765,6 +765,10 @@ res.send({'result':consigliati})}
 
 
 });
+
+function convertTZ(date) { 
+  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: 'Europe/Rome'}));    
+}
 
 
 
