@@ -413,12 +413,6 @@ function getDates(start, end,flag) {
   return arr;
 }
 
-/*
-app.get('/ao',urlencodedParser, (req, res) => {
-  res.sendFile('src/views/ao.html');
-  res.end();
-});
-*/
 app.post('/owm',urlencodedParser, function(req,res){
   console.log("owm");
 let m=meteo[req.body.name]; //response.data.daily
@@ -520,8 +514,6 @@ app.get('/borghi',urlencodedParser,async function(req,res){
 
 
 });
-
-/*++++++++++++++++++++++++++++++++++++++*/
 
 
 app.get('/seteventcalendar',urlencodedParser,function(req,res){
@@ -728,6 +720,9 @@ function compare_points(a,b){
 
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) { 
+  function deg2rad(deg) { 
+    return deg * (Math.PI/180) 
+  }
   var R = 6371; // Radius of the earth in km 
   var dLat = deg2rad(lat2-lat1);  // deg2rad below 
   var dLon = deg2rad(lon2-lon1);  
@@ -741,9 +736,7 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return d; 
 } 
  
-function deg2rad(deg) { 
-  return deg * (Math.PI/180) 
-}
+
 
 
 
