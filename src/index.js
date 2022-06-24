@@ -182,7 +182,6 @@ amqp.connect('amqp://root:root@my_rabbitmq:5672',function(err,conn){
     codaa=channel;
 
 
-console.log('connessoooooooooooooooooooooo');
 resolve();
 
 

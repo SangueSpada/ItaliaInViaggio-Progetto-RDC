@@ -141,8 +141,13 @@
             </div>
             <div class="row mt-5 mb-5">
                 <div class="col mb-2">
-                    <div id="panel"></div>
-                    <button class="btn btn-primary" onclick="invia_seg()">segnalazioni</button>
+                    <div id="panel">
+
+                    </div>
+                    <div class="container-fluid" >
+                      <button class="btn btn-primary " style="width: 100%;" onclick="invia_seg()">l' hotel non esiste più? segnalacelo!</button>
+                    
+                    </div>
                     <div id="listing">
                     <table id="resultsTable">
                       <tbody id="results"></tbody>
@@ -331,7 +336,7 @@ function invia_seg(){
                ws.onmessage = function (evt) 
                { 
                   var received_msg = evt.data; 
-                  console.log("Message is received..."+received_msg); 
+                  alert("Message is received..."+received_msg); 
                   //document.write("Message is received..."+received_msg); 
                }; 
  

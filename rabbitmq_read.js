@@ -28,7 +28,7 @@ amqp.connect('amqp://root:root@localhost:5672',function(err,conn){
       channel.bindQueue(q.queue,exchange,'inattività');
 
       channel.consume(q.queue,function(msg){
-        console.log('messaggio: '+ msg.fields.routingKey+'contenuto: '+msg.content.toString());
+        console.log('messaggio con topic: '+ msg.fields.routingKey+' contenuto: '+msg.content.toString());
       },{noAck:true});
 
 
