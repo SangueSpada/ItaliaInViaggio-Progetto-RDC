@@ -225,11 +225,16 @@ const punti_meteo={
 app.ws('/ws',function(ws,req){
   ws.on('message', function incoming(message) { 
     console.log('///////////////////////////////////////////////////////////////////');
-    console.log('received: %s', message); 
+    let m=JSON.parse(message);
+    console.log('received: %s', m);
+    let topic=m["topic"];
+    let nome=m["name"];
+    let borgo=m["borgo"];
+
 
     try{
 
-     codaa.publish(exchange,'inattività',Buffer.from(message));
+     codaa.publish(exchange,topic,Buffer.from(nome+','+borgo));
      ws.send('segnalazione ricevuta!'); 
 
 
@@ -412,12 +417,6 @@ function getDates(start, end,flag) {
   return arr;
 }
 
-/*
-app.get('/ao',urlencodedParser, (req, res) => {
-  res.sendFile('src/views/ao.html');
-  res.end();
-});
-*/
 app.post('/owm',urlencodedParser, function(req,res){
   console.log("owm");
 let m=meteo[req.body.name]; //response.data.daily
@@ -452,7 +451,7 @@ app.get('/borgo', urlencodedParser, function(req, res) {
   const p=new Promise(function(resolve,reject){
     let json={
       "selector":{"_id": {"$gt":null}},
-      "fields": ["_id","_rev","nome","regione","lat","long","zoom","foto","descrizione"]
+      "fields": ["_id","_rev","nome","regione","lat","long","zoom","foto","descrizione","stazione"]
     };
 
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
@@ -461,7 +460,6 @@ app.get('/borgo', urlencodedParser, function(req, res) {
   });
   ///////////////////////////
     
-
 
   p.then(value=>{
     resp.forEach(item=>{
@@ -519,8 +517,6 @@ app.get('/borghi',urlencodedParser,async function(req,res){
 
 
 });
-
-/*++++++++++++++++++++++++++++++++++++++*/
 
 
 app.get('/seteventcalendar',urlencodedParser,function(req,res){
@@ -613,10 +609,25 @@ app.post('/searchTsolutions',upload.none(), async function(req, res) {
   let dp = (req.body.CheckInDate).split("-");
   var orarioP = new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(req.body.oraPartenza)).toISOString().replace("Z","")+"+02:00";
   var solutions={};
+  try{
   solutions.DepartureSolutions=await t.getOneWaySolutions(IdSP[0].id,IdSA[0].id,orarioP,adulti,bambini);
+  }
+  catch(e){
+    res.send(e);
+    console.log('andata '+e);
+    return;
+  }
   dp = (req.body.CheckOutDate).split("-");
   var orarioR = new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]),parseInt(req.body.oraRitorno)).toISOString().replace("Z","")+"+02:00";
+  try{
   solutions.BackSolutions = await t.getOneWaySolutions(IdSA[0].id,IdSP[0].id,orarioR,adulti,bambini);
+  }
+  catch(e){
+    console.log('ritorno '+e);
+
+    res.send(e);
+    return;
+  }
   res.send(solutions);
 });
     
@@ -727,6 +738,9 @@ function compare_points(a,b){
 
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) { 
+  function deg2rad(deg) { 
+    return deg * (Math.PI/180) 
+  }
   var R = 6371; // Radius of the earth in km 
   var dLat = deg2rad(lat2-lat1);  // deg2rad below 
   var dLon = deg2rad(lon2-lon1);  
@@ -740,9 +754,7 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return d; 
 } 
  
-function deg2rad(deg) { 
-  return deg * (Math.PI/180) 
-}
+
 
 
 

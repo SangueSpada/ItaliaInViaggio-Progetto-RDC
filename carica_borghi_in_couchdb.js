@@ -15,7 +15,8 @@ let json={
         "long":s.long,
         "zoom":s.zoom,
         "foto":s.foto,
-        "descrizione":s.descrizione
+        "descrizione":s.descrizione,
+        "stazione":s.stazione
   
 
      };

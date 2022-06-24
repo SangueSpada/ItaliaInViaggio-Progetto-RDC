@@ -111,6 +111,7 @@ services:
     hostname: my_rabbitmq
     ports:
       - "5672:5672"
+    restart: always
     environment:
       - RABBITMQ_DEFAULT_USER=root
       - RABBITMQ_DEFAULT_PASS=root

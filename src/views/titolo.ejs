@@ -145,7 +145,11 @@
 
                     </div>
                     <div class="container-fluid" >
-                      <button class="btn btn-primary " style="width: 100%;" onclick="invia_seg()">l' hotel non esiste più? segnalacelo!</button>
+                      <button class="btn btn-primary " style="width: 100%;" onclick="invia_seg(0)">l' hotel non esiste più? segnalacelo!</button>
+                    
+                    </div>
+                    <div class="container-fluid" >
+                      <button class="btn btn-primary " style="width: 100%;" onclick="invia_seg(1)">l' hotel non offre un buon servizio? segnalacelo!</button>
                     
                     </div>
                     <div id="listing">
@@ -203,7 +207,7 @@
                                 <input type="text" class="active form-control" id="stazionePartenza" name="stazionePartenza" placeholder="Stazione di partenza" required> 
                             </div>
                             <div class="col-lg-6 mb-2" id="controls">
-                              <input type="text" class="active form-control" id="stazioneArrivo" name="stazioneArrivo" value="<%=borgo.nome%>" readonly>     
+                              <input type="text" class="active form-control" id="stazioneArrivo" name="stazioneArrivo" value="<%=borgo.stazione%>" readonly>     
                             </div>
                             <div class="col-lg-3 mt-2 d-flex justify-content-center">
                                 <label class="active me-1 mt-1" for="dateStandard" >Partenza:</label>
@@ -299,6 +303,7 @@
                     <div style="padding: 20pt;"></div>
             </div>
             <div class="row">
+              <div id="err_tr" class="h3 text-center" style="color: red;"></div>
               <div class="col-lg-6" id="depSol">
               </div>
               <div class="col-lg-6" id="backSol">
@@ -312,7 +317,8 @@
 <script type="text/javascript">
 
 
-function invia_seg(){
+function invia_seg(nn){
+
 
 
   if ("WebSocket" in window){ 
@@ -326,9 +332,33 @@ function invia_seg(){
 
                 let n=document.getElementById('place_id');
                 if(n!==null){
-                  // Web Socket is connected, send data using send() 
-                  ws.send('segnalazione su hotel con name='+n.textContent);
+
+                  if(nn){
+
+                    let message= {
+                      name:n.textContent,
+                      topic:'servizio',
+                      borgo:"<%=borgo.nome%>"
+                    }
+                    console.log(JSON.stringify(message));
+
+                    ws.send(JSON.stringify(message));
+
+                  }
+                  else{
+                  let message= {
+                      name:n.textContent,
+                      topic:'esistenza',
+                      borgo:"<%=borgo.nome%>"
+
+                    }
+                    console.log(JSON.stringify(message));
+
+                  ws.send(JSON.stringify(message));
+                  }
                   console.log('mandata');
+                
+                
                 }
                }; 
  
@@ -458,6 +488,13 @@ function validSearch(){
 
   document.getElementById("Tsolutions").onsubmit = function(e) {
   e.preventDefault();
+  
+  document.getElementById("err_tr").textContent='';
+
+
+  //document.getElementById("Tsolutions")[1].value="<%=borgo.stazione%>";
+  //console.log(document.getElementById("Tsolutions")[1]);
+
   var formData = new FormData(document.getElementById("Tsolutions")); //salva i dati della form 
   var xhr = new XMLHttpRequest(); 
   xhr.onreadystatechange= function(event){ 
@@ -465,6 +502,17 @@ function validSearch(){
       waitinSolutions();
     }
     else if(this.readyState==4 && this.status == 200){ 
+
+      if(event.target.response.includes('Request failed with status code')){
+        let err=document.getElementById("err_tr");
+        err.textContent='non esistono soluzioni di viaggio dalla corrente stazione di partenza, riprovi con un\' altra';
+        let a=document.getElementById("depSol");
+        a.innerHTML='<div class="col-lg-6" id="depSol"></div>';
+        let r=document.getElementById("backSol");
+        r.innerHTML='<div class="col-lg-6" id="backSol"></div>';
+        return;
+      }
+
       var sol = JSON.parse(event.target.response);
       cardSolutions(sol);
     }

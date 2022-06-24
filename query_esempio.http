@@ -23,5 +23,9 @@ Content-Type: application/json
     "selector":{
         "_id": {"$gt":null}
     },
-    "fields": ["_id","_rev","nome","lat","long","zoom"]
+    "fields": ["_id","_rev","nome","lat","long","zoom","stazione"]
 }
+
+
+###
+PUT http://admin:root@localhost:5984/iiv_db

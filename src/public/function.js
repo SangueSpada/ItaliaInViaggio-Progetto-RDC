@@ -493,7 +493,8 @@ function cardSolutions(sol){
       let small=document.createElement('small');
       small.classList.add("text-muted","mx-2");
       let img = document.createElement('img');
-      img.src ="../media/trenitalia/"+t.acronym+".svg"
+      //img.src ="../media/trenitalia/"+t.acronym+".svg"
+      img.src="https://lefrecce.it/Channels.Website.WEB/web/images/logo/"+t.acronym+".svg";
       img.classList.add("me1");
       img.width=90;
       img.height=32;
@@ -508,11 +509,15 @@ function cardSolutions(sol){
       header3.style.fontWeight="bold";
       header3.style.color="red";
       header3.innerHTML=s.price.amount+"€";
-      let a1 = document.createElement('h3');
+      let a1 = document.createElement('a');
       a1.classList.add("btn","btn-success");
-      a1.target="_blank";
-      a1.href="https://www.lefrecce.it/Channels.Website.WEB/";
-      a1.innerHTML="Acquista";
+      a1.classList.add("a");
+
+      a1.setAttribute("target","_blank");
+      //a1.target="_blank";
+      a1.setAttribute("href","https://www.lefrecce.it/Channels.Website.WEB/");
+     // a1.href="https://www.lefrecce.it/Channels.Website.WEB/";
+      a1.textContent="Acquista";
       col3.appendChild(header3);
       col3.appendChild(a1);
     }
@@ -560,7 +565,9 @@ function cardSolutions(sol){
       let small=document.createElement('small');
       small.classList.add("text-muted","mx-2");
       let img = document.createElement('img');
-      img.src ="../media/trenitalia/"+t.acronym+".svg"
+      //img.src ="../media/trenitalia/"+t.acronym+".svg"
+      img.src="https://lefrecce.it/Channels.Website.WEB/web/images/logo/"+t.acronym+".svg";
+
       img.classList.add("me1");
       img.width=90;
       img.height=32;
@@ -575,11 +582,15 @@ function cardSolutions(sol){
       header3.style.fontWeight="bold";
       header3.style.color="red";
       header3.innerHTML=s.price.amount+"€";
-      let a1 = document.createElement('h3');
+      let a1 = document.createElement('a');
       a1.classList.add("btn","btn-success");
-      a1.target="_blank";
-      a1.href="https://www.lefrecce.it/Channels.Website.WEB/";
-      a1.innerHTML="Acquista";
+      a1.classList.add("a");
+
+      a1.setAttribute("target","_blank");
+      //a1.target="_blank";
+      a1.setAttribute("href","https://www.lefrecce.it/Channels.Website.WEB/");
+     // a1.href="https://www.lefrecce.it/Channels.Website.WEB/";
+      a1.textContent="Acquista";
       col3.appendChild(header3);
       col3.appendChild(a1);
     }

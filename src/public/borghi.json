@@ -5,7 +5,8 @@
         "long":"12.6353254",
         "zoom":"14",
         "foto":["../media/borghi/castel-gandolfo-1.jpg","../media/borghi/castel-gandolfo-2.webp","../media/borghi/castel-gandolfo-3.jpg"],
-        "descrizione":"Splendidamente affacciato sul Lago Albano, Castel Gandolfo è noto per la bellezza della natura che lo circonda e per l’eleganza del centro storico cinto da mura, che l’ha fatto eleggere uno dei Borghi più belli d’Italia. Conosciuto anche per essere la residenza estiva dei papi, qui si trova il Palazzo Pontificio."
+        "descrizione":"Splendidamente affacciato sul Lago Albano, Castel Gandolfo è noto per la bellezza della natura che lo circonda e per l’eleganza del centro storico cinto da mura, che l’ha fatto eleggere uno dei Borghi più belli d’Italia. Conosciuto anche per essere la residenza estiva dei papi, qui si trova il Palazzo Pontificio.",
+        "stazione":"Castel Gandolfo"
     },
     {   "nome":"Bard",
         "regione":"Valle D’Aosta",
@@ -13,7 +14,8 @@
         "long":"7.7412505",
         "zoom":"16",
         "foto":["../media/borghi/bard-1.jpg","../media/borghi/bard-2.jpg","../media/borghi/bard-3.jpg"],
-        "descrizione":"Tipico villaggio di attraversamento nato lungo la strada romana, si presenta oggi nel suo assetto urbano medievale pressoché intatto. L’avvicinamento dal lato meridionale lungo l’antico tracciato della via delle Gallie si svolge in un paesaggio caratterizzato da un lato dai vigneti terrazzati alternati alle balze strapiombanti in parte utilizzate come palestra d’arrampicata, e dall’altro, dalle rocce montonate che precedono la rocca del Forte con gli evidenti segni di epoca glaciale (le Marmitte dei Giganti) e di epoca preistorica."
+        "descrizione":"Tipico villaggio di attraversamento nato lungo la strada romana, si presenta oggi nel suo assetto urbano medievale pressoché intatto. L’avvicinamento dal lato meridionale lungo l’antico tracciato della via delle Gallie si svolge in un paesaggio caratterizzato da un lato dai vigneti terrazzati alternati alle balze strapiombanti in parte utilizzate come palestra d’arrampicata, e dall’altro, dalle rocce montonate che precedono la rocca del Forte con gli evidenti segni di epoca glaciale (le Marmitte dei Giganti) e di epoca preistorica.",
+        "stazione":"Hone-Bard"
     },
     {   "nome":"Orta San Giulio",
         "regione":"Piemonte",
@@ -21,7 +23,8 @@
         "long":"8.405217",
         "zoom":"15",
         "foto":["../media/borghi/orta-san-giulio-1.jpg","../media/borghi/orta-san-giulio-2.jpg","../media/borghi/orta-san-giulio-3.jpg"],
-        "descrizione":"L’antico borgo di Orta San Giulio si colloca lungo le acque del Lago d’Orta: un punto strategico ed oggi uno dei palcoscenici ideali da cui ammirare il piccolo specchio d’acqua. A poche centinaia di metri da Piazza Motta, cuore del borgo, proprio sulla punta del promontorio, si scorge l’Isola di San Giulio poco distante."
+        "descrizione":"L’antico borgo di Orta San Giulio si colloca lungo le acque del Lago d’Orta: un punto strategico ed oggi uno dei palcoscenici ideali da cui ammirare il piccolo specchio d’acqua. A poche centinaia di metri da Piazza Motta, cuore del borgo, proprio sulla punta del promontorio, si scorge l’Isola di San Giulio poco distante.",
+        "stazione":"Orta-Miasino"
     },
     {   "nome":"Vogogna",
         "regione":"Piemonte",
@@ -29,7 +32,8 @@
         "long":"8.2686205",
         "zoom":"14",
         "foto":["../media/borghi/vogogna-1.jpg","../media/borghi/vogogna-2.jpg","../media/borghi/vogogna-3.jpg"],
-        "descrizione":"L’antico borgo di Vogogna, di origine medievale, è situato nel cuore dell’Ossola, a pochi chilometri dal Lago Maggiore, dal Lago d’Orta e dalla Svizzera. Entrato a far parte del Parco Nazionale della Val Grande, è ricco di tradizioni, di cultura e di storia."
+        "descrizione":"L’antico borgo di Vogogna, di origine medievale, è situato nel cuore dell’Ossola, a pochi chilometri dal Lago Maggiore, dal Lago d’Orta e dalla Svizzera. Entrato a far parte del Parco Nazionale della Val Grande, è ricco di tradizioni, di cultura e di storia.",
+        "stazione":"Vogogna Ossola"
     },
     {   "nome":"Moneglia",
         "regione":"Liguria",
@@ -37,8 +41,8 @@
         "long":"9.4753696",
         "zoom":"14",
         "foto":["../media/borghi/moneglia-1.jpg","../media/borghi/moneglia-2.jpg","../media/borghi/moneglia-3.jpg"],
-        "descrizione":"Moneglia è riconosciuta come esempio di cittadina balneare e si presenta ai turisti come borgo pulito e ordinato. Come ogni borgo marinaro ligure anche Moneglia ha il suo caruggio medievale che divide in due il centro. Principale prodotto di questo lembo di terra ligure è l'olio d'oliva, che ha ottenuto negli anni scorsi la DOP 'Riviera Ligure di Levante'."
-    
+        "descrizione":"Moneglia è riconosciuta come esempio di cittadina balneare e si presenta ai turisti come borgo pulito e ordinato. Come ogni borgo marinaro ligure anche Moneglia ha il suo caruggio medievale che divide in due il centro. Principale prodotto di questo lembo di terra ligure è l'olio d'oliva, che ha ottenuto negli anni scorsi la DOP 'Riviera Ligure di Levante'.",
+        "stazione":"Moneglia"
     },
     {   "nome":"Finalborgo",
         "regione":"Liguria",
@@ -46,7 +50,8 @@
         "long":"8.3207411",
         "zoom":"15",
         "foto":["../media/borghi/finalborgo-1.jpg","../media/borghi/finalborgo-2.jpg","../media/borghi/finalborgo-3.jpg"],
-        "descrizione":"Chiuso tra mura medievali ancora ben conservate, intervallate da torri semicircolari  e interrotte solo in corrispondenza delle porte, il Borgo di Finale (così detto per distinguerlo dalla Marina) offre subito al visitatore una sensazione di protezione e raccoglimento."
+        "descrizione":"Chiuso tra mura medievali ancora ben conservate, intervallate da torri semicircolari  e interrotte solo in corrispondenza delle porte, il Borgo di Finale (così detto per distinguerlo dalla Marina) offre subito al visitatore una sensazione di protezione e raccoglimento.",
+        "stazione":"Finale Ligure Marina"
     
     },
     {   "nome":"Laigueglia",
@@ -55,7 +60,8 @@
         "long":"8.1252361",
         "zoom":"13",
         "foto":["../media/borghi/laigueglia-1.jpg","../media/borghi/laigueglia-2.jpg","../media/borghi/laigueglia-3.jpg"],
-        "descrizione":"Con i suoi caruggi, le piazzette amare, i toni rosa lilla delle case radunate all’ombra protettrice della monumentale chiesa di San Matteo, Laigueglia conserva il fascino di vecchio borgo marinaro che la maggior parte dei comuni liguri rivieraschi ha perduto."
+        "descrizione":"Con i suoi caruggi, le piazzette amare, i toni rosa lilla delle case radunate all’ombra protettrice della monumentale chiesa di San Matteo, Laigueglia conserva il fascino di vecchio borgo marinaro che la maggior parte dei comuni liguri rivieraschi ha perduto.",
+        "stazione":"Laigueglia"
     
     },
     {   "nome":"Borgio Verezzi",
@@ -64,8 +70,8 @@
         "long":"8.2999814",
         "zoom":"15",
         "foto":["../media/borghi/borgio-verrezzi-1.jpg","../media/borghi/borgio-verrezzi-2.webp","../media/borghi/borgio-verrezzi-3.jpg"],
-        "descrizione":"Situato su una collina, si compone di quattro borgate: Poggio, Piazza, Roccaro e Crosa, con belle case in pietra costruite le une sulle altre e intervallate da stradine acciottolate che si inerpicano strette e silenziose."
-    
+        "descrizione":"Situato su una collina, si compone di quattro borgate: Poggio, Piazza, Roccaro e Crosa, con belle case in pietra costruite le une sulle altre e intervallate da stradine acciottolate che si inerpicano strette e silenziose.",
+        "stazione":"Borgio-Verezzi"    
     },
     {   "nome":"Campo Ligure",
         "regione":"Liguria",
@@ -73,8 +79,8 @@
         "long":"8.6808157",
         "zoom":"14",
         "foto":["../media/borghi/campo-ligure-1.jpg","../media/borghi/campo-ligure-2.jpg","../media/borghi/campo-ligure-3.jpg"],
-        "descrizione":"La fiera bellezza del castello medievale degli Spinola, che dall'alto osserva i tetti e i campanili dell'antico borgo; la sobria eleganza del ponte romanico sullo Stura; l'esuberante facciata dipinta del palazzo Spinola, sulla piazza principale del Paese; i colori liguri e vivaci delle case; i caruggi, sui quali si affacciano le botteghe degli artigiani e il profumo della revzora appena sfornata; il Museo della Filigrana, un gioiello che conserva gioielli, scrigno di un'arte antica che ha qui una delle sue capitali internazionali."
-    
+        "descrizione":"La fiera bellezza del castello medievale degli Spinola, che dall'alto osserva i tetti e i campanili dell'antico borgo; la sobria eleganza del ponte romanico sullo Stura; l'esuberante facciata dipinta del palazzo Spinola, sulla piazza principale del Paese; i colori liguri e vivaci delle case; i caruggi, sui quali si affacciano le botteghe degli artigiani e il profumo della revzora appena sfornata; il Museo della Filigrana, un gioiello che conserva gioielli, scrigno di un'arte antica che ha qui una delle sue capitali internazionali.",
+        "stazione":"Campo Ligure-Masone"    
     },
     {   "nome":"Vernazza",
         "regione":"Liguria",
@@ -82,8 +88,8 @@
         "long":"9.6813027",
         "zoom":"17",
         "foto":["../media/borghi/vernazza-1.jpg","../media/borghi/vernazza-2.jpg","../media/borghi/vernazza-3.webp"],
-        "descrizione":"Vernazza è la seconda delle Cinque Terre proveniendo da Monterosso. Circondata dai tipici terrazzamenti con muretti a secco, il paese si staglia su uno sperone roccioso che si incunea nel mare."
-    
+        "descrizione":"Vernazza è la seconda delle Cinque Terre proveniendo da Monterosso. Circondata dai tipici terrazzamenti con muretti a secco, il paese si staglia su uno sperone roccioso che si incunea nel mare.",
+        "stazione":"Vernazza"
     },
     {   "nome":"Chiusa",
         "regione":"Trentino A.A.",
@@ -91,8 +97,8 @@
         "long":"11.4809913",
         "zoom":"12",
         "foto":["../media/borghi/chiusa-1.jpg","../media/borghi/chiusa-2.jpg","../media/borghi/chiusa-3.jpg"],
-        "descrizione":"La cittadina si estende tra le rocce del promontorio di Sabiona e il fiume Isarco. Un susseguirsi di facciate romantiche, chiese gotiche e lo spettacolare Monastero Benedettino di Sabiona."
-    
+        "descrizione":"La cittadina si estende tra le rocce del promontorio di Sabiona e il fiume Isarco. Un susseguirsi di facciate romantiche, chiese gotiche e lo spettacolare Monastero Benedettino di Sabiona.",
+        "stazione":"Chiusa Klausen"    
     },
     {   "nome":"Egna",
         "regione":"Trentino A.A.",
@@ -100,8 +106,8 @@
         "long":"11.2538051",
         "zoom":"14",
         "foto":["../media/borghi/egna-1.webp","../media/borghi/egna-2.jpg","../media/borghi/egna-3.jpg"],
-        "descrizione":"Egna è un borgo ancora autentico, lontano dai ritmi caotici della città, in cui le mura degli antichi palazzi e i portici, sono lo scenario ideale per degustare un bicchiere di Pinot Nero in tranquillità e fare acquisti all’aria aperta nella zona pedonale."
-    
+        "descrizione":"Egna è un borgo ancora autentico, lontano dai ritmi caotici della città, in cui le mura degli antichi palazzi e i portici, sono lo scenario ideale per degustare un bicchiere di Pinot Nero in tranquillità e fare acquisti all’aria aperta nella zona pedonale.",
+        "stazione":"Egna-Termeno Neumarkt-Tramin"    
     },
     {   "nome":"Vipiteno",
         "regione":"Trentino A.A.",
@@ -109,8 +115,8 @@
         "long":"11.4116006",
         "zoom":"14",
         "foto":["../media/borghi/vipiteno-1.jpg","../media/borghi/vipiteno-2.jpg","../media/borghi/vipiteno-3.jpg"],
-        "descrizione":"Casette colorate, viuzze dello shopping, pittoresche piazze medievali e un paesaggio di montagna che sembra a portata di mano: la città alpina di Vipiteno in Valle Isarco incanta i suoi visitatori con un fascino unico."
-    
+        "descrizione":"Casette colorate, viuzze dello shopping, pittoresche piazze medievali e un paesaggio di montagna che sembra a portata di mano: la città alpina di Vipiteno in Valle Isarco incanta i suoi visitatori con un fascino unico.",
+        "stazione":"Vipiteno Val Vizze/sterzing Pfitsch"    
     },
     {   "nome":"Montagnana",
         "regione":"Veneto",
@@ -118,8 +124,8 @@
         "long":"11.4151783",
         "zoom":"13",
         "foto":["../media/borghi/montagnana-1.jpg","../media/borghi/montagnana-2.jpg","../media/borghi/montagnana-3.webp"],
-        "descrizione":"A cavallo di tre provincie nella fertile campagna alluvionale che fu alveo dell'Adige, la capitale della Sculdascia è universalmente famosa per la splendida cerchia muraria medioevale perfettamente conservata."
-    
+        "descrizione":"A cavallo di tre provincie nella fertile campagna alluvionale che fu alveo dell'Adige, la capitale della Sculdascia è universalmente famosa per la splendida cerchia muraria medioevale perfettamente conservata.",
+        "stazione":"Montagnana"    
     },
     {   "nome":"Venzone",
         "regione":"Friuli Venezia Giulia",
@@ -127,8 +133,8 @@
         "long":"13.1053373",
         "zoom":"12",
         "foto":["../media/borghi/venzone-1.jpg","../media/borghi/venzone-2.jpg","../media/borghi/venzone-3.jpg"],
-        "descrizione":"Venzone venne rasa al suolo dal terremoto del 1976 e fu interamente ricostruita così come era nel Medioevo: la città è uno dei migliori esempi di restauro architettonico ed artistico ed è l'unico esempio di cittadina fortificata del Trecento in Friuli Venezia Giulia."
-    
+        "descrizione":"Venzone venne rasa al suolo dal terremoto del 1976 e fu interamente ricostruita così come era nel Medioevo: la città è uno dei migliori esempi di restauro architettonico ed artistico ed è l'unico esempio di cittadina fortificata del Trecento in Friuli Venezia Giulia.",
+        "stazione":"Venzone"    
     },
     {   "nome":"Brisighella",
         "regione":"Emilia Romagna",
@@ -136,8 +142,8 @@
         "long":"11.7573768",
         "zoom":"14",
         "foto":["../media/borghi/brisighella-1.jpg","../media/borghi/brisighella-2.jpg","../media/borghi/brisighella-3.jpg"],
-        "descrizione":"L’antico borgo medioevale si distingue per la spiccata vocazione all’ospitalità e al turismo sostenibile, tanto da essere inserito nel club dei Borghi più belli d’Italia e certificato dal Touring Club Italiano con la 'Bandiera Arancione'."
-    
+        "descrizione":"L’antico borgo medioevale si distingue per la spiccata vocazione all’ospitalità e al turismo sostenibile, tanto da essere inserito nel club dei Borghi più belli d’Italia e certificato dal Touring Club Italiano con la 'Bandiera Arancione'.",
+        "stazione":"Brisighella"    
     },
     {   "nome":"Buonconvento",
         "regione":"Toscana",
@@ -145,8 +151,8 @@
         "long":"11.403648",
         "zoom":"12",
         "foto":["../media/borghi/buonconvento-1.jpg","../media/borghi/buonconvento-2.jpg","../media/borghi/buonconvento-3.webp"],
-        "descrizione":"Importante centro agricolo posto sul versante più gentile delle Crete Senesi, Buonconvento conobbe nel XIII secolo un notevole sviluppo grazie alla sua particolare e favorevole posizione alla confluenza dell’Arbia e dell’Ombrone e lungo la Via Francigena."
-    
+        "descrizione":"Importante centro agricolo posto sul versante più gentile delle Crete Senesi, Buonconvento conobbe nel XIII secolo un notevole sviluppo grazie alla sua particolare e favorevole posizione alla confluenza dell’Arbia e dell’Ombrone e lungo la Via Francigena.",
+        "stazione":"Buonconvento"
     },
     {   "nome":"Grottammare",
         "regione":"Marche",
@@ -154,8 +160,8 @@
         "long":"13.8268442",
         "zoom":"13",
         "foto":["../media/borghi/grottammare-1.jpg","../media/borghi/grottammare-2.jpg","../media/borghi/grottammare-3.jpg"],
-        "descrizione":"Definita la Perla dell’Adriatico, Grottammare si trova al centro della Riviera delle Palme, a sud delle Marche. La cittadina sorprende il visitatore per il verde delle pinete e delle palme, lo spettacolo degli oleandri e degli aranceti, le ville liberty e le spiagge di sabbia finissima attrezzate con numerosi stabilimenti balneari."
-    
+        "descrizione":"Definita la Perla dell’Adriatico, Grottammare si trova al centro della Riviera delle Palme, a sud delle Marche. La cittadina sorprende il visitatore per il verde delle pinete e delle palme, lo spettacolo degli oleandri e degli aranceti, le ville liberty e le spiagge di sabbia finissima attrezzate con numerosi stabilimenti balneari.",
+        "stazione":"Grottammare"    
     },
     {   "nome":"Castiglione Del Lago",
         "regione":"Umbria",
@@ -163,8 +169,8 @@
         "long":"12.0181044",
         "zoom":"14",
         "foto":["../media/borghi/castiglione-del-lago-1.jpg","../media/borghi/castiglione-del-lago-2.jpg","../media/borghi/castiglione-del-lago-3.jpg"],
-        "descrizione":"Si tratta di un piccolo centro urbano di origine etrusca collocato, su un promontorio collinare sulla sponda occidentale del lago Trasimeno che in origine era la quarta isola del lago. Tutto questo rende Castiglione del Lago un borgo attraente da visitare che ogni anno è meta di numerosi turisti."
-    
+        "descrizione":"Si tratta di un piccolo centro urbano di origine etrusca collocato, su un promontorio collinare sulla sponda occidentale del lago Trasimeno che in origine era la quarta isola del lago. Tutto questo rende Castiglione del Lago un borgo attraente da visitare che ogni anno è meta di numerosi turisti.",
+        "stazione":"Castiglione Del Lago"    
     },
     {   "nome":"Spello",
         "regione":"Umbria",
@@ -172,8 +178,8 @@
         "long":"12.6447022",
         "zoom":"14",
         "foto":["../media/borghi/spello-1.jpg","../media/borghi/spello-2.webp","../media/borghi/spello-3.webp"],
-        "descrizione":"Il paese, abbarbicato su uno sperone del Monte Subasio, quasi a dominare la Valle Umbra, è una meraviglia da scoprire con lentezza, perdendosi tra i suoi vicoli profumati e le sue stradine lastricate che vi condurranno alla scoperta di un centro storico coloratissimo."
-    
+        "descrizione":"Il paese, abbarbicato su uno sperone del Monte Subasio, quasi a dominare la Valle Umbra, è una meraviglia da scoprire con lentezza, perdendosi tra i suoi vicoli profumati e le sue stradine lastricate che vi condurranno alla scoperta di un centro storico coloratissimo.",
+        "stazione":"Spello"    
     },
     {   "nome":"Passignano Sul Trasimeno",
         "regione":"Umbria",
@@ -181,9 +187,8 @@
         "long":"12.1226707",
         "zoom":"14",
         "foto":["../media/borghi/passignano-sul-trasimeno-1.jpg","../media/borghi/passignano-sul-trasimeno-2.jpg","../media/borghi/passignano-sul-trasimeno-3.jpg"],
-        "descrizione":"Sul territorio, abitato dagli Etruschi e dai Romani, si fermarono le truppe di Annibale (217 a.C.) per decimare le truppe romane sconfitte nella famosa battaglia del Trasimeno, ma anche i Goti, i Longobardi e i Bizantini che si contendevano il controllo del territorio."
-    
-
+        "descrizione":"Sul territorio, abitato dagli Etruschi e dai Romani, si fermarono le truppe di Annibale (217 a.C.) per decimare le truppe romane sconfitte nella famosa battaglia del Trasimeno, ma anche i Goti, i Longobardi e i Bizantini che si contendevano il controllo del territorio.",
+        "stazione":"Passignano Sul Trasimeno"    
     },
     {   "nome":"Tagliacozzo",
         "regione":"Abruzzo",
@@ -191,8 +196,8 @@
         "long":"13.2438809",
         "zoom":"15",
         "foto":["../media/borghi/tagliacozzo-1.webp","../media/borghi/tagliacozzo-2.jpg","../media/borghi/tagliacozzo-3.jpg"],
-        "descrizione":"Borgo storico nel cuore d’Abruzzo, Tagliacozzo si estende nella gola della montagna ai piedi del monte Civita, immerso nella storia che dal Medioevo spazia fino al Barocco.La fonte più accreditata, per la spiegazione del suo nome, deriva dall’unione di due termini latini: Talus e Cotium, ovverosia 'taglio nella roccia'."
-    
+        "descrizione":"Borgo storico nel cuore d’Abruzzo, Tagliacozzo si estende nella gola della montagna ai piedi del monte Civita, immerso nella storia che dal Medioevo spazia fino al Barocco.La fonte più accreditata, per la spiegazione del suo nome, deriva dall’unione di due termini latini: Talus e Cotium, ovverosia 'taglio nella roccia'.",
+        "stazione":"Tagliacozzo"    
     },
     {   "nome":"Vietri Sul Mare",
         "regione":"Campania",
@@ -200,8 +205,8 @@
         "long":"14.7179463",
         "zoom":"15",
         "foto":["../media/borghi/vietri-sul-mare-1.jpg","../media/borghi/vietri-sul-mare-2.jpg","../media/borghi/vietri-sul-mare-3.jpg"],
-        "descrizione":"Vietri sul Mare (o più semplicemente Vietri) è il primo centro della costiera amalfitana che si incontra percorrendo la strada che parte da Salerno. Fu dichiarata dall’UNESCO Patrimonio dell’umanità nel 1997, poiché, anche se posizionata vicino alla città di Salerno, conserva tutte le caratteristiche tipiche delle località della Costiera."
-    
+        "descrizione":"Vietri sul Mare (o più semplicemente Vietri) è il primo centro della costiera amalfitana che si incontra percorrendo la strada che parte da Salerno. Fu dichiarata dall’UNESCO Patrimonio dell’umanità nel 1997, poiché, anche se posizionata vicino alla città di Salerno, conserva tutte le caratteristiche tipiche delle località della Costiera.",
+        "stazione":"Vietri Sul Mare-Amalfi"    
     },
     {   "nome":"Chianalea",
         "regione":"Calabria",
@@ -209,8 +214,8 @@
         "long":"15.713607",
         "zoom":"17",
         "foto":["../media/borghi/chianalea-1.jpg","../media/borghi/chianalea-2.jpg","../media/borghi/chianalea-3.jpg"],
-        "descrizione":"È il più antico borgo di Scilla, Chianalea ed è soprannominato la Venezia del Sud. Le case di Chianalea sono costruite direttamente sugli scogli, e sono separate da viuzze strette che scendono fino al Mar Tirreno che, viste dall’alto, sembrano un po’ i canali veneziani. Un’atmosfera magica, che le è valsa l’ingresso tra i Borghi più Belli d’Italia."
-    
+        "descrizione":"È il più antico borgo di Scilla, Chianalea ed è soprannominato la Venezia del Sud. Le case di Chianalea sono costruite direttamente sugli scogli, e sono separate da viuzze strette che scendono fino al Mar Tirreno che, viste dall’alto, sembrano un po’ i canali veneziani. Un’atmosfera magica, che le è valsa l’ingresso tra i Borghi più Belli d’Italia.",
+        "stazione":"Scilla"    
     },
     {   "nome":"Cefalù",
         "regione":"Sicilia",
@@ -218,7 +223,7 @@
         "long":"13.9903872",
         "zoom":"14",
         "foto":["../media/borghi/cefalu-1.jpg","../media/borghi/cefalu-2.jpg","../media/borghi/cefalu-3.jpg"],
-        "descrizione":"Cefalù è una deliziosa cittadina normanna adagiata sulle rive di un mare azzurrissimo e dominata da una rocca così celebre da essere nota semplicemente come… la Rocca. Facilmente raggiungibile in treno, è la meta perfetta per una gita in giornata da Palermo, per una vacanza di qualche giorno o come base per esplorare le vicine isole Eolie."
-    
+        "descrizione":"Cefalù è una deliziosa cittadina normanna adagiata sulle rive di un mare azzurrissimo e dominata da una rocca così celebre da essere nota semplicemente come… la Rocca. Facilmente raggiungibile in treno, è la meta perfetta per una gita in giornata da Palermo, per una vacanza di qualche giorno o come base per esplorare le vicine isole Eolie.",
+        "stazione":"Cefalu"    
     }
 ]
