@@ -538,10 +538,10 @@ app.get('/seteventcalendar',urlencodedParser,function(req,res){
 .then(function(response){ */
 
 
-//non so perchè non funziona con axios, ma solo con request
 
 request.post({ url: 'https://www.googleapis.com/oauth2/v4/token', form: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }, async function optionalCallback(err, httpResponse, body) {
   if (err) {
+    res.end();
       return console.log('upload failed:', err);
   }
    var info = JSON.parse(body);
@@ -566,10 +566,12 @@ request.post({ url: 'https://www.googleapis.com/oauth2/v4/token', form: formData
 
         axios.post('https://www.googleapis.com/calendar/v3/calendars/primary/events/', formData, { headers: { 'Authorization': 'Bearer ' + a_t, 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' } })
             .then(function(response) {
+              res.end();
                 //var info = JSON.parse(response);
                 console.log("riuscito: " + JSON.stringify(response.data));
             })
             .catch(function(error) {
+              res.end();
                 return console.error('errore: ', error);
 
             });
@@ -751,6 +753,7 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     ;  
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));  
   var d = R * c; // Distance in km 
+  d=Math.round(d, 2);
   return d; 
 } 
  

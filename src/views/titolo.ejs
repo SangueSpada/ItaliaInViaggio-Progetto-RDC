@@ -322,8 +322,9 @@ function invia_seg(nn){
 
 
   if ("WebSocket" in window){ 
+      
  
-              var ws=new WebSocket("ws://localhost:8080/ws");
+              var ws=new WebSocket("ws://"+window.location.host+"/ws");
 
             
  

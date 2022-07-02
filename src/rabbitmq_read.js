@@ -3,7 +3,7 @@ var codaa;
 var exchange='segnalazioni';
 
 
-amqp.connect('amqp://root:root@localhost:5672',function(err,conn){
+amqp.connect('amqp://root:root@my_rabbitmq:5672',function(err,conn){
   if(err){
     console.log(err);
     return;
@@ -32,6 +32,8 @@ amqp.connect('amqp://root:root@localhost:5672',function(err,conn){
       channel.consume(q.queue,function(msg){
         console.log('messaggio con topic: '+ msg.fields.routingKey+' contenuto: '+msg.content.toString());
       },{noAck:true});
+
+      
 
 
     });
