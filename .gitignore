@@ -1,2 +1,3 @@
 src/.env
 docker/rabbitmq/.erlang.cookie
+src/public/meteo.json

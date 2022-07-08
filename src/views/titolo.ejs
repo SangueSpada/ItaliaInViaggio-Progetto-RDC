@@ -323,8 +323,8 @@ function invia_seg(nn){
 
   if ("WebSocket" in window){ 
       
- 
-              var ws=new WebSocket("ws://"+window.location.host+"/ws");
+    //discrimare quando uso http e https, usanfo ws  e wss nei due casi. proveremo a fare un trycatchj
+              var ws=new WebSocket("wss://"+window.location.host+"/ws");
 
             
  
@@ -510,7 +510,7 @@ function validSearch(){
         let a=document.getElementById("depSol");
         a.innerHTML='<div class="col-lg-6" id="depSol"></div>';
         let r=document.getElementById("backSol");
-        r.innerHTML='<div class="col-lg-6" id="backSol"></div>';
+        r.innerHTML='<div class="col-lg-6" id="backSol"></ws>';
         return;
       }
 
