@@ -1,5 +1,15 @@
 GET http://admin:root@localhost:5984/_all_dbs
 
+###
+POST https://www.docsity.com/notes/documents/get-document-pages/
+Content-Type: application/json
+
+{
+    "fromPage":"6",
+    "id":"7858942",
+    "withGlobalOptions":"0"
+}
+
 
 
 ###
