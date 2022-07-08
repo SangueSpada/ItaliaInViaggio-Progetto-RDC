@@ -324,8 +324,15 @@ function invia_seg(nn){
   if ("WebSocket" in window){ 
       
     //discrimare quando uso http e https, usanfo ws  e wss nei due casi. proveremo a fare un trycatchj
-              var ws=new WebSocket("wss://"+window.location.host+"/ws");
-
+              var ws;
+              let prot=window.location.protocol;
+              if(prot=='https'){
+              ws=new WebSocket("wss://"+window.location.host+"/ws");
+              }
+              else{
+                console.log('connessione non protetta');
+                ws=new WebSocket("ws://"+window.location.host+"/ws");
+              }
             
  
                ws.onopen = function() 
