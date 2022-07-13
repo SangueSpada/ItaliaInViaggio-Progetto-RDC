@@ -9,6 +9,7 @@ const fs=require('fs');
 const axios=require('axios').default;
 const multer = require('multer');
 var amqp=require('amqplib/callback_api')
+const utils = require('./utilities');
 const upload = multer();
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
@@ -18,11 +19,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 enablews(app);
 
-
 var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
 const Trenitalia = require('./trenitalia.js');
-var codaa;
-var exchange='segnalazioni';
+
 var meteo={};
 var started=0;
 var client_id = process.env.CLIENT_ID_CALENDAR;
@@ -30,197 +29,123 @@ var client_secret = process.env.SECRET_ID_CALENDAR;
 var red_uri = process.env.RED_URI;
 
 
-async function aggiorna_meteo(){
-
-  var resp;
-let done=0;
-while(!done){
-resp=await getborghifromcouchdb();
-done=! Error(resp).message.includes('ECONNREFUSED');
-
-}
-
-
-let promises=[];
-
-for(let i=0;i<resp.length;i++){
-
-let url="https://api.openweathermap.org/data/2.5/onecall?lat="+resp[i].lat+"&lon="+resp[i].long+"&exclude=alerts&appid="+process.env.API_WHEATHER; 
-
-promises.push(new Promise(function(resolve,reject){
-
-axios.get(url)
-
-.then(function(result){
-  
- // console.log(resp[i].nome);
-
-resolve(meteo[resp[i].nome]=result.data.daily);
-
-
-
-
-})
-.catch(function(error){
- console.log(error);
- resolve(error);
-  
-});
-
-}));
-
-}
-
-Promise.all(promises).then(function(){
-
-  //console.log(meteo);
-  meteo["TimeStamp"]=new Date();
-  let res=fs.writeFileSync(path.join(__dirname, 'public/meteo.json'),JSON.stringify(meteo));
-  console.log('aggiornato meteo...');
-   //console.log(JSON.parse(fs.readFileSync(path.join(__dirname, 'public/meteo.json'))))
-  
-   return;
-
-});
-  
-
-
-}
-
 
 async function getborghifromcouchdb(){
   return new Promise(function(resolve){
-
     let json={
       "selector":{"_id": {"$gt":null}},
-      "fields": ["nome","lat","long","foto","descrizione"]
+      "fields": ["nome","regione","lat","long","foto","descrizione"]
     };
-
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
     // .then(function(response){console.log('response....');connected=1;resolve(resp=response.data.docs);})
     .then(function(response){resolve(resp=response.data.docs);}) 
     .catch(function(error){
-      
-      resolve(error);});
-
-
-
-
-  })
-
+      resolve(error);
+    });
+  });
 }
-
+////////////--gestione meteo--///////////////////
+async function aggiorna_meteo(){
+  var resp;
+  let done=0;
+  while(!done){
+    resp=await getborghifromcouchdb();
+    done=! Error(resp).message.includes('ECONNREFUSED');
+  }
+  let promises=[];
+  for(let i=0;i<resp.length;i++){
+    let url="https://api.openweathermap.org/data/2.5/onecall?lat="+resp[i].lat+"&lon="+resp[i].long+"&exclude=alerts&appid="+process.env.API_WHEATHER; 
+    promises.push(new Promise(function(resolve,reject){
+      axios.get(url)
+      .then(function(result){
+         // console.log(resp[i].nome);
+        resolve(meteo[resp[i].nome]=result.data.daily);
+      })
+      .catch(function(error){
+      console.log(error);
+      resolve(error);
+      });
+    }));
+  }
+  Promise.all(promises).then(function(){
+    //console.log(meteo);
+    meteo["TimeStamp"]=new Date();
+    let res=fs.writeFileSync(path.join(__dirname, 'public/meteo.json'),JSON.stringify(meteo));
+    console.log('aggiornato meteo...');
+    //console.log(JSON.parse(fs.readFileSync(path.join(__dirname, 'public/meteo.json'))))
+    return;
+  });
+}
 function ogni_3_ore(){
   meteo=JSON.parse(fs.readFileSync(path.join(__dirname, 'public/meteo.json')));
   let ins=process.env.INSTANCE;
-
   if(ins=='node1'){
   let ultimo_agg=new Date(meteo['TimeStamp']);
   let data_corrente=new Date();
   console.log('ultimo aggiornamento meteo: '+ultimo_agg);
   console.log('data corrente: '+data_corrente);
-  if((Math.abs(data_corrente.valueOf()-ultimo_agg.valueOf()))<10800000){
-    console.log('già aggiornato il meteo...');
-    return;
-  }
-  else{
-    console.log('aggiorno il meteo...');
-  aggiorna_meteo();}
-  }
+    if((Math.abs(data_corrente.valueOf()-ultimo_agg.valueOf()))<10800000){
+      console.log('già aggiornato il meteo...');
+      return;
+    }
+    else{
+      console.log('aggiorno il meteo...');
+      aggiorna_meteo();}
+    }
   else{
     if(!started && (Math.abs(new Date().valueOf()-new Date(meteo['TimeStamp']).valueOf()))>30000000){
-     console.log('è toccato a me aggiornare al posto di node1');
+      console.log('è toccato a me: ['+ins+'] aggiornare al posto di node1');
       aggiorna_meteo();
-    }
+      }
     started=1;
     console.log('leggo solo il meteo ...');
-
   }
-
 }
-
 ogni_3_ore();
 setInterval(ogni_3_ore,10800000);
 
-
-
-
 ////////////--connessione a rabbitmq--///////////////////
-
-attiva_amqp_rabbitmq();
-
+var codaa;
+var exchange='segnalazioni';
 async function attiva_amqp_rabbitmq(){
-let resp;
-let done=0;
-while(!done){
-resp=await connessione_amqp();
-done=! Error(resp).message.includes('ECONNREFUSED');
-
+  let resp;
+  let done=0;
+  while(!done){
+    resp=await connessione_amqp();
+    done=! Error(resp).message.includes('ECONNREFUSED');
+  }
 }
-}
-
 async function connessione_amqp(){
 
   return new Promise(function(resolve){
-
-amqp.connect('amqp://root:root@my_rabbitmq:5672',function(err,conn){
-  if(err){
-   // console.log(err);
-    resolve(err);
-    return;
-  }
-
-  conn.createChannel(function(err1,channel){
-    if(err1){
-      //console.log(err1);
-      resolve(err1);
-      return;
-    }
-    let ex=exchange;
-
-    channel.assertExchange(ex,'direct',{durable: true});
-    codaa=channel;
-
-
-resolve();
-
-
-    /*channel.assertQueue('segnalazioni_utenti',{durable:true},function(err2,q){
-      if(err2){
-        console.log(err2);
+    amqp.connect('amqp://root:root@my_rabbitmq:5672',function(err,conn){
+      if(err){
+        // console.log(err);
+        resolve(err);
         return;
       }
-
-      channel.bindQueue(q.queue,exchange,'inattività');
-      
-
-    });*/
-
+      conn.createChannel(function(err1,channel){
+        if(err1){
+          //console.log(err1);
+          resolve(err1);
+          return;
+        }
+        let ex=exchange;
+        channel.assertExchange(ex,'direct',{durable: true});
+        codaa=channel;
+        resolve();
+        /*channel.assertQueue('segnalazioni_utenti',{durable:true},function(err2,q){
+          if(err2){
+            console.log(err2);
+            return;
+          }
+          channel.bindQueue(q.queue,exchange,'inattività');
+        });*/
+      });
+    });
   });
-});
-});}
-
-/////////////////////////
-const punti_meteo={
-
-  Thunderstorm: 0,
-  Drizzle: 10,
-  Rain:5,
-  Snow: 18,
-  Mist:5,
-  Smoke:4,
-  Haze:7,
-  Dust:4,
-  Fog:4,
-  Sand:3,
-  Ash:3,
-  Squall:0,
-  Tornado:0,
-  Clear:26,
-  Clouds:16
-
-
-};
+}
+attiva_amqp_rabbitmq();
 
 app.ws('/ws',function(ws,req){
   ws.on('message', function incoming(message) { 
@@ -230,24 +155,15 @@ app.ws('/ws',function(ws,req){
     let topic=m["topic"];
     let nome=m["name"];
     let borgo=m["borgo"];
-
-
     try{
-
      codaa.publish(exchange,topic,Buffer.from(nome+','+borgo));
      ws.send('segnalazione ricevuta!'); 
-
-
     }
     catch(err){
       console.log(err);
       ws.send('errore nella segnalazione');
     }
-
-
-
   }); 
-
 });
 
 /*
@@ -291,12 +207,9 @@ app.get('/',urlencodedParser, (req, res) => {
 
 });
 
-
-
-
 app.get('/consigliati',urlencodedParser,function(req,res){
   
-    res.render('consigliati',{stazioni:stazioni,results:[],err:''});
+    res.render('consigliati',{stazioni:stazioni,results:[],err:'',search:[]});
 
   
 });
@@ -305,6 +218,7 @@ app.post('/consigliati',urlencodedParser,async function(req,res){
   let stazione=req.body.stazione;
   let partenza=new Date(req.body.CheckIn);
   let ritorno= new Date(req.body.CheckOut);
+  let ricerca = [stazione,req.body.CheckIn,req.body.CheckOut];
 
   partenza.setHours(0,0,1);
   ritorno.setHours(0,0,1);
@@ -338,7 +252,7 @@ if(!(partenza.valueOf()>=min_date.valueOf() && ritorno.valueOf()<=max_date.value
     //api couchdb all borgs names
     let json={
       "selector":{"_id": {"$gt":null}},
-      "fields": ["nome","lat","long","foto","descrizione"]
+      "fields": ["nome","regione","lat","long","foto","descrizione"]
     };
   
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
@@ -385,7 +299,7 @@ consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_
 //console.log(consigliati);
 let date=getDates(partenza,ritorno,0);
 
-res.render('consigliati',{stazioni:stazioni,results:consigliati,dates:date});
+res.render('consigliati',{stazioni:stazioni,results:consigliati,dates:date, search:ricerca});
 
 
 });
@@ -399,7 +313,6 @@ function addDays(date,days){
   result.setDate(result.getDate()+days);
   return result;
 }
-
 
 function getDates(start, end,flag) {
   if(flag){
@@ -433,7 +346,6 @@ res.status(200).send(m);
 }
 
 });
-
 
 app.get('/borgo', urlencodedParser, function(req, res) {
   console.log('get /borgo');
@@ -476,17 +388,15 @@ app.get('/borgo', urlencodedParser, function(req, res) {
 
 });
 
-
-
 app.get('/borghi',urlencodedParser,async function(req,res){
   
   const borghi=await getborghifromcouchdb();
 
   let results=[];
-
   for(let r=0;r<borghi.length;r++){
     let t={};
     t.nome=borghi[r].nome;
+    t.regione=borghi[r].regione;
     t.lat=borghi[r].lat;
     t.lon=borghi[r].long;
     t.foto=borghi[r].foto;
@@ -506,18 +416,11 @@ app.get('/borghi',urlencodedParser,async function(req,res){
   for(let j=0;j<results.length;j++){
     temp.push(results[j]= await get_meteo_borgo(results[j],p,r));
   }
-  //console.log(results);
-
-
   let date=getDates(p,r,0);
-
-
-
-    res.render('borghi',{borghi:results,dates:date});
+  res.render('borghi',{borghi:results,dates:date});
 
 
 });
-
 
 app.get('/seteventcalendar',urlencodedParser,function(req,res){
 
@@ -633,10 +536,6 @@ app.post('/searchTsolutions',upload.none(), async function(req, res) {
   res.send(solutions);
 });
     
-
-
-
-
 async function algoritmo_consigliati(lat,lon,borghi,partenza,ritorno){
 
 
@@ -649,6 +548,7 @@ let distanze=[];
 for(let r=0;r<borghi.length;r++){
   let t={};
   t.nome=borghi[r].nome;
+  t.regione=borghi[r].regione;
   t.lat=borghi[r].lat;
   t.lon=borghi[r].long;
   t.punti=0;
@@ -692,9 +592,26 @@ resolve(distanze);
 
 };
 
-
-
 function get_meteo_borgo(distanze,partenza,ritorno){
+  const punti_meteo={
+    Thunderstorm: 0,
+    Drizzle: 10,
+    Rain:5,
+    Snow: 18,
+    Mist:5,
+    Smoke:4,
+    Haze:7,
+    Dust:4,
+    Fog:4,
+    Sand:3,
+    Ash:3,
+    Squall:0,
+    Tornado:0,
+    Clear:26,
+    Clouds:16
+  
+  
+  };
 
   let name=distanze.nome;
   let m=meteo[name]; //response.data.daily
@@ -710,20 +627,15 @@ function get_meteo_borgo(distanze,partenza,ritorno){
        distanze["main"].push(keyy);
        distanze["icona"].push(m[k].weather[0].icon);
        distanze["punti"]=distanze["punti"]+punteggio;
-
-                                                            }
-                        }
-      resolve(distanze);
+      }
+    }
+    resolve(distanze);
 
 
 
   });
  
 }
-
-
-
-
 
 function compare_points(a,b){
 
@@ -736,8 +648,6 @@ function compare_points(a,b){
   return 0;
 
 }
-
-
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) { 
   function deg2rad(deg) { 
@@ -757,11 +667,6 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return d; 
 } 
  
-
-
-
-
-
 app.post('/api/consigliati',urlencodedParser,async function(req,res){
 
   let staz_par;
@@ -872,14 +777,6 @@ res.send({'result':consigliati})}
 
 
 });
-
-function convertTZ(date) { 
-  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: 'Europe/Rome'}));    
-}
-
-
-
-
 
 app.listen(process.env.PORT, () => {
 //  winston.info(`NODE_ENV: ${process.env.NODE_ENV}`);
