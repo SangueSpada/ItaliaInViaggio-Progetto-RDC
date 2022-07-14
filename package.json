@@ -4,7 +4,7 @@
   "description": "Made by Aras L. Kankilic, Francesco S. Sconocchia P.",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha src/test/test.js"
+    "test": "mocha src/test"
   },
   "author": "",
   "license": "ISC",
