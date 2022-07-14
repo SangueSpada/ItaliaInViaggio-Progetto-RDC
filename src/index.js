@@ -515,7 +515,7 @@ app.post('/searchTsolutions',upload.none(), async function(req, res) {
   res.send(solutions);
 });
  
-app.post('/api/consigliati',urlencodedParser,async function(req,res){
+app.post('/api/consigliati_by_meteo',urlencodedParser,async function(req,res){
 
   let staz_par;
   let inn;
@@ -598,6 +598,116 @@ p1.then( async function(value){
 
 let consigliati;
 consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),borghi,inn,outt);
+if(!consigliati){
+  res.status(404).send({'err':'consigliati non trovati'});
+  return;
+
+}
+else{
+  let c;
+  for(let r=0;r<consigliati.length;r++){
+    c=consigliati[r];
+    delete c.foto;
+    delete c.punti;
+    delete c.icona;
+    delete c.punteggio;
+  }
+  
+  
+res.send({'result':consigliati})}
+
+});
+
+
+
+
+
+
+});
+
+app.post('/api/consigliati_by_treno',urlencodedParser,async function(req,res){
+
+  let staz_par;
+  let inn;
+  let outt;
+  let min_date=addDays(new Date(),1);
+  min_date.setHours(0,0,0);
+  let max_date=addDays(min_date,6);
+  console.log("min_date: "+min_date);
+  console.log("max_date "+ max_date)
+
+try{
+  staz_par=req.body.partenza;
+  staz_par=staz_par.replaceAll(' ','%20');
+  if(staz_par==''){
+    res.status(400).send({'err':'inserire una stazione di partenza valida '});
+    return;
+  }
+
+}
+catch(err){
+  res.status(400).send({'err':'inserire una stazione di partenza in partenza key '});
+  return;
+}
+
+  let staz_andata;
+
+   inn=new Date(req.body.checkin);
+   inn.setHours(0,0,1);
+   outt=new Date(req.body.checkout);
+   outt.setHours(0,0,1);
+
+
+   if(inn=='Invalid Date' || outt=='Invalid Date'){
+    res.status(400).send({'err':'date non inserite o non valide'});
+    return;
+   }
+
+   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()==outt.valueOf()){
+    res.status(400).send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
+    return;
+   }
+
+
+
+
+
+const borghi=await getborghifromcouchdb();
+
+
+const p1=new Promise(function(resolve,reject){
+  // api openstreetmap for coordinates of departure station
+  axios.get('https://nominatim.openstreetmap.org/search?q='+staz_par+',Italia&format=json&addressdetails=1',{headers: {'Accept':'json'}})
+  .then(function(response){
+    response=response.data;
+    //console.log(response);
+    if(response.length==0){
+      resolve();}
+    else{
+      for(let i=0;i<response.length;i++){
+        if(response[i].type==="station"){
+          resolve(staz_andata=response[i]);
+          break;
+        }
+      }
+    resolve();}
+  })
+  .catch(function(error){res.status(400).send(error);return;});
+
+///////////////////////////////////////
+});
+
+p1.then( async function(value){
+  //console.log(staz_andata);
+  if(!staz_andata){
+    res.status(400).send({'err':'stazione non trovata su open street map, riprovare con un\' altra'});
+  return;}
+
+  let lat=staz_andata.lat;
+  let long=staz_andata.lon;
+
+let consigliati;
+consigliati= consigliati= await algoritmo_consigliati_treni(parseFloat(lat),parseFloat(long),borghi,inn,outt,req.body.stazione);
 if(!consigliati){
   res.status(404).send({'err':'consigliati non trovati'});
   return;
@@ -777,7 +887,7 @@ async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spa
       });
       costo+=Math.min.apply(Math,prezzi);
       prezzi=[];
-      console.log(StazR+"= "+costo);
+      //console.log(StazR+"= "+costo);
       return costo;
     }
 

@@ -110,7 +110,7 @@
                                             <h4 style="color: blue;" class="card-title"><%=item.nome%> (<%=item.regione%>)</h4>
                                             <h6 class="card-subtitle">distanza: <span class=" h4 fw-bold"> <%=item.distanza%> km</span></h6>
                                             <% if(item.costo){%>
-                                                <h6 class="card-subtitle">treni a partire da: <span class=" h4 fw-bold"> <%=item.costo%> €</span></h6>
+                                                <h6 class="card-subtitle">treni a partire da: <span class=" h4 fw-bold"> <%=item.costo%> €</span> per 1 adulto A/R</h6>
                                             <% } %>
 
                                             <div class="col-lg-8 justify-content-center">
@@ -161,7 +161,11 @@ var db;
     function validSearch_meteo(){ 
         var search= document.getElementById("stazionePartenza");
         console.log(db);
-        if(!db.includes(search.value)){
+        if(db == undefined){
+            alert("Reinserisci la stazione di partenza");
+            search.value='';
+        }
+        else if(!db.includes(search.value)){
             console.log(search.value);
             alert("Attenzione la stazione inserita non è valida");
             event.stopPropagation();
@@ -183,7 +187,11 @@ var db;
     function validSearch_treni(){ 
         var search= document.getElementById("stazionePartenza");
         console.log(db);
-        if(!db.includes(search.value)){
+        if(db == undefined){
+            alert("Reinserisci la stazione di partenza");
+            search.value='';
+        }
+        else if(!db.includes(search.value)){
             console.log(search.value);
             alert("Attenzione la stazione inserita non è valida");
             event.stopPropagation();
