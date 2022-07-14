@@ -84,11 +84,7 @@ function initMap() {
     service.nearbySearch(request, nearbyCallback);
   }
   function nearbyCallback(results, status, pagination) {
-    if (status !== "OK") return;
-    else if(!results){
-      console.log("No more results");
-      return;
-    }
+    if (status !== "OK" || !results) return;
     else{ 
       createMarkers(results);     
       centerControlDiv.disabled= !pagination || !pagination.hasNextPage;
@@ -114,7 +110,7 @@ function initMap() {
         console.log(place.place_id+" già è stato inserito")
       }
       else{
-        //lodges.push(place.place_id);
+        lodges.push(place.place_id);
         //console.log(place);
         nres = loadHotels(place, nres);
         let marker = new google.maps.Marker({
@@ -310,103 +306,8 @@ function initMap() {
     service.getDetails(request, (placeResult,status) => {showPanel(placeResult,status); });
     
   }
-/*
-  <div id="carosello" class="carousel">
-  <div class="carousel-indicators">
-      <button type='button' data-bs-target='#carosello' data-bs-slide-to="0" class='active' aria-current='true' aria-label='Slide "0" '></button>
-      <% (borgo.foto).forEach( (item,index) => {%>
-          <%if(index!=0){ %>
-              <button type='button' data-bs-target='#carosello' data-bs-slide-to="<%=index%>" aria-label='Slide "<%=index%>"'></button>
-          <% } %>
-        <% }) %>
-  </div>
-  
-  <div class="carousel-inner" id="primi_carousel">
-      <div class="carousel-item active">
-          <img style="width:100%; height:800px;  margin: auto;" src="<%=borgo.foto[0]%>">
-      </div>
-      <% (borgo.foto).forEach( (item,index) => {%>
-          <%if(index!=0){ %>   
-              <div class="carousel-item">
-              <img style="width:100%; height:800px;  margin: auto;" src="<%=item%>">
-              </div>
-          <% } %> 
-      <% }) %> 
-  </div>        
-  <button class="carousel-control-prev" type="button" data-bs-target="#carosello" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carosello" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-
-</div> */
 }
 window.initMap = initMap;
-
-/*
-function tempo(citta){
-  console.log(citta);
-  for(var i=0;i<n.length;i++){
-      if(n[i]==citta){
-          var lat=la[i];
-          var long=lo[i];
-          break;
-      }
-  }
-  
-
-
-  var httpreq= new XMLHttpRequest();
-  httpreq.responseType='json';
-  httpreq.onreadystatechange= function(e){
-      if(this.readyState==4 && this.status == 200){
-          let meteos=this.response;
-          $("#meteo")[0].hidden=false;
-         //document.getElementById("meteo").textContent=document.getElementById("meteo").textContent+(meteos[t].weather[0].description+'+++');
-         $("#date").find("th").each(function(index){
-             var data=new Date(meteos[index].dt*1000);
-         $(this)[0].textContent=String(new Intl.DateTimeFormat().format(data));});
-
-         $("#icone").find("td").each(function(index){
-
-          var url_icon='http://openweathermap.org/img/wn/'+meteos[index].weather[0].icon+'@2x.png';
-          $(this).find("img")[0].src=url_icon;
-         });
-
-         $("#descrizioni").find("td").each(function(index){
-          $(this)[0].textContent=meteos[index].weather[0].description;
-         });
-
-
-
-      }
-
-
-
-      else if(this.readyState==4 && this.status ==500){
-          console.log('errore 500 '+this.response);
-       }
-      else if(this.readyState==4 && this.status !=500 & this.status!=200){
-          console.log(this.response);
-       }   
-
-  }
-
-var url="https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&exclude=alerts&appid=";
-
-httpreq.open("POST","/owm",true);
-
-httpreq.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-httpreq.send('url='+url);
-
-
-}
-
-*/
-//tempo(document.getElementById("testo_ricerca").value);
 
 
 

@@ -53,13 +53,14 @@ class Trenitalia {
      * @param {int} adulti Il numero di passeggeri adulti
      * @param {int} bambini Il numero di passeggeri bambini
      */
-     async getOneWaySolutions(stazionePartenza, stazioneArrivo, orarioPartenza, adulti, bambini) {
+     async getOneWaySolutions(stazionePartenza, stazioneArrivo, orarioPartenza, adulti, bambini,limit=10) {
         const request =  {
             "departureLocationId": stazionePartenza,
             "arrivalLocationId": stazioneArrivo,
             "departureTime": orarioPartenza,
             "adults": adulti,
-            "children": bambini
+            "children": bambini,
+            "criteria":{"frecceOnly":false,"limit":limit,"noChanges":false,"offset":0,"order":"DEPARTURE_DATE","regionalOnly":false}
         }
         try {
             const result = await this.api.post('ticket/solutions',request,{headers: {'Content-Type': 'application/json'} });

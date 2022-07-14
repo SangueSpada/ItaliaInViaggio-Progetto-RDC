@@ -9,7 +9,7 @@ Content-Type: application/json
 POST http://localhost:8080/api/consigliati
 Content-Type: application/json
 
-{"partenza":"Roma Termini","checkin":"2022/07/14","checkout":"2022/07/17"}
+{"partenza":"Roma","checkin":"2022/07/15","checkout":"2022/07/16"}
 ###
 
 GET https://www.lefrecce.it/Channels.Website.BFF.WEB/website/cart?cartId=8eaa922d-dbed-4d1b-958f-a4b77b94c12b

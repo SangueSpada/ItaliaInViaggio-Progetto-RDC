@@ -18,8 +18,6 @@ app.use(express.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 enablews(app);
-
-var stazioni=JSON.parse(fs.readFileSync(path.join(__dirname, '../stazioni.json')));
 const Trenitalia = require('./trenitalia.js');
 
 var meteo={};
@@ -34,7 +32,7 @@ async function getborghifromcouchdb(){
   return new Promise(function(resolve){
     let json={
       "selector":{"_id": {"$gt":null}},
-      "fields": ["nome","regione","lat","long","foto","descrizione"]
+      "fields": ["nome","regione","lat","long","foto","descrizione","stazione"]
     };
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
     // .then(function(response){console.log('response....');connected=1;resolve(resp=response.data.docs);})
@@ -166,95 +164,45 @@ app.ws('/ws',function(ws,req){
   }); 
 });
 
-/*
-wss.on('connection', function connection(ws) { 
-  console.log('/////////////////////////////////////////////////');
-  console.log('connessoooooo');
-  ws.on('message', function incoming(message) { 
-    console.log('received: %s', message); 
-  }); 
-  //active_connection = ws; 
-  ws.send('segnalazione ricevuta!'); 
-  //test(); 
-}); 
-*/
-
-
-app.get('/',urlencodedParser, (req, res) => {
-  var resp;
-
-
-  const p=new Promise(function(resolve,reject){
-
-
-  //api couchdb all borgs names
-  let json={
-    "selector":{"_id": {"$gt":null}},
-    "fields": ["_id","_rev","nome","regione","lat","long","zoom"]
-  };
-
-  axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
-  .then(function(response){resolve(resp=response.data.docs);})
-  .catch(function(error){res.send(error);return;});
-  ///////////////////////////
-    });
-
-
-  p.then(value=>{
-
-    res.render('index',{maps_key:process.env.API_MAPS, nomi:resp});
-  });
-
+////////////--server--///////////////////
+app.get('/',urlencodedParser, async (req, res) => {
+  var resp= await getborghifromcouchdb();
+  res.render('index',{maps_key:process.env.API_MAPS, nomi:resp});
 });
 
 app.get('/consigliati',urlencodedParser,function(req,res){
-  
-    res.render('consigliati',{stazioni:stazioni,results:[],err:'',search:[]});
-
-  
+    res.render('consigliati',{results:[],err:'',search:[]});
 });
 
-app.post('/consigliati',urlencodedParser,async function(req,res){
+app.post('/consigliati_meteo',urlencodedParser,async function(req,res){
   let stazione=req.body.stazione;
   let partenza=new Date(req.body.CheckIn);
   let ritorno= new Date(req.body.CheckOut);
-  let ricerca = [stazione,req.body.CheckIn,req.body.CheckOut];
+  let ricerca = [req.body.stazione,req.body.CheckIn,req.body.CheckOut];
 
   partenza.setHours(0,0,1);
   ritorno.setHours(0,0,1);
+  let min_date=addDays(new Date(),1);
+  min_date.setHours(0,0,0);
+  let max_date=addDays(min_date,6);
+  max_date.setHours(23,59,59);
 
-
-let min_date=addDays(new Date(),1);
-min_date.setHours(0,0,0);
-let max_date=addDays(min_date,6);
-max_date.setHours(23,59,59);
-
-
-
-if(!(partenza.valueOf()>=min_date.valueOf() && ritorno.valueOf()<=max_date.valueOf()) || partenza.valueOf()==ritorno.valueOf()){
+  if(!(partenza.valueOf()>=min_date.valueOf() && ritorno.valueOf()<=max_date.valueOf()) || partenza.valueOf()==ritorno.valueOf()){
     res.send('range date non valido');
     res.end();
     return;
-   }
+  }
   
-  
-  
-
-
   stazione=stazione.replaceAll(' ','%20');
   let tutti_borghi;
   let staz_andata;
 
-
   const p0=new Promise(function(resolve,reject){
-
-
     //api couchdb all borgs names
     let json={
       "selector":{"_id": {"$gt":null}},
       "fields": ["nome","regione","lat","long","foto","descrizione"]
     };
-  
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
     .then(function(response){resolve(tutti_borghi=response.data.docs);})
     .catch(function(error){res.send(error);return;});
@@ -281,70 +229,108 @@ if(!(partenza.valueOf()>=min_date.valueOf() && ritorno.valueOf()<=max_date.value
   ///////////////////////////////////////
   });
 
-Promise.all([p0,p1]).then( async function(value){
-  if(!staz_andata){
-    
-    res.render('consigliati',{stazioni:stazioni,results:[],err:'stazione non trovata su open street map, riprovare con un\' altra'});
+  Promise.all([p0,p1]).then( async function(value){
+    if(!staz_andata){
 
-  return;}
+      res.render('consigliati',{search:ricerca,results:[],err:'stazione non trovata su open street map, riprovare con un\' altra'});
 
-  let lat=staz_andata.lat;
-  let long=staz_andata.lon;
+    return;}
 
-let consigliati;
-
+    let lat=staz_andata.lat;
+    let long=staz_andata.lon;
+    let consigliati;
 
 
-consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi,partenza,ritorno);
-//console.log(consigliati);
-let date=getDates(partenza,ritorno,0);
 
-res.render('consigliati',{stazioni:stazioni,results:consigliati,dates:date, search:ricerca});
+    consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),tutti_borghi,partenza,ritorno);
+    //console.log(consigliati);
+    let date=getDates(partenza,ritorno,0);
 
-
+    res.render('consigliati',{results:consigliati,dates:date, search:ricerca});
+  });
 });
 
+app.post('/consigliati_treni',urlencodedParser,async function(req,res){
+  let stazione=req.body.stazione;
+  let partenza=new Date(req.body.CheckIn);
+  let ritorno= new Date(req.body.CheckOut);
+  let ricerca = [req.body.stazione,req.body.CheckIn,req.body.CheckOut];
 
+  partenza.setHours(0,0,1);
+  ritorno.setHours(0,0,1);
+  let min_date=addDays(new Date(),1);
+  min_date.setHours(0,0,0);
+  let max_date=addDays(min_date,6);
+  max_date.setHours(23,59,59);
 
-});
-
-function addDays(date,days){
-  let result=new Date(date.valueOf());
-  result.setDate(result.getDate()+days);
-  return result;
-}
-
-function getDates(start, end,flag) {
-  if(flag){
-    for (var arr = [], dt = start; dt <= end; dt.setDate(dt.getDate() + 1)) {
-      arr.push(new Date(dt).toISOString().split('T')[0]);
+  if(!(partenza.valueOf()>=min_date.valueOf() && ritorno.valueOf()<=max_date.valueOf()) || partenza.valueOf()==ritorno.valueOf()){
+    res.send('range date non valido');
+    res.end();
+    return;
   }
   
-  }
+  stazione=stazione.replaceAll(' ','%20');
+  let tutti_borghi;
+  let staz_andata;
 
-  else{
-  for (var arr = [], dt = start; dt <= end; dt.setDate(dt.getDate() + 1)) {
-      arr.push(dt.getDate()+'/'+(dt.getMonth()+1));
-  }
-}
-  return arr;
-}
+  const p0=new Promise(function(resolve,reject){
+    //api couchdb all borgs names
+    let json={
+      "selector":{"_id": {"$gt":null}},
+      "fields": ["nome","regione","lat","long","foto","descrizione","stazione"]
+    };
+    axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
+    .then(function(response){resolve(tutti_borghi=response.data.docs);})
+    .catch(function(error){res.send(error);return;});
+    ///////////////////////////
+  });
+
+  const p1=new Promise(function(resolve,reject){
+    // api openstreetmap for coordinates of departure station
+    axios.get('https://nominatim.openstreetmap.org/search?q='+stazione+',Italia&format=json&addressdetails=1',{headers: {'Accept':'json'}})
+    .then(function(response){
+      response=response.data;
+      if(response.length==0){resolve();}
+      else{
+        for(let i=0;i<response.length;i++){
+          if(response[i].type==="station"){
+            resolve(staz_andata=response[i]);
+            break;
+          }
+        }        resolve();
+      }
+    })
+    .catch(function(error){console.log(error);res.send(error);return;});
+
+  ///////////////////////////////////////
+  });
+
+  Promise.all([p0,p1]).then( async function(value){
+    if(!staz_andata){
+
+      res.render('consigliati',{search:ricerca,results:[],err:'stazione non trovata su open street map, riprovare con un\' altra'});
+
+    return;}
+
+    let lat=staz_andata.lat;
+    let long=staz_andata.lon;
+    let consigliati;
+
+    consigliati= await algoritmo_consigliati_treni(parseFloat(lat),parseFloat(long),tutti_borghi,partenza,ritorno,req.body.stazione);
+    //console.log(consigliati);
+    let date=getDates(partenza,ritorno,0);
+
+    res.render('consigliati',{results:consigliati,dates:date, search:ricerca});
+  });
+});
 
 app.post('/owm',urlencodedParser, function(req,res){
   console.log("owm");
-let m=meteo[req.body.name]; //response.data.daily
-
-/*
-var url='https://api.openweathermap.org/data/2.5/onecall?lat='+req.body.lat+'&lon='+req.body.lon+'&exclude=alerts&appid='+process.env.API_WHEATHER;
-axios.get(url,{headers: {'Accept':'text/plain'}})
-.then(function(response){res.status(200).send(response.data.daily);})
-.catch(function(error){res.status(500).send(error);return;});
-*/
-if(m=='undefined'){res.status(500).send('errore nome borgo non trovato');}
-else{
-res.status(200).send(m);
-}
-
+  let m=meteo[req.body.name]; //response.data.daily 
+  if(m=='undefined'){res.status(500).send('errore nome borgo non trovato');}
+  else{
+    res.status(200).send(m);
+  }
 });
 
 app.get('/borgo', urlencodedParser, function(req, res) {
@@ -369,9 +355,7 @@ app.get('/borgo', urlencodedParser, function(req, res) {
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
     .then(function(response){resolve(resp=response.data.docs);})
     .catch(function(error){res.send(error);return;}); 
-  });
-  ///////////////////////////
-    
+  });   
 
   p.then(value=>{
     resp.forEach(item=>{
@@ -407,7 +391,7 @@ app.get('/borghi',urlencodedParser,async function(req,res){
   }
   
   //distanze.sort(compare_distance);
-  //////////////////////////////////
+  ////////////////////////////////// questo serve per il fuso orario con owm
   let p=new Date();
   let r=addDays(new Date(),7)
   r.setHours(23,59,59);
@@ -435,13 +419,6 @@ app.get('/seteventcalendar',urlencodedParser,function(req,res){
         redirect_uri: red_uri,
         grant_type: 'authorization_code'
     }
-
-  /*    axios.post('https://www.googleapis.com/oauth2/v4/token',form, {headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-
-.then(function(response){ */
-
-
-
 request.post({ url: 'https://www.googleapis.com/oauth2/v4/token', form: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }, async function optionalCallback(err, httpResponse, body) {
   if (err) {
     res.end();
@@ -469,11 +446,13 @@ request.post({ url: 'https://www.googleapis.com/oauth2/v4/token', form: formData
 
         axios.post('https://www.googleapis.com/calendar/v3/calendars/primary/events/', formData, { headers: { 'Authorization': 'Bearer ' + a_t, 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' } })
             .then(function(response) {
+              res.write("<script>window.close();</" + "script>");
               res.end();
                 //var info = JSON.parse(response);
                 console.log("riuscito: " + JSON.stringify(response.data));
             })
             .catch(function(error) {
+              res.write("<script>window.close();</" + "script>");
               res.end();
                 return console.error('errore: ', error);
 
@@ -535,137 +514,6 @@ app.post('/searchTsolutions',upload.none(), async function(req, res) {
   }
   res.send(solutions);
 });
-    
-async function algoritmo_consigliati(lat,lon,borghi,partenza,ritorno){
-
-
- return new Promise(async function(resolve){
-ritorno.setHours(23,59,59);
-partenza.setHours(0,0,0);
-//console.log('di js '+partenza.valueOf()+' '+ritorno.valueOf());
-// ordino per distanza i borghi
-let distanze=[];
-for(let r=0;r<borghi.length;r++){
-  let t={};
-  t.nome=borghi[r].nome;
-  t.regione=borghi[r].regione;
-  t.lat=borghi[r].lat;
-  t.lon=borghi[r].long;
-  t.punti=0;
-  t.foto=borghi[r].foto;
-  t.descrizione=borghi[r].descrizione;
-  t.main=[];
-  t.icona=[];
-  t.distanza=getDistanceFromLatLonInKm(parseFloat(borghi[r].lat),parseFloat(borghi[r].long),parseFloat(lat),parseFloat(lon));
-  distanze.push(t);
-}
-
-//distanze.sort(compare_distance);
-//////////////////////////////////
-let temp=[];
-for(let j=0;j<distanze.length;j++){
-  //distanze[j]= get_meteo_borgo(distanze[j],partenza,ritorno);
-  temp.push(distanze[j]= await get_meteo_borgo(distanze[j],partenza,ritorno));
-}
-
-
-for(let k=0;k<distanze.length;k++){
-let d=distanze[k];
-d["punteggio"]=d.distanza-(d.punti*2);
-
-
-}
-
-distanze.sort(compare_points);
-
-
-
-
-
-
-//console.log(distanze);
-resolve(distanze);
-
-
-}); 
-
-
-};
-
-function get_meteo_borgo(distanze,partenza,ritorno){
-  const punti_meteo={
-    Thunderstorm: 0,
-    Drizzle: 10,
-    Rain:5,
-    Snow: 18,
-    Mist:5,
-    Smoke:4,
-    Haze:7,
-    Dust:4,
-    Fog:4,
-    Sand:3,
-    Ash:3,
-    Squall:0,
-    Tornado:0,
-    Clear:26,
-    Clouds:16
-  
-  
-  };
-
-  let name=distanze.nome;
-  let m=meteo[name]; //response.data.daily
-  return new Promise(resolve =>{
-
-    for(let k=0;k<8;k++){
-      let dt=new Date(m[k].dt*1000).valueOf();
-
-      if(dt>=partenza.valueOf() && dt<= (ritorno.valueOf())){
-       
-       let keyy=m[k].weather[0].main
-       let punteggio=punti_meteo[keyy];
-       distanze["main"].push(keyy);
-       distanze["icona"].push(m[k].weather[0].icon);
-       distanze["punti"]=distanze["punti"]+punteggio;
-      }
-    }
-    resolve(distanze);
-
-
-
-  });
- 
-}
-
-function compare_points(a,b){
-
-  if(a.punteggio<b.punteggio){
-    return -1;
-  }
-  if(a.punteggio>b.punteggio){
-    return 1;
-  }
-  return 0;
-
-}
-
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) { 
-  function deg2rad(deg) { 
-    return deg * (Math.PI/180) 
-  }
-  var R = 6371; // Radius of the earth in km 
-  var dLat = deg2rad(lat2-lat1);  // deg2rad below 
-  var dLon = deg2rad(lon2-lon1);  
-  var a =  
-    Math.sin(dLat/2) * Math.sin(dLat/2) + 
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *  
-    Math.sin(dLon/2) * Math.sin(dLon/2) 
-    ;  
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));  
-  var d = R * c; // Distance in km 
-  d=Math.round(d, 2);
-  return d; 
-} 
  
 app.post('/api/consigliati',urlencodedParser,async function(req,res){
 
@@ -682,14 +530,13 @@ try{
   staz_par=req.body.partenza;
   staz_par=staz_par.replaceAll(' ','%20');
   if(staz_par==''){
-    res.send({'err':'inserire una stazione di partenza valida '});
-
+    res.status(400).send({'err':'inserire una stazione di partenza valida '});
     return;
   }
 
 }
 catch(err){
-  res.send({'err':'inserire una stazione di partenza in partenza key '});
+  res.status(400).send({'err':'inserire una stazione di partenza in partenza key '});
   return;
 }
 
@@ -702,12 +549,12 @@ catch(err){
 
 
    if(inn=='Invalid Date' || outt=='Invalid Date'){
-    res.send({'err':'date non inserite o non valide'});
+    res.status(400).send({'err':'date non inserite o non valide'});
     return;
    }
 
    else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()==outt.valueOf()){
-    res.send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
+    res.status(400).send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
     return;
    }
 
@@ -735,7 +582,7 @@ const p1=new Promise(function(resolve,reject){
       }
     resolve();}
   })
-  .catch(function(error){res.send(error);return;});
+  .catch(function(error){res.status(400).send(error);return;});
 
 ///////////////////////////////////////
 });
@@ -743,7 +590,7 @@ const p1=new Promise(function(resolve,reject){
 p1.then( async function(value){
   //console.log(staz_andata);
   if(!staz_andata){
-    res.send({'err':'stazione non trovata su open street map, riprovare con un\' altra'});
+    res.status(400).send({'err':'stazione non trovata su open street map, riprovare con un\' altra'});
   return;}
 
   let lat=staz_andata.lat;
@@ -752,7 +599,7 @@ p1.then( async function(value){
 let consigliati;
 consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),borghi,inn,outt);
 if(!consigliati){
-  res.send({'err':'consigliati non trovati'});
+  res.status(404).send({'err':'consigliati non trovati'});
   return;
 
 }
@@ -777,6 +624,245 @@ res.send({'result':consigliati})}
 
 
 });
+
+////////////---funzioni ausiliarie----//////////////////////
+
+function addDays(date,days){
+  let result=new Date(date.valueOf());
+  result.setDate(result.getDate()+days);
+  return result;
+}
+
+function getDates(start, end,flag) {
+  if(flag){
+    for (var arr = [], dt = start; dt <= end; dt.setDate(dt.getDate() + 1)) {
+      arr.push(new Date(dt).toISOString().split('T')[0]);
+  }
+  
+  }
+
+  else{
+  for (var arr = [], dt = start; dt <= end; dt.setDate(dt.getDate() + 1)) {
+      arr.push(dt.getDate()+'/'+(dt.getMonth()+1));
+  }
+}
+  return arr;
+}
+
+async function algoritmo_consigliati(lat,lon,borghi,partenza,ritorno){
+
+  return new Promise(async function(resolve){
+    ritorno.setHours(23,59,59);
+    partenza.setHours(0,0,0);
+    //console.log('di js '+partenza.valueOf()+' '+ritorno.valueOf());
+    // ordino per distanza i borghi
+    let distanze=[];
+    for(let r=0;r<borghi.length;r++){
+      let t={};
+      t.nome=borghi[r].nome;
+      t.regione=borghi[r].regione;
+      t.lat=borghi[r].lat;
+      t.lon=borghi[r].long;
+      t.punti=0;
+      t.foto=borghi[r].foto;
+      t.descrizione=borghi[r].descrizione;
+      t.main=[];
+      t.icona=[];
+      t.distanza=getDistanceFromLatLonInKm(parseFloat(borghi[r].lat),parseFloat(borghi[r].long),parseFloat(lat),parseFloat(lon));
+      distanze.push(t);
+    }
+
+    //distanze.sort(compare_distance);
+    //////////////////////////////////
+    let temp=[];
+    for(let j=0;j<distanze.length;j++){
+      //distanze[j]= get_meteo_borgo(distanze[j],partenza,ritorno);
+      temp.push(distanze[j]= await get_meteo_borgo(distanze[j],partenza,ritorno));
+    }
+
+    function algoritmo(distanza,p_meteo,giorni){
+      var media_meteo= p_meteo/giorni;
+      var punteggio = distanza - (distanza*media_meteo)/200  // il meteo condiziona il 50% del punteggio calcolato in funzione della distanza 
+      //punteggio = distanza -distanza*50%*media_punti_meteo%
+      return punteggio; 
+    }
+
+    for(let k=0;k<distanze.length;k++){
+      let d=distanze[k];
+      var giorni = Math.ceil((ritorno.getTime() - partenza.getTime())/(1000 * 3600 * 24));
+      console.log(giorni);
+      d["punteggio"]=algoritmo(d.distanza,d.punti,giorni);
+    }
+
+    function compare_points(a,b){
+
+      if(a.punteggio<b.punteggio){
+        return -1;
+      }
+      if(a.punteggio>b.punteggio){
+        return 1;
+      }
+      return 0;
+
+    }
+    distanze.sort(compare_points);
+    resolve(distanze);
+  });  
+};
+async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spartenza){
+
+  return new Promise(async function(resolve){
+    Dritorno.setHours(12,00,00);
+    Dpartenza.setHours(0,0,0);
+    //console.log('di js '+partenza.valueOf()+' '+ritorno.valueOf());
+    // ordino per distanza i borghi
+    let distanze=[];
+    for(let r=0;r<borghi.length;r++){
+      let t={};
+      t.nome=borghi[r].nome;
+      t.regione=borghi[r].regione;
+      t.stazione=borghi[r].stazione;
+      t.lat=borghi[r].lat;
+      t.lon=borghi[r].long;
+      t.punti=0;
+      t.foto=borghi[r].foto;
+      t.descrizione=borghi[r].descrizione;
+      t.main=[];
+      t.icona=[];
+      t.distanza=getDistanceFromLatLonInKm(parseFloat(borghi[r].lat),parseFloat(borghi[r].long),parseFloat(lat),parseFloat(lon));
+      distanze.push(t);
+    }
+
+    let temp=[];
+    for(let j=0;j<distanze.length;j++){
+      //distanze[j]= get_meteo_borgo(distanze[j],partenza,ritorno);
+      temp.push(distanze[j]= await get_meteo_borgo(distanze[j],Dpartenza,Dritorno));
+    }
+
+    async function algoritmo(StazP,StazR,dataP,dataR){
+      const t = new Trenitalia();
+      var IdSP = await t.autocomplete(StazP);
+      var IdSA = await t.autocomplete(StazR);
+      var orarioP = String(dataP.toISOString()).replace("Z","")+"+02:00";
+      var solutions={};
+      try{
+      solutions.DepartureSolutions=await t.getOneWaySolutions(IdSP[0].id,IdSA[0].id,orarioP,1,0,5);
+      }
+      catch(e){
+        console.log('andata '+e);
+        return 0;
+      }
+      var orarioR = String(dataR.toISOString()).replace("Z","")+"+02:00";
+      try{
+      solutions.BackSolutions = await t.getOneWaySolutions(IdSA[0].id,IdSP[0].id,orarioR,1,0,5);
+      }
+      catch(e){
+        console.log('ritorno '+e);
+        return 0;
+      }
+      var costo=0;
+      var prezzi=[];
+      (solutions.DepartureSolutions.solutions).forEach(item =>{
+        var sol = item.solution;
+        if(sol.price != null){
+          prezzi.push(parseFloat(String(sol.price.amount)));
+        }
+      });
+      costo+=Math.min.apply(Math,prezzi);
+      (solutions.BackSolutions.solutions).forEach(item =>{
+        var sol = item.solution;
+        if(sol.price != null){
+            prezzi.push(parseFloat(String(sol.price.amount)));
+          }
+      });
+      costo+=Math.min.apply(Math,prezzi);
+      prezzi=[];
+      console.log(StazR+"= "+costo);
+      return costo;
+    }
+
+    for(let k=0;k<distanze.length;k++){
+      let d=distanze[k];
+      d["costo"]=await algoritmo(Spartenza,d['stazione'],Dpartenza,Dritorno);
+      d["punteggio"]=d["costo"];
+    }
+
+    function compare_points(a,b){
+      if(a.punteggio<b.punteggio){
+        return -1;
+      }
+      if(a.punteggio>b.punteggio){
+        return 1;
+      }
+      return 0;
+    }
+    distanze.sort(compare_points);
+    resolve(distanze);
+  });  
+};
+
+function get_meteo_borgo(distanze,partenza,ritorno){
+  const punti_meteo={
+    Thunderstorm: 0,
+    Drizzle: 32,
+    Rain:20,
+    Snow: 75,
+    Mist:20,
+    Smoke:20,
+    Haze:20,
+    Dust:12,
+    Fog:20,
+    Sand:12,
+    Ash:4,
+    Squall:0,
+    Tornado:0,
+    Clear:100,
+    Clouds:70
+  
+  
+  };
+
+  let name=distanze.nome;
+  let m=meteo[name]; //response.data.daily
+  return new Promise(resolve =>{
+
+    for(let k=0;k<8;k++){
+      let dt=new Date(m[k].dt*1000).valueOf();
+
+      if(dt>=partenza.valueOf() && dt<= (ritorno.valueOf())){
+       
+       let keyy=m[k].weather[0].main
+       let punteggio=punti_meteo[keyy];
+       distanze["main"].push(keyy);
+       distanze["icona"].push(m[k].weather[0].icon);
+       distanze["punti"]=distanze["punti"]+punteggio;
+      }
+    }
+    resolve(distanze);
+  });
+ 
+}
+
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) { 
+  function deg2rad(deg) { 
+    return deg * (Math.PI/180) 
+  }
+  var R = 6371; // Radius of the earth in km 
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below 
+  var dLon = deg2rad(lon2-lon1);  
+  var a =  
+    Math.sin(dLat/2) * Math.sin(dLat/2) + 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *  
+    Math.sin(dLon/2) * Math.sin(dLon/2) 
+    ;  
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));  
+  var d = R * c; // Distance in km 
+  d=Math.round(d, 2);
+  return d; 
+} 
+////////////-----------------------//////////////////////
+
 
 app.listen(process.env.PORT, () => {
 //  winston.info(`NODE_ENV: ${process.env.NODE_ENV}`);

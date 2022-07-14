@@ -26,7 +26,7 @@
         <div class="container cont">
             <div class="col-lg-12 text-center">
                 <nav class="shadow container p-3 rounded-3 " style="background-color: #e3f2fd;">
-                    <form class="row" method="post" action="/consigliati">
+                    <form class="row" method="post" action="" id="reccomendForm">
                         <div class="col-lg-12 mb-2" id="controls">
                           <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
                         
@@ -43,16 +43,21 @@
                             <input type="date" value="<%=search[2] || ''%>" id="CheckOutDate" onchange="checkout_fun();" name="CheckOut">
                         </div>
                         
-                        
-                        
-                        
-                        <div class="col-lg-2 mt-2 d-flex justify-content-center">
-                            <button class="btn btn-primary rounded-3 fw-bold" onclick="validSearch()">Cerca <i class="ms-2 bi bi-search"></i></button>
+                        <div class="col-lg-3 mt-2 d-flex justify-content-center">
+                            <button class="btn btn-warning rounded-3 fw-bold" onclick="validSearch_meteo()">Cerca in base al meteo <i class="ms-2 bi bi-search"></i></button>
+                        </div>
+                        <div class="col-lg-3 mt-2 d-flex justify-content-center">
+                            <button class="btn btn-danger rounded-3 fw-bold" onclick="validSearch_treni()">Cerca in base al costo del treno<i class="ms-2 bi bi-search"></i></button>
                         </div>
                     </form>
                 </nav>
             </div>
-            
+
+            <div class="row">
+                <div id="err_tr" class="h3 text-center" style="color: red;"></div>
+                <div class="col-lg-12" id="depSol">
+                </div>  
+            </div>
             <div style="padding: 40pt;"></div>
             <div class="col-lg-12 text-center">
                 <% if(results.length!=0){ %>
@@ -103,11 +108,15 @@
                                     <div class="col-md-8">
                                         <div class="card-body row">
                                             <h4 style="color: blue;" class="card-title"><%=item.nome%> (<%=item.regione%>)</h4>
-                                            <h6 class="card-subtitle">con distanza di <span class=" h4 fw-bold"> <%=item.distanza%> km</span></h6>
-                                            <div class="col-lg-8">
+                                            <h6 class="card-subtitle">distanza: <span class=" h4 fw-bold"> <%=item.distanza%> km</span></h6>
+                                            <% if(item.costo){%>
+                                                <h6 class="card-subtitle">treni a partire da: <span class=" h4 fw-bold"> <%=item.costo%> €</span></h6>
+                                            <% } %>
+
+                                            <div class="col-lg-8 justify-content-center">
                                                 <p class="card-text desc pt-2"><%=item.descrizione%> </p>
                                             </div> 
-                                            <div class="col-lg-4 table-responsive">
+                                            <div class="col-lg-4 table-responsive justify-content-center">
                                                 <table class="table-responsive" style="min-width: 300px;">
                                             <tbody>
                                                 <tr>
@@ -148,7 +157,8 @@ var db;
         }
       });
     });
-    function validSearch(){ 
+    
+    function validSearch_meteo(){ 
         var search= document.getElementById("stazionePartenza");
         console.log(db);
         if(!db.includes(search.value)){
@@ -166,7 +176,61 @@ var db;
             checkin.value=data.toISOString().split('T')[0];
             data.setDate(data.getDate()+1);
             checkout.value=data.toISOString().split('T')[0];
-        } 
+        }
+        document.getElementById("reccomendForm").action = '/consigliati_meteo';
+    }
+    
+    function validSearch_treni(){ 
+        var search= document.getElementById("stazionePartenza");
+        console.log(db);
+        if(!db.includes(search.value)){
+            console.log(search.value);
+            alert("Attenzione la stazione inserita non è valida");
+            event.stopPropagation();
+            event.preventDefault();
+        }
+        var checkin = document.getElementById("CheckInDate");
+        var checkout = document.getElementById("CheckOutDate");
+        console.log("value= "+checkin.value);
+        if(checkin.value == ""){
+            let data=new Date();
+            data.setDate(data.getDate()+1);
+            checkin.value=data.toISOString().split('T')[0];
+            data.setDate(data.getDate()+1);
+            checkout.value=data.toISOString().split('T')[0];
+        }
+        document.getElementById("reccomendForm").action = '/consigliati_treni';
+        /*-------xmlhttp---
+        
+        document.getElementById("reccomendForm").onsubmit = function(e) {
+            e.preventDefault();
+            
+            document.getElementById("err_tr").textContent='';
+
+            var formData = new FormData(document.getElementById("Tsolutions")); //salva i dati della form 
+            var xhr = new XMLHttpRequest(); 
+            xhr.onreadystatechange= function(event){ 
+                if(this.readyState==1){
+                waitinSolutions2();
+              }
+              else if(this.readyState==4 && this.status == 200){ 
+
+                if(event.target.response.includes('Request failed with status code')){
+                  let err=document.getElementById("err_tr");
+                  err.textContent='non esistono soluzioni di viaggio dalla corrente stazione di partenza, riprovi con un\' altra';
+                  let a=document.getElementById("depSol");
+                  a.innerHTML='<div class="col-lg-12" id="depSol"></div>';
+                  return;
+                }
+            
+                var sol = JSON.parse(event.target.response);
+                cardSolutions(sol);
+              }
+        }; 
+        xhr.open("POST","/searchTsolutions",true); 
+        xhr.send(formData);
+        }
+        ---*/
     }
         
     

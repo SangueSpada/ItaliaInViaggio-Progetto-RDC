@@ -285,7 +285,7 @@ function invia_seg(nn){
               var ws;
               let prot=window.location.protocol;
               console.log(prot);
-              if(prot=='https'){
+              if(prot=='https:'){
               ws=new WebSocket("wss://"+window.location.host+"/ws");
               }
               else{
@@ -348,18 +348,14 @@ function invia_seg(nn){
                }; 
             } 
  
-            else{ 
-               // The browser doesn't support WebSocket 
-               alert("WebSocket NOT supported by your Browser!"); 
-            }
+  else{ 
+     // The browser doesn't support WebSocket 
+     alert("WebSocket NOT supported by your Browser!"); 
+  }
 
 }
 
-</script>
 
-
-
-<script>
 
 
 var url='<%=url%>';
@@ -385,10 +381,11 @@ let json={};
 
     url=url.replace('state={}',ss);
 
-let newWindow= window.open(url,'name','height=600,width=450');
-if(window.focus){
-newWindow.focus();
-}
+    let newWindow= window.open(url,'name','height=600,width=450');
+    if(window.focus){
+    newWindow.focus();
+    newWindow.onload() = newWindow.close();
+    }
     //document.location.href=url;
  }
 }
@@ -457,10 +454,6 @@ function validSearch(){
   e.preventDefault();
   
   document.getElementById("err_tr").textContent='';
-
-
-  //document.getElementById("Tsolutions")[1].value="<%=borgo.stazione%>";
-  //console.log(document.getElementById("Tsolutions")[1]);
 
   var formData = new FormData(document.getElementById("Tsolutions")); //salva i dati della form 
   var xhr = new XMLHttpRequest(); 

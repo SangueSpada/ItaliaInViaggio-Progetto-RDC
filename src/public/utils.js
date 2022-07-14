@@ -127,6 +127,34 @@ function checkin_fun() {
     divP.appendChild(cardP);
     divA.appendChild(cardA);
   }
+
+  function waitinSolutions2(){
+    var element = document.getElementById("depSol");
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    };
+    var divP = document.getElementById("depSol");
+    let cardP = document.createElement('div');
+    cardP.id="waitP";
+    cardP.classList.add("card","mb-3");
+    cardA.classList.add("card","mb-3");
+    let cardBody = document.createElement('div');
+    cardBody.classList.add("card-body");
+    let p = document.createElement('p');
+    p.classList.add("card-text","placeholder-glow");
+    let span1 = document.createElement('span');
+    span1.classList.add("placeholder","col-7");
+    let span2 = document.createElement('span');
+    span2.classList.add("placeholder","col-5");
+    let span3 = document.createElement('span');
+    span3.classList.add("placeholder","col-9");
+    p.appendChild(span1);
+    p.appendChild(span2);
+    p.appendChild(span3);
+    cardBody.appendChild(p);
+    cardP.appendChild(cardBody);
+    divP.appendChild(cardP);
+  }
   
   function cardSolutions(sol){
     var element = document.getElementById("depSol");
