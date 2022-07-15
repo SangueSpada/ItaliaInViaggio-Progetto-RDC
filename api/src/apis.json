@@ -1,0 +1,9 @@
+/**
+*@api {post} /api/consigliati lista dei borghi consigliati
+*@apiBody {Object} [partenza,checkin,checkout]
+*@apiName borghi_consigliati
+*@apiGroup borghi
+*@apiPermission none
+*@apiDescription ricevi informazioni sui borghi consigliati a fronte di una stazione di partenza in formato json
+*/
+
