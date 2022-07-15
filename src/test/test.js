@@ -4,6 +4,29 @@ var expect = chai.expect;
 const chaihttp = require('chai-http');
 const describe = require('mocha').describe;
 chai.use(chaihttp);
+
+function addDays(date,days){
+  let result=new Date(date.valueOf());
+  result.setDate(result.getDate()+days);
+  return result;
+}
+
+function formatdata(data){
+  let d=data.toISOString().split('T')[0];
+  d=d.replaceAll('-','/');
+  return d;
+
+}
+
+let oggi=new Date();
+let andata=addDays(oggi,1);
+let ritorno=addDays(oggi,4);
+
+let a=formatdata(andata);
+let r=formatdata(ritorno);
+
+
+
 describe("POST /api/consigliati_by_meteo", () => {
     it("verify the request has a correct response", async () => {
 
@@ -13,8 +36,8 @@ describe("POST /api/consigliati_by_meteo", () => {
       .set('Content-Type', 'application/json')
       .send({
         partenza: "Roma Termini",
-        checkin: "2022/07/15",
-        checkout: "2022/07/17"
+        checkin: a,
+        checkout: r
       })
       .end(function (err, result) {
         if(err){
@@ -35,8 +58,8 @@ describe("POST /api/consigliati_by_meteo", () => {
       .set('Content-Type', 'application/json')
       .send({
             partenza: "stazione",
-            checkin: "2022/07/15",
-            checkout: "2022/07/17"
+            checkin: a,
+            checkout: r
         })
       .end(function (err, result) {
         if(err){
@@ -69,6 +92,9 @@ describe("POST /api/consigliati_by_meteo", () => {
       });
     });
 });
+
+
+
 describe("POST /api/consigliati_by_treno", () => {
   it("verify the request has a correct response", async () => {
 
@@ -77,8 +103,8 @@ describe("POST /api/consigliati_by_treno", () => {
     .set('Content-Type', 'application/json')
     .send({
       partenza: "Roma Termini",
-      checkin: "2022/07/15",
-      checkout: "2022/07/17"
+      checkin: a,
+      checkout: r
     })
     .end(function (err, result) {
       if(err){
@@ -99,8 +125,8 @@ describe("POST /api/consigliati_by_treno", () => {
     .set('Content-Type', 'application/json')
     .send({
           partenza: "stazione",
-          checkin: "2022/07/15",
-          checkout: "2022/07/17"
+          checkin: a,
+          checkout: r
       })
     .end(function (err, result) {
       if(err){
