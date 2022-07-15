@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../personal_dist/style.css" />
-    <script type="text/javascript" src="../function.js"></script>
-
+    
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../personal_dist/our.css">
     <!-- JavaScript Bundle with Popper -->
+    <script type="text/javascript" src="../utils.js"></script>
+    <script type="text/javascript" src="../maps.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -81,7 +82,7 @@
 
             <div id="meteo" hidden="true">
               <div style="padding: 15pt;"></div>
-              <table class="table table-sm">
+              <table class="table table-responsive" style="min-width: 1200px;">
                   <thead>
                       <tr id="date">
 
@@ -128,77 +129,34 @@
 
                   </tbody>
               </table>
-          </div>
-
-
-
-
+            </div>
             <div class="row mt-2 mb-5">
               <div style="padding: 15pt;"></div>
 
-                <div id="map">
+                <div class="col me-2" id="map">
                 </div>
+                <div class="col-3 table-wrapper-scroll-y my-custom-scrollbar">
+                  <table class="table table-responsive">
+                      <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">foto</th>
+                            <th scope="col">Nome Hotel</th>
+                            <th scope="col">Recensioni</th>
+                          </tr>
+                      </thead>
+                      <tbody id="hotelList">
+                      </tbody>
+                  </table>
+              </div>
             </div>
             <div class="row mt-5 mb-5">
-                <div class="col mb-2">
-                    <div id="panel">
-
-                    </div>
-                    <div class="container-fluid" >
-                      <button class="btn btn-primary " style="width: 100%;" onclick="invia_seg(0)">l' hotel non esiste più? segnalacelo!</button>
-                    
-                    </div>
-                    <div class="container-fluid" >
-                      <button class="btn btn-primary " style="width: 100%;" onclick="invia_seg(1)">l' hotel non offre un buon servizio? segnalacelo!</button>
-                    
-                    </div>
-                    <div id="listing">
-                    <table id="resultsTable">
-                      <tbody id="results"></tbody>
-                      
-                    
-                    </table>
-                    </div>
-                    <div style="display: none" id="info-content">
-                      <table>
-                      
-                        <tr id="iw-url-row" class="iw_table_row">
-                          <td id="iw-icon" class="iw_table_icon"></td>
-                          <td id="iw-url"></td>
-                        </tr>
-                        <tr id="iw-address-row" class="iw_table_row">
-                          <td class="iw_attribute_name">Indirizzo:</td>
-                          <td id="iw-address"></td>
-                        </tr>
-                        <tr id="iw-phone-row" class="iw_table_row">
-                          <td class="iw_attribute_name">Telefono:</td>
-                          <td id="iw-phone"></td>
-                        </tr>
-                        <tr id="iw-rating-row" class="iw_table_row">
-                          <td class="iw_attribute_name">Recensioni:</td>
-                          <td id="iw-rating"></td>
-                        </tr>
-                        <tr id="iw-website-row" class="iw_table_row">
-                          <td class="iw_attribute_name">Sito Web:</td>
-                          <td id="iw-website"></td>
-                        </tr>
-                      </table>
-                    </div>
-                </div>
-                <div class="col-lg-5 mb-2 table-wrapper-scroll-y my-custom-scrollbar">
-                    <table class="table table-responsive">
-                        <thead>
-                            <tr>
-                              <th scope="col">#</th>
-                              <th scope="col">foto</th>
-                              <th scope="col">Nome Hotel</th>
-                              <th scope="col">Recensioni</th>
-                            </tr>
-                        </thead>
-                        <tbody id="hotelList">
-                        </tbody>
-                    </table>
-                </div>
+              <div id="panel" class="row">
+              </div>
+              <div class="d-block">
+                <button class="btn btn-primary" onclick="invia_seg(0)">l' hotel non esiste più? segnalacelo!</button>
+                <button class="btn btn-primary" onclick="invia_seg(1)">l' hotel non offre un buon servizio? segnalacelo!</button>
+              </div>
             </div>
             <div class="row mt-4">
                     <nav class="shadow container p-3 rounded-3" style="background-color: #e3f2fd;">
@@ -325,6 +283,10 @@ function invia_seg(nn){
       
               var ws;
               let prot=window.location.protocol;
+<<<<<<< HEAD
+=======
+              console.log(prot);
+>>>>>>> 422c19cfaf1d1a9cac0e6c63d3961221f315dd9d
               if(prot=='https:'){
               ws=new WebSocket("wss://"+window.location.host+"/ws");
               }
@@ -387,18 +349,14 @@ function invia_seg(nn){
                }; 
             } 
  
-            else{ 
-               // The browser doesn't support WebSocket 
-               alert("WebSocket NOT supported by your Browser!"); 
-            }
+  else{ 
+     // The browser doesn't support WebSocket 
+     alert("WebSocket NOT supported by your Browser!"); 
+  }
 
 }
 
-</script>
 
-
-
-<script>
 
 
 var url='<%=url%>';
@@ -424,10 +382,11 @@ let json={};
 
     url=url.replace('state={}',ss);
 
-let newWindow= window.open(url,'name','height=600,width=450');
-if(window.focus){
-newWindow.focus();
-}
+    let newWindow= window.open(url,'name','height=600,width=450');
+    if(window.focus){
+    newWindow.focus();
+    newWindow.onload() = newWindow.close();
+    }
     //document.location.href=url;
  }
 }
@@ -496,10 +455,6 @@ function validSearch(){
   e.preventDefault();
   
   document.getElementById("err_tr").textContent='';
-
-
-  //document.getElementById("Tsolutions")[1].value="<%=borgo.stazione%>";
-  //console.log(document.getElementById("Tsolutions")[1]);
 
   var formData = new FormData(document.getElementById("Tsolutions")); //salva i dati della form 
   var xhr = new XMLHttpRequest(); 
