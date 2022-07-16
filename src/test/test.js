@@ -8,7 +8,7 @@ describe("POST /api/consigliati_by_meteo", () => {
     it("verify the request has a correct response", async () => {
 
 
-      chai.request("http://localhost:8080")
+      chai.request("https://localhost:443")
       .post('/api/consigliati_by_meteo')
       .set('Content-Type', 'application/json')
       .send({
@@ -30,7 +30,7 @@ describe("POST /api/consigliati_by_meteo", () => {
     
     });
     it("verify the request has a bad response: station not found", async () => {
-      chai.request("http://localhost:8080")
+      chai.request("https://localhost:443")
       .post('/api/consigliati_by_meteo')
       .set('Content-Type', 'application/json')
       .send({
@@ -50,7 +50,7 @@ describe("POST /api/consigliati_by_meteo", () => {
     });
 
     it("verify the request has a bad response: incorrect range dates", async () => {
-      chai.request("http://localhost:8080")
+      chai.request("https://localhost:443")
       .post('/api/consigliati_by_meteo')
       .set('Content-Type', 'application/json')
       .send({
@@ -72,7 +72,7 @@ describe("POST /api/consigliati_by_meteo", () => {
 describe("POST /api/consigliati_by_treno", () => {
   it("verify the request has a correct response", async () => {
 
-    chai.request("http://localhost:8080")
+    chai.request("https://localhost:443")
     .post('/api/consigliati_by_treno')
     .set('Content-Type', 'application/json')
     .send({
@@ -94,7 +94,7 @@ describe("POST /api/consigliati_by_treno", () => {
   
   });
   it("verify the request has a bad response: station not found", async () => {
-    chai.request("http://localhost:8080")
+    chai.request("https://localhost:443")
     .post('/api/consigliati_by_treno')
     .set('Content-Type', 'application/json')
     .send({
@@ -114,7 +114,7 @@ describe("POST /api/consigliati_by_treno", () => {
   });
 
   it("verify the request has a bad response: incorrect range dates", async () => {
-    chai.request("http://localhost:8080")
+    chai.request("https://localhost:443")
     .post('/api/consigliati_by_treno')
     .set('Content-Type', 'application/json')
     .send({
