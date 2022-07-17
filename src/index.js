@@ -8,8 +8,7 @@ var request=require('request');
 const fs=require('fs');
 const axios=require('axios').default;
 const multer = require('multer');
-var amqp=require('amqplib/callback_api')
-const utils = require('./utilities');
+var amqp=require('amqplib/callback_api');
 const upload = multer();
 require('dotenv').config({path: path.join(__dirname,'/.env')});
 var urlencodedParser=bodyParser.urlencoded({extended:false});
