@@ -583,8 +583,6 @@ const p1=new Promise(function(resolve,reject){
     resolve();}
   })
   .catch(function(error){res.status(400).send(error);return;});
-
-///////////////////////////////////////
 });
 
 p1.then( async function(value){
