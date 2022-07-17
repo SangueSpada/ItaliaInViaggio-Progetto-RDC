@@ -7,48 +7,49 @@
  * @apiBody {String} checkin Data formato GG/MM/AAAA
  * @apiBody {String} checkout Data formato GG/MM/AAAA
  * @apiSuccess (Success 200) {Json} Json_object Restituisce un oggetto avente una chiave result e valore lista di oggetti borghi.
+ * @apiError (Error 4XX) {String} StazioneInvalida Inserire una stazione ferroviaria esistente su Trenitalia.
  * @apiSuccessExample {Json} Success
  * HTTP/1.1 200 OK
  * {
     "result": [
       {
-        "nome": "Brisighella",
-        "regione": "Emilia Romagna",
-        "lat": "44.2237502",
-        "lon": "11.7573768",
-        "descrizione": "L’antico borgo medioevale si distingue per la spiccata vocazione all’ospitalità e al turismo sostenibile, tanto da essere inserito nel club dei Borghi più belli d’Italia e certificato dal Touring Club Italiano con la 'Bandiera Arancione'.",
-        "main": [],
-        "distanza": 265
-      },
-      {
-        "nome": "Chiusa",
-        "regione": "Trentino A.A.",
-        "lat": "46.6719942",
-        "lon": "11.4809913",
-        "descrizione": "La cittadina si estende tra le rocce del promontorio di Sabiona e il fiume Isarco. Un susseguirsi di facciate romantiche, chiese gotiche e lo spettacolare Monastero Benedettino di Sabiona.",
-        "main": [],
-        "distanza": 537
-      },
-      {
-        "nome": "Orta San Giulio",
-        "regione": "Piemonte",
-        "lat": "45.7964467",
-        "lon": "8.405217",
-        "descrizione": "L’antico borgo di Orta San Giulio si colloca lungo le acque del Lago d’Orta: un punto strategico ed oggi uno dei palcoscenici ideali da cui ammirare il piccolo specchio d’acqua. A poche centinaia di metri da Piazza Motta, cuore del borgo, proprio sulla punta del promontorio, si scorge l’Isola di San Giulio poco distante.",
-        "main": [],
-        "distanza": 544
-      },
+      "nome": "Castel Gandolfo",
+      "regione": "Lazio",
+      "lat": "41.7487496",
+      "lon": "12.6353254",
+      "descrizione": "Splendidamente affacciato sul Lago Albano, Castel Gandolfo è noto per la bellezza della natura che lo circonda e per l’eleganza del centro storico cinto da mura, che l’ha fatto eleggere uno dei Borghi più belli d’Italia. Conosciuto anche per essere la residenza estiva dei papi, qui si trova il Palazzo Pontificio.",
+      "main": [
+        "Clear",
+        "Clear"
+      ],
+      "distanza": 20
+    },
+    {
+      "nome": "Tagliacozzo",
+      "regione": "Abruzzo",
+      "lat": "42.0689524",
+      "lon": "13.2438809",
+      "descrizione": "Borgo storico nel cuore d’Abruzzo, Tagliacozzo si estende nella gola della montagna ai piedi del monte Civita, immerso nella storia che dal Medioevo spazia fino al Barocco.La fonte più accreditata, per la spiegazione del suo nome, deriva dall’unione di due termini latini: Talus e Cotium, ovverosia 'taglio nella roccia'.",
+      "main": [
+        "Clear",
+        "Clear"
+      ],
+      "distanza": 64
+    },
       ...
       {
-        "nome": "Spello",
-        "regione": "Umbria",
-        "lat": "42.9913514",
-        "lon": "12.6447022",
-        "descrizione": "Il paese, abbarbicato su uno sperone del Monte Subasio, quasi a dominare la Valle Umbra, è una meraviglia da scoprire con lentezza, perdendosi tra i suoi vicoli profumati e le sue stradine lastricate che vi condurranno alla scoperta di un centro storico coloratissimo.",
-        "main": [],
-        "distanza": 122
-      }
+      "nome": "Vogogna",
+      "regione": "Piemonte",
+      "lat": "46.0178943",
+      "lon": "8.2686205",
+      "descrizione": "L’antico borgo di Vogogna, di origine medievale, è situato nel cuore dell’Ossola, a pochi chilometri dal Lago Maggiore, dal Lago d’Orta e dalla Svizzera. Entrato a far parte del Parco Nazionale della Val Grande, è ricco di tradizioni, di cultura e di storia.",
+      "main": [
+        "Clouds",
+        "Rain"
+      ],
+      "distanza": 569
+    }
       ]
     }   
- * @apiError (Error 4XX) {String} StazioneInvalida {'err':'inserire una stazione di partenza valida '}  
+ * 
  */

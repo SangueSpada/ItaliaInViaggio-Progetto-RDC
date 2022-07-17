@@ -35,7 +35,6 @@ async function getborghifromcouchdb(){
       "fields": ["nome","regione","lat","long","foto","descrizione","stazione"]
     };
     axios.post('http://admin:root@couchdb:5984/iiv_db/_find',json,{ headers:{'Content-Type': 'application/json'}})
-    // .then(function(response){console.log('response....');connected=1;resolve(resp=response.data.docs);})
     .then(function(response){resolve(resp=response.data.docs);}) 
     .catch(function(error){
       console.log(" NON SONO RIUSCITO A CONNETTERMI A COUCHDB, PRENDO I BORGHI STATICAMENTE.");
@@ -57,7 +56,6 @@ async function aggiorna_meteo(){
     promises.push(new Promise(function(resolve,reject){
       axios.get(url)
       .then(function(result){
-         // console.log(resp[i].nome);
         resolve(meteo[resp[i].nome]=result.data.daily);
       })
       .catch(function(error){
@@ -487,7 +485,6 @@ app.get('/stazioni_autocomplete',urlencodedParser, async function(req,res){
 
 app.post('/searchTsolutions',upload.none(), async function(req, res) {
   const t = new Trenitalia();
-  console.log(req.body);
   var IdSP = await t.autocomplete(req.body.stazionePartenza);
   var IdSA = await t.autocomplete(req.body.stazioneArrivo);
   var adulti = req.body.adulti;
@@ -525,8 +522,6 @@ app.post('/api/consigliati_by_meteo',urlencodedParser,async function(req,res){
   let min_date=addDays(new Date(),1);
   min_date.setHours(0,0,0);
   let max_date=addDays(min_date,6);
-  console.log("min_date: "+min_date);
-  console.log("max_date "+ max_date)
 
 try{
   staz_par=req.body.partenza;
@@ -625,8 +620,6 @@ app.post('/api/consigliati_by_treno',urlencodedParser,async function(req,res){
   let min_date=addDays(new Date(),1);
   min_date.setHours(0,0,0);
   let max_date=addDays(min_date,6);
-  console.log("min_date: "+min_date);
-  console.log("max_date "+ max_date)
 
 try{
   staz_par=req.body.partenza;
@@ -790,7 +783,6 @@ async function algoritmo_consigliati(lat,lon,borghi,partenza,ritorno){
     for(let k=0;k<distanze.length;k++){
       let d=distanze[k];
       var giorni = Math.ceil((ritorno.getTime() - partenza.getTime())/(1000 * 3600 * 24));
-      console.log(giorni);
       d["punteggio"]=algoritmo(d.distanza,d.punti,giorni);
     }
 
@@ -886,7 +878,6 @@ async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spa
 
     for(let k=0;k<distanze.length;k++){
       let d=distanze[k];
-      //console.log('sssssssssssssssssssss'+Spartenza);
       d["costo"]=await algoritmo(Spartenza,d['stazione'],Dpartenza,Dritorno);
       d["punteggio"]=d["costo"];
     }
