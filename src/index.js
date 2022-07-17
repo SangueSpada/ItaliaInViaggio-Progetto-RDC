@@ -38,7 +38,8 @@ async function getborghifromcouchdb(){
     // .then(function(response){console.log('response....');connected=1;resolve(resp=response.data.docs);})
     .then(function(response){resolve(resp=response.data.docs);}) 
     .catch(function(error){
-      resolve(error);
+      console.log(" NON SONO RIUSCITO A CONNETTERMI A COUCHDB, PRENDO I BORGHI STATICAMENTE.");
+      resolve(resp=JSON.parse(fs.readFileSync(path.join(__dirname, 'public/borghi.json'))));
     });
   });
 }
@@ -60,8 +61,8 @@ async function aggiorna_meteo(){
         resolve(meteo[resp[i].nome]=result.data.daily);
       })
       .catch(function(error){
-      console.log(error);
-      resolve(error);
+      console.log("NON SONO RIUSCITO A LEGGERE IL METEO. CARICO STATICAMENTE GLI ULTIMI DATI SALVATI");
+      resolve(meteo = fs.readFileSync(path.join(__dirname, 'public/meteo.json')));
       });
     }));
   }
@@ -559,14 +560,11 @@ catch(err){
    }
 
 
+const borghi=await getborghifromcouchdb(); // get borghi from CouchDB
 
-
-
-const borghi=await getborghifromcouchdb();
-
-
+// --- api openstreetmap for coordinates of departure station --- //
 const p1=new Promise(function(resolve,reject){
-  // api openstreetmap for coordinates of departure station
+  
   axios.get('https://nominatim.openstreetmap.org/search?q='+staz_par+',Italia&format=json&addressdetails=1',{headers: {'Accept':'json'}})
   .then(function(response){
     response=response.data;
@@ -591,36 +589,31 @@ p1.then( async function(value){
     res.status(400).send({'err':'stazione non trovata su open street map, riprovare con un\' altra'});
   return;}
 
+// ---------------------------------------------------------------- //
+
+
+// ---- esecuzione algoritmo consigliati ------- //
   let lat=staz_andata.lat;
   let long=staz_andata.lon;
+  let consigliati;
+  consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),borghi,inn,outt);
 
-let consigliati;
-consigliati= await algoritmo_consigliati(parseFloat(lat),parseFloat(long),borghi,inn,outt);
-if(!consigliati){
-  res.status(404).send({'err':'consigliati non trovati'});
-  return;
-
-}
-else{
-  let c;
-  for(let r=0;r<consigliati.length;r++){
-    c=consigliati[r];
-    delete c.foto;
-    delete c.punti;
-    delete c.icona;
-    delete c.punteggio;
+  if(!consigliati){
+    res.status(404).send({'err':'consigliati non trovati'});
+    return;
   }
-  
-  
-res.send({'result':consigliati})}
-
-});
-
-
-
-
-
-
+  else{
+    let c;
+    for(let r=0;r<consigliati.length;r++){
+      c=consigliati[r];
+      delete c.foto;
+      delete c.punti;
+      delete c.icona;
+      delete c.punteggio;
+    }
+  // ------------------------------------------------------- //
+  res.send({'result':consigliati})}
+  });
 });
 
 app.post('/api/consigliati_by_treno',urlencodedParser,async function(req,res){
@@ -691,8 +684,6 @@ const p1=new Promise(function(resolve,reject){
     resolve();}
   })
   .catch(function(error){res.status(400).send(error);return;});
-
-///////////////////////////////////////
 });
 
 p1.then( async function(value){
@@ -972,8 +963,11 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 ////////////-----------------------//////////////////////
 
 
-app.listen(process.env.PORT, () => {
+var server = app.listen(process.env.PORT, () => {
 //  winston.info(`NODE_ENV: ${process.env.NODE_ENV}`);
   //winston.info(`INSTANCE: ${process.env.INSTANCE}`);
   //winston.info(`EXPRESS: ${process.env.PORT}`);
 });
+
+
+module.exports = server
