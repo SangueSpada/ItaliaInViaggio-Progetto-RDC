@@ -252,6 +252,7 @@ app.post('/consigliati_meteo',urlencodedParser,async function(req,res){
 
 app.post('/consigliati_treni',urlencodedParser,async function(req,res){
   let stazione=req.body.stazione;
+
   let partenza=new Date(req.body.CheckIn);
   let ritorno= new Date(req.body.CheckOut);
   let ricerca = [req.body.stazione,req.body.CheckIn,req.body.CheckOut];
@@ -707,7 +708,7 @@ p1.then( async function(value){
   let long=staz_andata.lon;
 
 let consigliati;
-consigliati= consigliati= await algoritmo_consigliati_treni(parseFloat(lat),parseFloat(long),borghi,inn,outt,req.body.stazione);
+consigliati= consigliati= await algoritmo_consigliati_treni(parseFloat(lat),parseFloat(long),borghi,inn,outt,req.body.partenza);
 if(!consigliati){
   res.status(404).send({'err':'consigliati non trovati'});
   return;
@@ -821,6 +822,8 @@ async function algoritmo_consigliati(lat,lon,borghi,partenza,ritorno){
 };
 async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spartenza){
 
+  //console.log("primooooo"+Spartenza);
+
   return new Promise(async function(resolve){
     Dritorno.setHours(12,00,00);
     Dpartenza.setHours(0,0,0);
@@ -852,6 +855,7 @@ async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spa
     async function algoritmo(StazP,StazR,dataP,dataR){
       const t = new Trenitalia();
       var IdSP = await t.autocomplete(StazP);
+      //console.log("secondoooooo"+StazP);
       var IdSA = await t.autocomplete(StazR);
       var orarioP = String(dataP.toISOString()).replace("Z","")+"+02:00";
       var solutions={};
@@ -893,6 +897,7 @@ async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spa
 
     for(let k=0;k<distanze.length;k++){
       let d=distanze[k];
+      //console.log('sssssssssssssssssssss'+Spartenza);
       d["costo"]=await algoritmo(Spartenza,d['stazione'],Dpartenza,Dritorno);
       d["punteggio"]=d["costo"];
     }
