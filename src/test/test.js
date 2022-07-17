@@ -72,8 +72,6 @@ describe("POST /api/consigliati_by_meteo", () => {
     });
 });
 
-
-
 describe("POST /api/consigliati_by_treno", () => {
   it("verify the request has a correct response", async () => {
     let response = await request(app)

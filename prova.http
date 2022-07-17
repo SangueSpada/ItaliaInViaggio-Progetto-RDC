@@ -9,7 +9,7 @@ Content-Type: application/json
 POST http://localhost:8080/api/consigliati_by_treno
 Content-Type: application/json
 
-{"partenza":"Napoli Centrale","checkin":"2022/07/19","checkout":"2022/07/20"}
+{"partenza":"Roma Termini","checkin":"2022/07/19","checkout":"2022/07/20"}
 ###
 
 GET https://www.lefrecce.it/Channels.Website.BFF.WEB/website/cart?cartId=8eaa922d-dbed-4d1b-958f-a4b77b94c12b

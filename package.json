@@ -4,7 +4,7 @@
   "description": "Made by Aras L. Kankilic, Francesco S. Sconocchia P.",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha src/test --timeout 50000 --exit"
+    "test": "mocha src/test --timeout 100000 --exit"
   },
   "apidoc": {
     "title": "ItaliaInViaggioRDC API",
