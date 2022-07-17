@@ -6,10 +6,10 @@ Content-Type: application/json
 {"departureLocationId":830008409,"arrivalLocationId":830008703,"departureTime":"2022-06-24T09:00:00.000+02:00","adults":1,"children":0}
 
 ###
-POST http://localhost:8080/api/consigliati
+POST http://localhost:8080/api/consigliati_by_treno
 Content-Type: application/json
 
-{"partenza":"Roma","checkin":"2022/07/15","checkout":"2022/07/16"}
+{"partenza":"Roma Termini","checkin":"2022/07/18","checkout":"2022/07/19"}
 ###
 
 GET https://www.lefrecce.it/Channels.Website.BFF.WEB/website/cart?cartId=8eaa922d-dbed-4d1b-958f-a4b77b94c12b

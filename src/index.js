@@ -705,7 +705,7 @@ p1.then( async function(value){
   let long=staz_andata.lon;
 
 let consigliati;
-consigliati= consigliati= await algoritmo_consigliati_treni(parseFloat(lat),parseFloat(long),borghi,inn,outt,req.body.stazione);
+consigliati= consigliati= await algoritmo_consigliati_treni(parseFloat(lat),parseFloat(long),borghi,inn,outt,req.body.partenza);
 if(!consigliati){
   res.status(404).send({'err':'consigliati non trovati'});
   return;
@@ -885,7 +885,7 @@ async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spa
       });
       costo+=Math.min.apply(Math,prezzi);
       prezzi=[];
-      //console.log(StazR+"= "+costo);
+      console.log(StazR+"= "+costo);
       return costo;
     }
 

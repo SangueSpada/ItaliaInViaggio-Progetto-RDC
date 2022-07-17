@@ -113,6 +113,7 @@ describe("POST /api/consigliati_by_treno", () => {
       else{
         expect(result.status).to.equal(200);
         expect(result.body.result).to.not.be.undefined;
+        console.log(result.body);
       }
    });
 
