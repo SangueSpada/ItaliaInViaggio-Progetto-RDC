@@ -554,7 +554,7 @@ catch(err){
     return;
    }
 
-   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()==outt.valueOf()){
+   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()>=outt.valueOf()){
     res.status(400).send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
     return;
    }
@@ -662,7 +662,7 @@ catch(err){
     return;
    }
 
-   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()==outt.valueOf()){
+   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()>=outt.valueOf()){
     res.status(400).send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
     return;
    }
