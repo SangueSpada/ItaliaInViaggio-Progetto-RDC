@@ -253,6 +253,7 @@ app.post('/consigliati_meteo',urlencodedParser,async function(req,res){
 
 app.post('/consigliati_treni',urlencodedParser,async function(req,res){
   let stazione=req.body.stazione;
+
   let partenza=new Date(req.body.CheckIn);
   let ritorno= new Date(req.body.CheckOut);
   let ricerca = [req.body.stazione,req.body.CheckIn,req.body.CheckOut];
@@ -554,7 +555,7 @@ catch(err){
     return;
    }
 
-   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()==outt.valueOf()){
+   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()>=outt.valueOf()){
     res.status(400).send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
     return;
    }
@@ -654,7 +655,7 @@ catch(err){
     return;
    }
 
-   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()==outt.valueOf()){
+   else if(!(inn.valueOf()>=min_date.valueOf() && outt.valueOf()<=max_date.valueOf()) || inn.valueOf()>=outt.valueOf()){
     res.status(400).send({'err':'range date inserite non valido, la data deve essere compresa tra domani e 7 giorni'});
     return;
    }
@@ -810,6 +811,8 @@ async function algoritmo_consigliati(lat,lon,borghi,partenza,ritorno){
 };
 async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spartenza){
 
+  //console.log("primooooo"+Spartenza);
+
   return new Promise(async function(resolve){
     Dritorno.setHours(12,00,00);
     Dpartenza.setHours(0,0,0);
@@ -841,6 +844,7 @@ async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spa
     async function algoritmo(StazP,StazR,dataP,dataR){
       const t = new Trenitalia();
       var IdSP = await t.autocomplete(StazP);
+      //console.log("secondoooooo"+StazP);
       var IdSA = await t.autocomplete(StazR);
       var orarioP = String(dataP.toISOString()).replace("Z","")+"+02:00";
       var solutions={};
@@ -882,6 +886,7 @@ async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spa
 
     for(let k=0;k<distanze.length;k++){
       let d=distanze[k];
+      //console.log('sssssssssssssssssssss'+Spartenza);
       d["costo"]=await algoritmo(Spartenza,d['stazione'],Dpartenza,Dritorno);
       d["punteggio"]=d["costo"];
     }
