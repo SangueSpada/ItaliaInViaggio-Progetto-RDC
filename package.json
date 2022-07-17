@@ -6,6 +6,10 @@
   "scripts": {
     "test": "mocha src/test"
   },
+  "apidoc": {
+    "title": "ItaliaInViaggioRDC API",
+    "url" : "https://localhost:443"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

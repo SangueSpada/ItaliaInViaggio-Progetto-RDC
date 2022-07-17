@@ -584,8 +584,6 @@ const p1=new Promise(function(resolve,reject){
     resolve();}
   })
   .catch(function(error){res.status(400).send(error);return;});
-
-///////////////////////////////////////
 });
 
 p1.then( async function(value){
@@ -891,7 +889,7 @@ async function algoritmo_consigliati_treni(lat,lon,borghi,Dpartenza,Dritorno,Spa
       });
       costo+=Math.min.apply(Math,prezzi);
       prezzi=[];
-      //console.log(StazR+"= "+costo);
+      console.log(StazR+"= "+costo);
       return costo;
     }
 
