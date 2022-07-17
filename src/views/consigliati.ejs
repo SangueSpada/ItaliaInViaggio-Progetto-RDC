@@ -112,7 +112,11 @@
                                             <h6 class="card-subtitle">distanza: <span class=" h4 fw-bold"> <%=item.distanza%> km</span></h6>
                                             <% if(item.costo){%>
                                                 <h6 class="card-subtitle">treni a partire da: <span class=" h4 fw-bold"> <%=item.costo%> €</span> per 1 adulto A/R</h6>
+                                            <% } else {%>
+                                                <h6 class="card-subtitle">Consultare Trenitalia per eventuali soluzioni disponibili</h6>
                                             <% } %>
+
+
 
                                             <div class="col-lg-8 justify-content-center">
                                                 <p class="card-text desc pt-2"><%=item.descrizione%> </p>
