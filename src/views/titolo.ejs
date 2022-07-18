@@ -382,9 +382,12 @@ let json={};
     let newWindow= window.open(url,'name','height=600,width=450');
     if(window.focus){
     newWindow.focus();
-    newWindow.onload() = newWindow.close();
+    //newWindow.onload() = newWindow.close();
     }
     //document.location.href=url;
+ }
+ else{
+  alert("inserire data di partenza e di ritorno validi");
  }
 }
 

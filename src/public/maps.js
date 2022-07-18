@@ -216,7 +216,7 @@ function initMap() {
 
   function showPanel(placeResult,status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-      console.log(placeResult);
+      //console.log(placeResult);
     var infoPane = document.getElementById('panel');
     // If infoPane is already open, close it
     if (infoPane.classList.contains("open")) {
@@ -256,7 +256,7 @@ function initMap() {
     // Add place details with text formatting
     let name = document.createElement('h1');
     name.classList.add('place');
-    name.id='place_id';
+    name.id="place_id";
     name.textContent = placeResult.name;
     divInfo.appendChild(name);
     if (placeResult.rating != null) {
