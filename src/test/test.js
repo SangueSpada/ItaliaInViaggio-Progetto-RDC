@@ -1,4 +1,6 @@
 
+require('dotenv').config();
+process.env.TEST=true;
 const chai = require('chai');
 var expect = chai.expect;
 const chaihttp = require('chai-http');
