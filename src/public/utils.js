@@ -168,6 +168,16 @@ function checkin_fun() {
   
     var partenze = sol.DepartureSolutions;
     var ritorni = sol.BackSolutions;
+    var h3 = document.createElement("h3");
+    h3.classList.add("text-center");
+    h3.style.color="bisque";
+    h3.style.fontWeight="bold";
+    h3.innerHTML="Soluzioni andata";
+    var divP = document.getElementById("depSol");
+    divP.appendChild(h3.cloneNode(true));
+    var divR = document.getElementById("backSol");
+    h3.innerHTML="Soluzioni ritorno";
+    divR.appendChild(h3.cloneNode(true));
     (partenze.solutions).forEach(item=>{
       var s = item.solution;
       var divP = document.getElementById("depSol");
@@ -200,7 +210,12 @@ function checkin_fun() {
         small.classList.add("text-muted","mx-2");
         let img = document.createElement('img');
         //img.src ="../media/trenitalia/"+t.acronym+".svg"
-        img.src="https://lefrecce.it/Channels.Website.WEB/web/images/logo/"+t.acronym+".svg";
+        if(t.acronym==null){
+          img.src="https://lefrecce.it/Channels.Website.WEB/web/images/logo/UB.svg";
+        }
+        else{
+          img.src="https://lefrecce.it/Channels.Website.WEB/web/images/logo/"+t.acronym+".svg";
+        }
         img.classList.add("me1");
         img.width=90;
         img.height=32;
@@ -271,9 +286,12 @@ function checkin_fun() {
         let small=document.createElement('small');
         small.classList.add("text-muted","mx-2");
         let img = document.createElement('img');
-        //img.src ="../media/trenitalia/"+t.acronym+".svg"
-        img.src="https://lefrecce.it/Channels.Website.WEB/web/images/logo/"+t.acronym+".svg";
-  
+        if(t.acronym==null){
+          img.src="https://lefrecce.it/Channels.Website.WEB/web/images/logo/UB.svg";
+        }
+        else{
+          img.src="https://lefrecce.it/Channels.Website.WEB/web/images/logo/"+t.acronym+".svg";
+        }
         img.classList.add("me1");
         img.width=90;
         img.height=32;
