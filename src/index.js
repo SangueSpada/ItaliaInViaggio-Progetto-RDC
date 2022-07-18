@@ -58,6 +58,7 @@ async function aggiorna_meteo(){
         resolve(meteo[resp[i].nome]=result.data.daily);
       })
       .catch(function(error){
+      console.log(error);
       console.log("NON SONO RIUSCITO A LEGGERE IL METEO. CARICO STATICAMENTE GLI ULTIMI DATI SALVATI");
       resolve(meteo = fs.readFileSync(path.join(__dirname, 'public/meteo.json')));
       });

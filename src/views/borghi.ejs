@@ -18,45 +18,14 @@
         <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
         
         
-        <title>Anulare</title>
+        <title>I borghi</title>
     </head>
 
 
     <body class="bg1">
         <%- include('navbar')%>
         <div style="padding: 40pt;"></div>
-        <div class="container cont">
-            <div class="col-lg-12 text-center">
-                <nav class="shadow container p-3 rounded-3 " style="background-color: #e3f2fd;">
-                    <form class="row" method="post" action="/consigliati">
-                        <div class="col-lg-12 mb-2" id="controls">
-                          <!--<input type="text" class="active form-control" id="testo_ricerca" name="testo_ricerca" placeholder="Cerca per Hotel o per Città">-->
-                        
-                            <input type="text" class="active form-control" id="stazionePartenza" name="stazione" placeholder="Da dove vuoi partire?" required> 
-
-                        </div>
-                       
-                        <div class="col-lg-3 mt-2 d-flex justify-content-center">
-                            <label class="active me-1 mt-1" for="dateStandard">Partenza:</label>
-                            <input type="date" id="CheckInDate" onchange="checkin_fun();" name="CheckIn">
-                        </div>
-                        <div class="col-lg-3 mt-2 d-flex justify-content-center">
-                            <label class="active me-1 mt-1" for="dateStandard">Ritorno:</label>
-                            <input type="date" id="CheckOutDate" onchange="checkout_fun();" name="CheckOut">
-                        </div>
-                        
-                        
-                        
-                        
-                        <div class="col-lg-2 mt-2 d-flex justify-content-center">
-                            <button class="btn btn-primary rounded-3 fw-bold" onclick="validSearch()">Cerca <i class="ms-2 bi bi-search"></i></button>
-                        </div>
-                    </form>
-                </nav>
-            </div>
-            
-            <div style="padding: 40pt;"></div>
-            
+        <div class="container cont">            
             <div class="row d-flex">
                             <% borghi.forEach((item,i) => {%>
                                 <div class="card mb-3">
