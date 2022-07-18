@@ -32,7 +32,10 @@ Per i turisti indecisi sulla meta offriamo un servizio di suggerimento dei borgh
 
 3. **La soluzione deve prevedere l'uso di protocolli asincroni. Per esempio Websocket e/o AMQP**
 
-ws per http e wss per https (TBD)
+L' applicazione prevede la comunicazione tramire WebSocket (WebSocket secure per https) con lo scopo di ricevere messaggi in modo asincrono da parte dei clienti ogni volta che uno di essi voglia segnalare un problema riguardante un particolare alloggio.
+
+Questi messaggi una volta ricevuti dal server, vengono inoltrati tramite un exchange al broker container RabbitMQ per una futura lettura di essi.
+
 
 4. **Il progetto deve prevedere l'uso di Docker e l'automazione del processo di lancio, configurazione e test, deve essere implementata una forma di CI/CD**
 
@@ -51,12 +54,18 @@ npm install
 ```
 creare il file `src/.env` contenente queste informazioni opportunamente compilate
 ```
-API_MAPS="YOURS CREDENTIALS"
-API_WHEATHER="YOURS CREDENTIALS"
-CLIENT_ID_CALENDAR="YOURS CREDENTIALS"
-SECRET_ID_CALENDAR="YOURS CREDENTIALS"
+API_MAPS="YOURS GOOGLE MAPS API CREDENTIALS"
+API_WHEATHER="YOURS OPENWEATHERMAP API CREDENTIALS"
+CLIENT_ID_CALENDAR="YOURS GOOGLE OAUTH2 CLIENTID CREDENTIALS"
+SECRET_ID_CALENDAR="YOURS GOOGLE OAUTH2 SECRETID CREDENTIALS"
 RED_URI="http://localhost:8080/seteventcalendar"
 ```
+
+Per creare i containers usare il comando
+```
+docker-compose build
+```
+
 Infine per avviare o terminare l'esecuzione dei containers
 ```
 docker-compose up
