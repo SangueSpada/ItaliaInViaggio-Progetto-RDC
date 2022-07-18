@@ -131,13 +131,12 @@ async function connessione_amqp(){
         channel.assertExchange(ex,'direct',{durable: true});
         codaa=channel;
         resolve();
-        /*channel.assertQueue('segnalazioni_utenti',{durable:true},function(err2,q){
+        channel.assertQueue('segnalazioni_utenti',{durable:true},function(err2,q){
           if(err2){
             console.log(err2);
             return;
           }
-          channel.bindQueue(q.queue,exchange,'inattività');
-        });*/
+        });
       });
     });
   });
