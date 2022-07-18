@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "mocha src/test --timeout 100000 --exit",
-    "start": "docker-compose up"
+    "start": "docker-compose up",
+    "reader": "node ./src/rabbitmq_read.js"
   },
   "apidoc": {
     "title": "ItaliaInViaggioRDC API",

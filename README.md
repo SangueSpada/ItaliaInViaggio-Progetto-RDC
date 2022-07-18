@@ -32,10 +32,9 @@ Per i turisti indecisi sulla meta offriamo un servizio di suggerimento dei borgh
 
 3. **La soluzione deve prevedere l'uso di protocolli asincroni. Per esempio Websocket e/o AMQP**
 
-L' applicazione prevede la comunicazione tramire WebSocket (WebSocket secure per https) con lo scopo di ricevere messaggi in modo asincrono da parte dei clienti ogni volta che uno di essi voglia segnalare un problema riguardante un particolare alloggio.
+L'applicazione prevede la comunicazione tramire WebSocket (WebSocket secure per https) con lo scopo di ricevere messaggi in modo asincrono da parte dei clienti ogni volta che uno di essi voglia segnalare un problema riguardante un particolare alloggio.
 
 Questi messaggi una volta ricevuti dal server, vengono inoltrati tramite un exchange al broker container RabbitMQ per una futura lettura di essi.
-
 
 4. **Il progetto deve prevedere l'uso di Docker e l'automazione del processo di lancio, configurazione e test, deve essere implementata una forma di CI/CD**
 
@@ -66,7 +65,7 @@ Per creare i containers usare il comando
 docker-compose build
 ```
 
-Infine per avviare o terminare l'esecuzione dei containers
+Per avviare o terminare l'esecuzione dei containers
 ```
 docker-compose up
 docker-compose down
@@ -75,6 +74,10 @@ docker-compose down
 Per eseguire il test del funzionamento delle API offerte
 ```
 npm test
+```
+Per attivare il lettore delle segnalazioni presenti nel broker RabbitMQ eseguire il comando
+```
+npm run reader
 ```
 
 
