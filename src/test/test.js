@@ -1,5 +1,6 @@
 
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({path: path.join(__dirname,'../.env')});
 process.env.TEST=true;
 const chai = require('chai');
 var expect = chai.expect;
